@@ -1,34 +1,25 @@
 <!DOCTYPE html>
 <html>
-<title>GIT API</title>
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <title>Dynamic</title>
+</head>
 
 <body>
-<h1>
-Enter a Github username:
-</h1>
-<form id="userform">
-  <input id="user">
-  <input type="submit" value="Go">
-</form>
-<div id="github">
-
-</div>
+  <div class="header">
+  	<div class="title">
+    	<h2></h2>
+    	<h1>Dynamic</h1>
+  	</div>
+  </div>
+  <div id="app" class="content">
+    
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.7/vue.js" integrity="sha256-g+Q8DFAmG5+eyRPSydX0LY4TfjsL11XSDrIGerbbEdA=" crossorigin="anonymous"></script>
+  <script src="dynamic.js"></script>
 </body>
 
-<script>
-document.getElementById("userform").addEventListener("submit", function(event) {
-    event.preventDefault();
-    var id = document.getElementById("user").value;
-    var fullURL = "https://api.github.com/users/" + id;
-    console.log(fullURL);
-    fetch(fullURL)
-    .then(function(response) {
-      return response.json();
-    }).then(function(json) {
-      console.log(json);
-      document.getElementById("github").innerHTML = 
-        "<strong>ID= "+json["id"]+"</strong>";
-    });
-  });
-</script>
 </html>
