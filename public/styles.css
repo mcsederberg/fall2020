@@ -1,0 +1,25 @@
+body{
+    margin: 0px;
+}
+body, html, #app, #mainWrapper{
+    height: 100%;
+    width: 100%;
+}
+#app{
+    display: flex;
+    flex-direction: column;
+}
+#header{
+    height: 80px;
+    border-bottom: 1px solid gray;
+    padding-left: 40px;
+    background: #16191f;
+    color: white;
+}
+#mainWrapper{
+    display: flex;
+}
+#sidebar{
+    width: 200px;
+    border-right: 1px solid gray;
+}
