@@ -1,0 +1,15 @@
+body{
+    margin: 0px;
+    font-family: Metropolis,"Source Sans","Myriad Pro",Arial,sans-serif;
+    color: white
+}
+body, html, #app, #mainWrapper{
+    height: 100%;
+    width: 100%;
+}
+#app{
+    display: flex;
+    flex-direction: column;
+}
+
+
