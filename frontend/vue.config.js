@@ -1,7 +1,7 @@
 // vue.config.js
 module.exports = {
-  devServer: {
-    disableHostCheck: true
-  }
-  // options...
+    devServer: {
+        disableHostCheck: true
+    }
+    // options...
 }
