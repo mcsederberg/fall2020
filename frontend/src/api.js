@@ -1,38 +1,29 @@
-import Vue from 'vue'
+// import vue from 'vue'
 import axios from 'axios'
 
 const client = axios.create({
-  baseURL: 'http://18.218.126.54:3000/',
-  json: true
+  baseURL: 'http://18.218.126.54:3000',
+  json: true,
+  headers: {
+	"Content-type": "application/json"
+  }
 })
+// const Vue = vue;
 
 export default {
-	async execute (method, resource, data) {
-		// inject the accessToken for each request
-		let accessToken = await Vue.prototype.$auth.getAccessToken()
-		return client({
-			method,
-			url: resource,
-			data,
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		}).then(req => {
-			return req.data
-		})
-	},
 	//User
-	createUser(data){
-		return this.execute('post','/posts', data);
+	// async register(user){
+	// 	return client.post(`/api/register`, user.toJSON());
+	// },
+	async register(user){
+		var res =  client.post("/api/register/name/"+user.name+"/username/"+user.username+"/password/"+user.password);	
+		console.log("Res: " + res);
+		return res;
 	},
-	readUser(id){
-		return this.execute('get',`/gets/${id}`);
-	},
-	updateUser(id, data){
-		return this.execute('put', `/posts/${id}`, data);
-	},
-	deleteUser(id){
-		return this.execute('delete', `/posts/${id}`);
-	},
+	async login(user){
+		var res =  client.post("/api/login/username/"+user.username+"/password/"+user.password);	
+		console.log("Res: " + res);
+		return res;
+	}
 	
 }
