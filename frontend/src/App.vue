@@ -7,7 +7,7 @@
 	</div>
 	<div id="mainWrapper">
 		<div id="sidebar" v-if="$route.name !== 'Login'">
-			<router-link to="/" class="sidebarOption">Home</router-link>
+			<router-link to="/home" class="sidebarOption">Home</router-link>
 			<router-link to="/projects" class="sidebarOption">Projects</router-link>
 			<router-link to="/tasks" class="sidebarOption">Tasks</router-link>
 			<router-link to="/chart" class="sidebarOption">Gantt chart</router-link> 

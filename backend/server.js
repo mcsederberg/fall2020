@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const passwordHash = require('password-hash');
 const app = express();
+var cors = require('cors');
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: false
@@ -50,8 +52,8 @@ app.post('/api/login/username/:username/password/:password', async (req, res) =>
 		var queryString = `SELECT * FROM user WHERE username = '${username}'`;
 		var successCallback = function(result){
 			var hashedPassword = result[0].password;
-			var isPassword = passwordHash.verify(password, hashedPassword);
-			res.sendStatus(200);
+			var isPassword = passwordHash.verify(password, hashedPassword); //todo send incorrect password message
+			res.sendStatus(200); //todo maybe return user object?
 		}
 		var errorCallback = function(error){
 			res.sendStatus(500);
