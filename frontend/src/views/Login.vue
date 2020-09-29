@@ -6,16 +6,17 @@
 			<button @click="setScreen('register')" class="mb-auto mx-auto w-1/2 border">Register</button>
 		</div>
 		<div v-else-if="screen === 'login'" class="flex flex-col border m-auto px-5 py-2">
-			<p class="self-center">Login</p>
-			<div class="my-1"><label for="loginUsername">Username: </label><input id="loginUsername" v-model="loginUsername" class="text-dark"/></div>
-			<div class="my-1"><label for="loginPassword">Password: </label><input id="loginPassword" v-model="loginPassword" type="password" class="text-dark"/></div>
+			<div class="flex"><p @click="reset" class="cursor-pointer">Back</p><p class="self-center mx-auto">Login</p></div>
+			<div class="my-1"><label for="loginUsername">Username: </label><input id="loginUsername" v-model="loginUsername" class="ml-2 px-1 float-right text-dark"/></div>
+			<div class="my-1"><label for="loginPassword">Password: </label><input id="loginPassword" v-model="loginPassword" type="password" class="ml-2 px-1 float-right text-dark"/></div>
 			<button class="border" @click="login">Login</button>
 		</div>
 		<div v-else-if="screen === 'register'" class="flex flex-col border m-auto px-5 py-2">
-			<p class="self-center">Register</p>
-			<div class="my-1"><label for="registerName">Name: </label><input id="registerName" v-model="registerName" class="text-dark"/></div>
-			<div class="my-1"><label for="registerUsername">Username: </label><input id="registerUsername" v-model="registerUsername" class="text-dark"/></div>
-			<div class="my-1"><label for="registerPassword">Password: </label><input id="registerPassword" v-model="registerPassword" type="password" class="text-dark"/></div>
+			<div class="flex"><p @click="reset" class="cursor-pointer">Back</p><p class="self-center mx-auto">Register</p></div>
+			<div class="my-1"><label for="registerFirstName">First name: </label><input id="registerFirstName" v-model="registerFirstName" class="ml-2 px-1 float-right text-dark"/></div>
+			<div class="my-1"><label for="registerLastName">Last name: </label><input id="registerLastName" v-model="registerLastName" class="ml-2 px-1 float-right text-dark"/></div>
+			<div class="my-1"><label for="registerUsername">Username: </label><input id="registerUsername" v-model="registerUsername" class="ml-2 px-1 float-right text-dark"/></div>
+			<div class="my-1"><label for="registerPassword">Password: </label><input id="registerPassword" v-model="registerPassword" type="password" class="ml-2 px-1 float-right text-dark"/></div>
 			<button class="border" @click="register">Register</button>
 		</div>
 	</div>
@@ -33,22 +34,68 @@ export default {
 			screen: 'main',
 			loginUsername: "",
 			loginPassword: "",
-			registerName: "",
+			registerFirstName: "",
+			registerLastName: "",
 			registerUsername: "",
 			registerPassword: "",
 		}
 	},
+	mounted: function(){
+		var foo = 0;
+	},
 	methods: {
+		reset: function(){
+			this.screen = 'main';
+			this.loginUsername = "";
+			this.loginPassword = "";
+			this.registerPassword = "";
+			this.registerUsername = "";
+			this.registerLastName = "";
+			this.registerFirstName = "";
+		},
 		setScreen: function(type){
 			this.screen = type;  
 		},
 		login: function(){
-			var user = new User(this.loginUsername, this.loginPassword, "");
-			user.login();
+			if (this.loginUsername == "" || this.loginPassword == ""){
+				alert("You must fill in all of the fields");
+				return;
+			}
+			var res = User.login(this.loginUsername, this.loginPassword);
+			var vue = this;
+			res.then(function(response){
+				vue.$root.$data.user = response;
+				window.location.href = "/projects";
+			}).catch(function(e){
+				var code = e.error;	
+				switch (code){
+					case "INCORRECT_PASSWORD":
+						alert("Incorrect password");
+						break;
+					case "INVALID_USERNAME":
+						alert("Invalid username");
+						break;
+				}
+			});
 		},
 		register: function(){
-			var user = new User(this.registerUsername, this.registerPassword, this.registerName);
-			user.register();
+			var vue = this;
+			if (this.registerFirstName == "" || this.registerLastName == "" || this.registerUsername == "" || this.registerPassword == ""){
+				alert("You must fill in all of the fields");
+				return;
+			}
+			var res = User.register(this.registerUsername, this.registerPassword, this.registerFirstName, this.registerLastName);
+			res.then(function(response){
+				vue.$root.$data.user = response;
+				window.location.href = "/projects";
+			}).catch(function(e){
+				var code = e.error;
+				switch (code){
+					case "ER_DUP_ENTRY":
+						alert("That username is taken");
+						break;
+				}
+			});
 		}
 	}
 }

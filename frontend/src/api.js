@@ -1,9 +1,10 @@
 // import vue from 'vue'
 import axios from 'axios'
+import User from './models/User';
 
 const client = axios.create({
-  baseURL: 'http://18.218.126.54:3000',
-//   baseURL: 'http://localhost:3000',
+//   baseURL: 'http://18.218.126.54:3000',
+  baseURL: 'http://localhost:3000',
   json: true,
   headers: {
 	"Content-type": "application/json"
@@ -12,29 +13,64 @@ const client = axios.create({
 // const Vue = vue;
 
 export default {
-	//User
-	// async register(user){
-	// 	return client.post(`/api/register`, user.toJSON());
-	// },
-	async register(user){
-		var res =  client.post("/api/register/name/" + user.name + "/username/" + user.username + "/password/" + user.password);	
-		res.then(function(response) {
-			console.log(response)
-			window.location.href = "/home"
-		}).catch(function(e) {
-			console.log("error", e); //TODO display error
-		})
-		return res;
+	async register(username, password, firstName, lastName){
+		return new Promise(function(resolve, reject){
+			var res = client.post("/api/register", {
+				username: username, 
+				password: password,
+				firstName: firstName,
+				lastName: lastName
+			});	
+			res.then(function(response) {
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					user: new User(model.id, model.username, model.password, model.firstName, model.lastName)
+				});
+				return;
+			}).catch(function(e) {
+				console.log("error", e);
+				reject({
+					status: "BAD",
+					error: e
+				});
+			});
+		});
 	},
-	async login(user){
-		var res =  client.post("/api/login/username/" + user.username + "/password/" + user.password);	
-		res.then(function(response) {
-			console.log(response)
-			window.location.href = "/home"
-		}).catch(function(e) {
-			console.log("error", e); // TODO display error
-		})
-		return res;
+	async login(username, password){
+		return new Promise(function(resolve, reject){
+			var res =  client.post("/api/login",{
+				username: username,
+				password: password
+			});	
+			res.then(function(response) {
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					user: new User(model.id, model.username, model.password, model.firstName, model.lastName)
+				})
+				return;
+			}).catch(function(e) {
+				console.log("error", e);
+				return e;
+			})
+		});
 	}
 	
 }
