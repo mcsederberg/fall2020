@@ -9,8 +9,8 @@ export default class User {
 		this.id = id;
 	}
 	static getUser(id){
-	    return api.getUser(id);
-	};
+		return api.getUser(id);
+	}
 	static async login(username, password){
 		return new Promise(function(resolve, reject){
 			var res = api.login(username, password);
@@ -24,9 +24,7 @@ export default class User {
 				reject(e);
 			});
 		})
-
-		return api.login(username, password);
-	};
+	}
 	static async register(username, password, firstName, lastName){
 		return new Promise(function(resolve, reject){
 			var res = api.register(username, password, firstName, lastName);
@@ -42,7 +40,7 @@ export default class User {
 				reject(e);
 			});
 		});
-	};
+	}
 	toJSON(){
 		return {
 			username: this.username,

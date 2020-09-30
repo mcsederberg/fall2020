@@ -120,6 +120,77 @@ app.post('/api/register', async (req, res) => {
 		query(queryString, successCallback, errorCallback);
 	} catch (error){
 		console.log("Error in register" + error);
-		res.send(500);
+		res.send(error);
+	}
+});
+
+
+app.post("/api/task/create", async(req, res) => {
+	var id = generateUID();
+	var model = req.body;
+	try{
+		var queryString = `INSERT INTO task (id, userID, projectID, title, summary, dueDate, completedDate, status, percentComplete, startDate, deleted) VALUES ('${model.id}', '${model.userID}','${model.projectID}','${model.title}','${model.summary}','${model.dueDate}','${model.completedDate}','${model.status}','${model.percentComplete}','${model.startDate}','0')`;
+		query(queryString, function(result){
+			res.send({
+				code: "OK",
+				model: {
+					id: id,
+					userID: model.userID,
+					projectID: model.projectID,
+					title: model.title,
+					summary: model.summary,
+					dueDate: model.dueDate,
+					completedDate: model.completedDate,
+					status: model.status,
+					percentComplete: model.percentComplete,
+					startDate: model.startDate,
+					deleted: model.deleted
+				}
+			})
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+});
+
+app.get("/api/tasks/projectID/:projectID", async(req,res)=>{
+	var id = req.params.projectID;
+	try{
+		var queryString = `SELECT * FROM  task WHERE projectID = '${id}' AND deleted = 0`;
+		query(queryString, function(result){
+			if (result.length == 0){
+				res.send({
+					code: "NO_TASKS"
+				});
+				return;
+			}
+			res.send({
+				code: "OK",
+				tasks: result
+			});
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+
+});
+
+app.put("/api/task/delete", async(req,res) =>{
+	var id = req.body.taskID;
+	try{
+		var queryString = `UPDATE task SET deleted = 1 WHERE id = ${id}`;
+		query(queryString, function(result){
+			res.send({
+				code: "OK"
+			});
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
 	}
 });

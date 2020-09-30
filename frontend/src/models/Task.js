@@ -1,7 +1,8 @@
 import api from '@/api'
 
 export default class Task {
-    constructor(userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete, deleted) {
+    constructor(id, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete, deleted) {
+        this.id = id;
         this.userID = userID;
         this.projectID = projectID;
         this.title = title;
@@ -12,6 +13,51 @@ export default class Task {
         this.status = status;
         this.percentComplete = percentComplete;
         this.deleted = deleted;
+    }
+    static getTask(id){
+        return api.getTask(id);
+    }
+    static async getTasksForProjectID(projectID){
+        return new Promise(function(resolve, reject){
+            var res = api.getTasksForProjectID(projectID);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.tasks);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
+    static async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
+        return new Promise(function(resolve, reject){
+            var res = api.createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.task);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
+    static async deleteTask(taskID){
+        return new Promise(function(resolve, reject){
+            var res = api.deleteTask(taskID);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve("OK");
+            }).catch(function(e){
+                reject(e);
+            });
+        });
     }
     toJSON(){
         return {
