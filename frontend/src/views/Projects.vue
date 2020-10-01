@@ -17,7 +17,7 @@ export default {
 		}
 	},
 	mounted: function(){
-    var foo = 0;
+    // var foo = 0;
 	},
 	methods: {
 		
