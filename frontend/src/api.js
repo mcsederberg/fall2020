@@ -112,6 +112,27 @@ export default {
 			});
 		});
 	},
+	async deleteTask(id){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/task/delete/task/"+id);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				resolve({
+					status: "OK"
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 	async getTasksForProjectID(projectID){
 		return new Promise(function(resolve, reject){
 			var res = client.get("/api/tasks/projectID/" + projectID);

@@ -179,10 +179,10 @@ app.get("/api/tasks/projectID/:projectID", async(req,res)=>{
 
 });
 
-app.put("/api/task/delete", async(req,res) =>{
-	var id = req.body.taskID;
+app.put("/api/task/delete/task/:taskID", async(req,res) =>{
+	var id = req.params.taskID;
 	try{
-		var queryString = `UPDATE task SET deleted = 1 WHERE id = ${id}`;
+		var queryString = `UPDATE task SET deleted = 1 WHERE id = '${id}'`;
 		query(queryString, function(result){
 			res.send({
 				code: "OK"

@@ -1,9 +1,20 @@
 sele<template>
-    <div class="">
+    <div class="w-full h-full">
         <i @click="showPopup=true" style="right: 50px; top: 75px; font-size: 35px;" class="fa fa-plus absolute text-primary-alt cursor-pointer"/>
-        <div>
-            <div v-for="(task, index) in allTasks" :key="index" class="">
-                {{task.title}}
+        <div class="w-full h-full flex flex-col">
+            <div v-for="(task, index) in allTasks" :key="index" class="flex flex-col self-center w-3/4 border my-3 px-8">
+                <div class="taskHeader flex justify-between">
+                    Task <p class="text-center">{{task.title}}</p><p class="float-right">Due: {{task.dueDate}}  <i class="fa fa-times cursor-pointer" @click="deleteTask(task.id)"/></p>
+                </div>
+                <div class="taskHours flex justify-between">
+                    Hours: TODO
+                    <div class="flex border p-1"><p class="cursor-pointer">IN</p>/<p class="cursor-pointer">OUT</p></div>
+                </div>
+                <div class="taskDescription">
+                    Description:
+                    <br>
+                    {{task.summary}}
+                </div>
             </div>
         </div>
 
@@ -92,6 +103,23 @@ export default {
 			res.then(function(response){
                 vue.allTasks = response;
                 vue.showPopup = false;
+			}).catch(function(e){
+				var code = e.error;
+				switch (code){
+                    default:
+					// case "ER_DUP_ENTRY":
+					// 	alert("That username is taken");
+					// 	break;
+				}
+			});
+        },
+        deleteTask: function(taskID){
+            var vue = this;
+			var res = Task.deleteTask(taskID);
+			res.then(function(){
+                vue.allTasks = vue.allTasks.filter(function(task){
+                    return task.id !== taskID;
+                });
 			}).catch(function(e){
 				var code = e.error;
 				switch (code){
