@@ -64,7 +64,7 @@ export default {
 			var vue = this;
 			res.then(function(response){
 				vue.$root.$data.user = response;
-				window.location.href = "/projects";
+				vue.$router.push('/projects'); //do this instead of changing window href so it retains data
 			}).catch(function(e){
 				var code = e.error;	
 				switch (code){

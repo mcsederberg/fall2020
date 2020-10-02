@@ -17,7 +17,7 @@ export default class User {
 			res.then(function(response){
 				if (response.status !== "OK"){
 					reject();
-					return;
+					return
 				}
 				resolve(response.user);
 			}).catch(function(e){
