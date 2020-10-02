@@ -203,7 +203,7 @@ app.put('/api/project/update/:id', async (req, res) => {
 					title: model.title,
 					summary: model.summary,
 					ownerID: model.ownerID,
-					deleted: model.deleted //should this be returned in the object?
+					deleted: model.deleted
 				}
 			});
 		},
