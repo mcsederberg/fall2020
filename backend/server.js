@@ -126,16 +126,13 @@ app.post('/api/register', async (req, res) => {
 });
 
 //PROJECT
-app.post('/api/createProject', async (req, res) => {
-	console.log(req.body);
-	var title = req.body.title;
-	var summary = req.body.summary;
-	var ownerID = req.body.ownerID; //will we have this information or will we need to fetch it?
-	var deleted = false; //should this be something else like a 0 or 1?
+app.post('/api/project/create', async (req, res) => {
+	var model = req.body;
+	var deleted = 0;
 	var id = generateUID();
 	try{
-		var queryString = `INSERT INTO project (id, title, summary, ownerID, deleted) VALUES ('${id}', '${title}', '${summary}', '${ownerID}', '${deleted}')`;
-		var successCallback = function(result){
+		var queryString = `INSERT INTO project (id, title, summary, ownerID, deleted) VALUES ('${id}', '${model.title}', '${model.summary}', '${model.ownerID}', '${deleted}')`;
+		query(queryString, function(result){
 			res.send({
 				code: "OK",
 				model:{
@@ -143,14 +140,13 @@ app.post('/api/createProject', async (req, res) => {
 					title: title,
 					summary: summary,
 					ownerID: ownerID,
-					deleted: deleted //should this be returned in the object?
+					deleted: deleted
 				}
 			});
-		}
-		var errorCallback = function(error){
+		},
+		function(error){
 			res.send(error);
-		}
-		var response = await query(queryString, successCallback, errorCallback);
+		})
 	} catch (error){
 		res.send(error);
 	}
@@ -158,20 +154,49 @@ app.post('/api/createProject', async (req, res) => {
 
 app.get('/api/project/:id', async (req, res) => {
 	try{
-		var queryString = `SELECT * FROM project WHERE id = '${req.params.id}'`;
-		var successCallback = function(result){
-			console.log("Success:");
-			console.log(result);
+		var queryString = `SELECT * FROM project WHERE id = '${req.params.id}' AND deleted = 0`;
+		query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "INVALID_ID"
 				});
 				return;
 			}
-			console.log("Result:");
-			console.log(result);
 			var model = result[0];
 			res.send({
+				code: "OK",
+				model:{
+					id: model.id,
+					title: model.title,
+					summary: model.summary,
+					ownerID: model.ownerID,
+					deleted: model.deleted
+				}
+			});
+		},
+		function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+})
+
+app.put('/api/project/update/:id', async (req, res) => {
+	var model = req.body;
+	//probably need to make a check to see if it is already deleted.
+	try{
+		var queryString = `UPDATE project SET (ownerID, title, summary, deleted) VALUES (${model.title}', '${model.summary}', '${model.ownerID}', '${model.deleted}')
+							WHERE id = '${req.params.id}'`;
+		query(queryString, function(result){
+			if (result.length == 0){
+				res.send({
+					code: "INVALID_ID"
+				});
+				return;
+			}
+			var model = result[0];
+			res.send({ //also not sure if we need to send the model back here...
 				code: "OK",
 				model:{
 					id: model.id,
@@ -181,30 +206,41 @@ app.get('/api/project/:id', async (req, res) => {
 					deleted: model.deleted //should this be returned in the object?
 				}
 			});
-		}
-		var errorCallback = function(error){
+		},
+		function(error){
 			res.send(error);
-		}
-		var response = await query(queryString, successCallback, errorCallback);
+		})
 	} catch (error){
 		res.send(error);
 	}
 })
 
+app.put("/api/project/delete/:id", async(req,res) =>{
+	var id = req.params.projectID;
+	try{
+		var queryString = `UPDATE project SET deleted = 1 WHERE id = ${id}`;
+		query(queryString, function(result){
+			res.send({
+				code: "OK"
+			});
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+});
+
 //MESSAGE
-app.post('/api/createMessage', async (req, res) => {
-	console.log(req.body);
-	var projectID = req.body.projectID;
-	var userID = req.body.userID; //will we have this information or will we need to fetch it?
-	var content = req.body.content;
+app.post('/api/message/create', async (req, res) => {
+	var model = req.body;
 	var timePublished = Date.now; //not sure this will work
 	var editDate = Date.now;
-	var priority = req.body.priority;
-	var deleted = false; 
+	var deleted = 0; 
 	var id = generateUID();
 	try{
-		var queryString = `INSERT INTO message (id, projectID, userID, content, timePublished, editDate, priority, deleted) VALUES ('${id}', '${projectID}', '${userID}', '${content}', '${timePublished}', '${editDate}', '${priority}', '${deleted}')`;
-		var successCallback = function(result){
+		var queryString = `INSERT INTO message (id, projectID, userID, content, timePublished, editDate, priority, deleted) VALUES ('${id}', '${model.projectID}', '${model.userID}', '${model.content}', '${timePublished}', '${editDate}', '${model.priority}', '${deleted}')`;
+		query(queryString, function(result){
 			res.send({
 				code: "OK",
 				model:{
@@ -217,32 +253,26 @@ app.post('/api/createMessage', async (req, res) => {
 					priority: priority,
 					deleted: deleted //should this be returned in the object?
 				}
-			});
-		}
-		var errorCallback = function(error){
+			})
+		}, function(error){
 			res.send(error);
-		}
-		query(queryString, successCallback, errorCallback);
+		})
 	} catch (error){
-		console.log("Error in creating project " + error);
-		res.send(500);
+		res.send(error);
 	}
 })
 
+//message by id
 app.get('/api/message/:id', async (req, res) => {
 	try{
-		var queryString = `SELECT * FROM message WHERE id = '${req.params.id}'`;
-		var successCallback = function(result){
-			console.log("Success:");
-			console.log(result);
+		var queryString = `SELECT * FROM message WHERE id = '${req.params.id}' AND deleted = 0`;
+		query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "INVALID_ID"
 				});
 				return;
 			}
-			console.log("Result:");
-			console.log(result);
 			var model = result[0];
 			res.send({
 				code: "OK",
@@ -257,12 +287,87 @@ app.get('/api/message/:id', async (req, res) => {
 					deleted: model.deleted
 				}
 			});
-		}
-		var errorCallback = function(error){
+		},
+		function(error){
 			res.send(error);
-		}
-		var response = await query(queryString, successCallback, errorCallback); //is this necessary?
+		})
 	} catch (error){
 		res.send(error);
 	}
 })
+
+//message by project
+app.get("/api/message/projectID/:projectID", async(req,res)=>{
+	var id = req.params.projectID;
+	try{
+		var queryString = `SELECT * FROM message WHERE projectID = '${id}' AND deleted = 0`;
+		query(queryString, function(result){
+			if (result.length == 0){
+				res.send({
+					code: "NO_MESSAGES"
+				});
+				return;
+			}
+			res.send({
+				code: "OK",
+				messages: result
+			});
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+});
+
+app.put('/api/message/update/:id', async (req, res) => {
+	var editDate = Date.now;
+	var model = req.body;
+	try{
+		var queryString = `UPDATE message SET (content, editDate, priority, deleted) VALUES (${model.content}', '${editDate}', '${model.priority}', '${deleted}')
+							WHERE id = '${req.params.id}'`;
+		query(queryString, function(result){
+			if (result.length == 0){
+				res.send({
+					code: "INVALID_ID"
+				});
+				return;
+			}
+			var model = result[0];
+			res.send({ //also not sure if we need to send the model back here...
+				code: "OK",
+				model:{
+					id: model.id,
+					projectID: model.projectID,
+					userID: model.userID,
+					content: model.content,
+					timePublished: model.timePublished,
+					editDate: model.editDate,
+					priority: model.priority,
+					deleted: model.deleted
+				}
+			});
+		},
+		function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+})
+
+app.put("/api/message/delete/:id", async(req,res) =>{
+	var id = req.params.messageID;
+	try{
+		var queryString = `UPDATE message SET deleted = 1 WHERE id = ${id}`;
+		query(queryString, function(result){
+			res.send({
+				code: "OK"
+			});
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+});
