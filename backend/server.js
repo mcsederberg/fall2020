@@ -45,6 +45,11 @@ var generateUID = function() {
     });
 }
 
+///////////////////////////////////////////////////////////////////////////
+//////////////////////////////    USERS    ////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+//Login
 app.post('/api/login', async (req, res) => {
 	console.log(req.body);
 	var username = req.body.username;
@@ -91,7 +96,7 @@ app.post('/api/login', async (req, res) => {
 	}
 });
 
-
+//Register
 app.post('/api/register', async (req, res) => {
 	console.log(req.body);
 	var first = req.body.firstName;
@@ -125,6 +130,13 @@ app.post('/api/register', async (req, res) => {
 });
 
 
+
+///////////////////////////////////////////////////////////////////////////
+//////////////////////////////    TASKS    ////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+
+//Create task
 app.post("/api/task/create", async(req, res) => {
 	var id = generateUID();
 	var model = req.body;
@@ -155,6 +167,8 @@ app.post("/api/task/create", async(req, res) => {
 	}
 });
 
+
+//Get all tasks
 app.get("/api/tasks/projectID/:projectID", async(req,res)=>{
 	var id = req.params.projectID;
 	try{
@@ -178,7 +192,32 @@ app.get("/api/tasks/projectID/:projectID", async(req,res)=>{
 	}
 
 });
+//Get single task
+app.get("/api/task/taskID/:taskID", async(req,res)=>{
+	var id = req.params.taskID;
+	try{
+		var queryString = `SELECT * FROM  task WHERE id = '${id}' AND deleted = 0`;
+		query(queryString, function(result){
+			if (result.length == 0){
+				res.send({
+					code: "NO_TASK"
+				});
+				return;
+			}
+			res.send({
+				code: "OK",
+				tasks: result
+			});
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+});
 
+
+//Delete task
 app.put("/api/task/delete/task/:taskID", async(req,res) =>{
 	var id = req.params.taskID;
 	try{
