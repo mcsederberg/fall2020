@@ -16,7 +16,7 @@ const client = axios.create({
 export default {
 	async register(username, password, firstName, lastName){
 		return new Promise(function(resolve, reject){
-			var res = client.post("/api/register", {
+			var res = client.post("/api/user/register", {
 				username: username, 
 				password: password,
 				firstName: firstName,
@@ -48,7 +48,7 @@ export default {
 	},
 	async login(username, password){
 		return new Promise(function(resolve, reject){
-			var res =  client.post("/api/login",{
+			var res =  client.post("/api/user/login",{
 				username: username,
 				password: password
 			});	
@@ -170,7 +170,7 @@ export default {
 	},
 	async getTasksForProjectID(projectID){
 		return new Promise(function(resolve, reject){
-			var res = client.get("/api/tasks/projectID/" + projectID);
+			var res = client.get("/api/task/projectID/" + projectID);
 			res.then(function(response){
 				var code = response.data.code;
 				if (code !== "OK"){
