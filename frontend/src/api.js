@@ -114,7 +114,7 @@ export default {
 	},
 	async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
 		return new Promise(function(resolve, reject){
-			var res = client.post("/api/task/update", {
+			var res = client.put("/api/task/update", {
 				taskID: taskID,
 				projectID: projectID,
 				userID: userID,

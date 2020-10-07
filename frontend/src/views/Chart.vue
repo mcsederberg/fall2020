@@ -6,9 +6,8 @@
 </template>
 
 <script>
-// import api from '@/api'
-// import User from '../models/User'
 import {gantt} from 'dhtmlx-gantt';
+import Task from '../models/Task';
 export default {
 	name: 'Projects',
 	components: {
@@ -47,17 +46,57 @@ export default {
 						type: '0'
 					}
 				]
-			}
+			},
+			displayTasks: {data: [], links: []}
 		}
 	},
 	mounted: function(){
 		gantt.config.xml_date = "%Y-%m-%d";
 		gantt.config.readonly = true;
         gantt.init(this.$refs.gantt);
-        gantt.parse(this.tasks);
+        this.$root.$data.project = {id: "12345678911"};
+        this.$root.$data.user = {id: "b8dca12f9a28"}
+		this.getAllTasks();
 	},
 	methods: {
-		
+		getAllTasks: function(){
+            var vue = this;
+			var res = Task.getTasksForProjectID(this.$root.$data.project.id);
+			res.then(function(response){
+				var displayTasks = [];
+				for (var i in response) {
+					var task = response[i];
+					displayTasks.push({
+						id: task.id,
+						text: task.title,
+						start_date: vue.ganttDate(task.startDate),
+						duration: vue.dayDiff(new Date(task.startDate), new Date(task.dueDate)),
+						progress: 0,
+					});
+                }
+
+				vue.allTasks = response;
+				vue.displayTasks.data = displayTasks;
+				vue.showPopup = false;
+				gantt.parse(vue.displayTasks);
+			}).catch(function(e){
+				var code = e.error;
+				switch (code){
+                    default:
+					// case "ER_DUP_ENTRY":
+					// 	alert("That username is taken");
+					// 	break;
+				}
+			});
+		},
+		ganttDate: function(date){
+			return new Date(date).toString("yyyy-MM-dd");
+		},
+		dayDiff: function(date1, date2){
+			var Difference_In_Time = date2.getTime() - date1.getTime(); 
+			
+			return Difference_In_Time / (1000 * 3600 * 24); 
+		}
 	}
 }
 </script>

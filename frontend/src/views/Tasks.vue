@@ -76,6 +76,9 @@ export default {
 	},
 	methods: {
         SQLDateTime: function(date){
+            if (date == ""){
+                return "";
+            }
             return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
         },
         taskPopupFunction: function(){
@@ -139,6 +142,16 @@ export default {
         },
         createTaskPopup: function(){
             this.popupType = this.ACTIVITY_CREATE;
+            this.popupTask = {
+                title: "",
+                summary: "",
+                dueDate: "",
+                completedDate: "",
+                status: "",
+                percentComplete: "60",
+                startDate: "",
+                deleted: false,
+            };
             this.showPopup = true;
         },
         createTask: function(){
@@ -150,10 +163,21 @@ export default {
 				alert("You must fill in all of the fields");
 				return;
 			}
-			var res = Task.createTask(this.$root.$data.user.id, this.$root.$data.project.id, this.popupTask.title, this.popupTask.summary, this.popupTask.dueDate, this.popupTask.startDate, this.popupTask.completedDate, this.popupTask.status, this.popupTask.percentComplete);
+            var res = Task.createTask(
+                this.$root.$data.user.id, 
+                this.$root.$data.project.id, 
+                this.popupTask.title, 
+                this.popupTask.summary, 
+                this.SQLDateTime(this.popupTask.dueDate), 
+                this.SQLDateTime(this.popupTask.startDate), 
+                this.SQLDateTime(this.popupTask.completedDate), 
+                this.popupTask.status, 
+                this.popupTask.percentComplete
+            );
 			var vue = this;
 			res.then(function(response){
 				vue.allTasks.push(response);
+                vue.showPopup = false;
 			}).catch(function(e){
 				var code = e.error;	
 				switch (code){
