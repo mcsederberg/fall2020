@@ -24,8 +24,6 @@ export default class User {
 				reject(e);
 			});
 		})
-
-		// return api.login(username, password); //?
 	}
 	static async register(username, password, firstName, lastName){
 		return new Promise(function(resolve, reject){
