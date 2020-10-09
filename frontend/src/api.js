@@ -112,6 +112,41 @@ export default {
 			});
 		});
 	},
+	async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/task/update", {
+				taskID: taskID,
+				projectID: projectID,
+				userID: userID,
+				projectID: projectID,
+				title: title,
+				summary: summary,
+				dueDate: dueDate,
+				startDate: startDate,
+				completedDate: completedDate,
+				status: status,
+				percentComplete: percentComplete
+			});
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 	async deleteTask(id){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/task/delete/task/"+id);

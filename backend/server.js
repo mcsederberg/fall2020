@@ -58,4 +58,7 @@ var methods = {
 			return v.toString(16);
 		});
 	}
-}
+};
+
+
+exports.data = methods;

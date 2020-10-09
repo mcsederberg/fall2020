@@ -34,6 +34,36 @@ router.post("/create", async(req, res) => {
 	}
 });
 
+//update task
+router.put("/api/task/update", async(req, res) => {
+	var model = req.body;
+	try{
+		var queryString = `UPDATE task SET title ='${model.title}',	summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', status = '${model.status}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
+		server.data.query(queryString, function(result){
+			res.send({
+				code: "OK",
+				model: {
+					id: model.taskID,
+					userID: model.userID,
+					projectID: model.projectID,
+					title: model.title,
+					summary: model.summary,
+					dueDate: model.dueDate,
+					completedDate: model.completedDate,
+					status: model.status,
+					percentComplete: model.percentComplete,
+					startDate: model.startDate,
+					deleted: model.deleted
+				}
+			})
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+});
+
 
 //Get all tasks
 router.get("/projectID/:projectID", async(req,res)=>{

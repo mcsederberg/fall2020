@@ -45,6 +45,20 @@ export default class Task {
             });
         });
     }
+    static async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
+        return new Promise(function(resolve, reject){
+            var res = api.updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.task);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
     static async deleteTask(taskID){
         return new Promise(function(resolve, reject){
             var res = api.deleteTask(taskID);
@@ -59,8 +73,12 @@ export default class Task {
             });
         });
     }
+    duplicate(){
+        return JSON.parse(JSON.stringify(this));
+    }
     toJSON(){
         return {
+            id: this.id,
             userID: this.userID,
             projectID: this.projectID,
             title: this.title,
