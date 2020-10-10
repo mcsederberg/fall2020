@@ -2,6 +2,7 @@
 import axios from 'axios'
 import Task from './models/Task';
 import User from './models/User';
+import Hour from './models/Hour';
 
 const client = axios.create({
 //   baseURL: 'http://18.218.126.54:3000',
@@ -118,7 +119,6 @@ export default {
 				taskID: taskID,
 				projectID: projectID,
 				userID: userID,
-				projectID: projectID,
 				title: title,
 				summary: summary,
 				dueDate: dueDate,
@@ -195,6 +195,38 @@ export default {
 				return e;
 			});
 		});
-	}
+	},
+
+
+
+	/*      HOURS        */
+	
+	async createHours(userID, parentID, parentType){
+		return new Promise(function(resolve, reject){
+			var res = client.post("/api/hour/create", {
+				userID: userID,
+				parentID: parentID,
+				parentType: parentType,
+			});
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					task: new Hour(model.id, "", model.userID, model.parentID, model.parentType)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 	
 }

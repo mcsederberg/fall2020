@@ -1,43 +1,46 @@
 sele<template>
-    <div class="w-full h-full">
-        <i @click="createTaskPopup()" style="right: 50px; top: 75px; font-size: 35px;" class="fa fa-plus absolute text-primary-alt cursor-pointer"/>
-        <div class="w-full h-full flex flex-col">
-            <div class="flex w-1/2 mx-auto mt-4">
-                <div class="text-lg">My Tasks</div>
-                <div class="taskHours flex justify-between ml-auto">
-                    <p class="self-center mr-4">Hours: {{projectHours}}</p>
-                    <div class="flex"><p class="cursor-pointer border px-6 py-1 rounded-l-lg" @click="clockIn()">in</p><p class="cursor-pointer border px-6 py-1 rounded-r-lg" @click="clockOut()">out</p></div>
+    <div class="w-full h-full bg-lightBlue">
+        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8">
+            <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
+            <div class="w-full h-full flex flex-col">
+                <div class="flex w-1/2 mx-auto mt-4">
+                    <div class="text-xxxlg">My Tasks</div>
                 </div>
-            </div>
-            <div v-for="(task, index) in allTasks" :key="index" class="flex flex-col self-center w-1/2 border my-3 p-4">
-             <i class="fa fa-times cursor-pointer ml-auto" @click="deleteTask(task.id)"/>
-                <div class="taskHeader flex justify-between">
-                    <p class="text-center text-lg">{{task.title}}  <i class="far fa-edit cursor-pointer" @click="editActivityPopup(task)"/></p><p class="float-right">Due: {{prettyDate(task.dueDate)}}</p>
-                </div>
-                <div class="taskDescription ml-2">
-                    {{task.summary}}
+                <div v-for="(task, index) in sortedTasks" :key="index" class="flex flex-col self-center w-1/2 border my-3 p-4 bg-header">
+                <i class="fa fa-times cursor-pointer ml-auto" @click="deleteTask(task.id)"/>
+                    <div class="taskHeader flex justify-between">
+                        <p class="text-center text-lg">{{task.title}}  <i class="far fa-edit cursor-pointer text-teal" @click="editActivityPopup(task)"/></p><p class="float-right">Due: {{prettyDate(task.dueDate)}}</p>
+                    </div>
+                    <div class="taskDescription ml-2">
+                        {{task.summary}}
+                    </div>
                 </div>
             </div>
         </div>
 
 
-
-        <div v-if="showPopup" id="newTaskPopup" class="flex flex-col absolute border p-5 bg-action" style="left: 45%; top: 20%;">
-            <div class="flex">
-                <i @click="showPopup=false" class="fa fa-remove cursor-pointer"/> <p class="self-center mx-auto">{{popupType == ACTIVITY_CREATE? 'New Task' : 'Update Task'}}</p>
+        <div v-if="showPopup" class="w-screen h-screen fixed top-0 left-0 bg-blur">
+            <div id="newTaskPopup" class="flex flex-col absolute border-8 p-3 bg-darkBlue" style="left: 40%; top: 20%;">
+                <div class="flex">
+                    <p class="self-center text-xxxlg">{{popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'}}</p> <i @click="showPopup=false" class="ml-auto float-right fa fa-remove cursor-pointer"/>
+                </div>
+                <div class="border px-3 pt-3">
+                    <div class="flex flex-row">
+                        <div class="my-1"><label for="newStartDate">Start Date: </label><input id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
+                        <div class="my-1 ml-2"><label for="newDueDate">Due Date: </label><input id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
+                    </div>
+                    <div class="my-1"><label for="newCompletedDate">Completed Date: </label><input id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
+                    <div class="my-1"><label for="newStatus">Status: </label>
+                        <select class="bg-darkBlue border" v-model="popupTask.status">
+                            <option default class="bg-darkBlue border" value="open">In Progress</option>
+                            <option class="bg-darkBlue border" value="closed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="my-1"><label for="newTitle">Title: </label><input id="newTitle" v-model="popupTask.title" class="ml-2 px-1 bg-darkBlue border"/></div>
+                    <div class="my-1"><label for="newSummary">Description (Optional): </label><br><textarea id="newSummary" v-model="popupTask.summary" class="w-full px-1 bg-darkBlue border"/></div>
+                </div>
+                <div class="ml-auto mt-3 border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
             </div>
-            <div class="my-1"><label for="newTitle">Title: </label><input id="newTitle" v-model="popupTask.title" class="ml-2 px-1 float-right text-dark"/></div>
-            <div class="my-1"><label for="newSummary">Summary: </label><input id="newSummary" v-model="popupTask.summary" class="ml-2 px-1 float-right text-dark"/></div>
-            <div class="my-1"><label for="newStartDate">StartDate: </label><input id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right text-dark"/></div>
-            <div class="my-1"><label for="newDueDate">Due Date: </label><input id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right text-dark"/></div>
-            <div class="my-1"><label for="newCompletedDate">Completed Date: </label><input id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 float-right text-dark"/></div>
-            <div class="my-1"><label for="newStatus">Status: </label>
-                <select class="text-dark float-right" v-model="popupTask.status">
-                    <option default class="text-dark" value="open">Open</option>
-                    <option class="text-dark" value="closed">Closed</option>
-                </select>
-            </div>
-            <div class="self-center border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
         </div>
     </div>
 </template>
@@ -45,18 +48,18 @@ sele<template>
 <script>
 import Task from '../models/Task';
 export default {
-	name: 'Tasks',
-	components: {
-	},
-	data: function(){
-		return{
+    name: 'Tasks',
+    components: {
+    },
+    data: function(){
+        return{
             showPopup: false,
             popupTask: {
                 title: "",
                 summary: "",
                 dueDate: "",
                 completedDate: "",
-                status: "",
+                status: "open",
                 percentComplete: "60",
                 startDate: "",
                 deleted: false,
@@ -66,15 +69,21 @@ export default {
             popupType: null,
             ACTIVITY_CREATE: 0,
             ACTIVITY_EDIT: 1,
-		}
-	},
-	mounted: function(){
+            clockedIn: false,
+        }
+    },
+    mounted: function(){
         this.$root.$data.project = {id: "12345678911"};
         this.$root.$data.user = {id: "b8dca12f9a28"}
 
         this.getAllTasks();
-	},
-	methods: {
+    },
+    computed: {
+        sortedTasks: function(){
+            return this.allTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+        }
+    },
+    methods: {
         SQLDateTime: function(date){
             if (date == ""){
                 return "";
@@ -103,10 +112,10 @@ export default {
             || this.popupTask.dueDate == "" 
             || this.popupTask.status == ""
             || this.popupTask.startDate == ""){
-				alert("You must fill in all of the fields");
-				return;
-			}
-			var res = Task.updateTask(
+                alert("You must fill in all of the fields");
+                return;
+            }
+            var res = Task.updateTask(
                 this.popupTask.id, 
                 this.$root.$data.user.id, 
                 this.$root.$data.project.id,
@@ -118,8 +127,8 @@ export default {
                 this.popupTask.status, 
                 this.popupTask.percentComplete
             );
-			var vue = this;
-			res.then(function(response){
+            var vue = this;
+            res.then(function(response){
                 for (var i in vue.allTasks) {
                     if (vue.allTasks[i].id == response.id) {
                         vue.$set(vue.allTasks, i, response);
@@ -127,18 +136,18 @@ export default {
                     }
                 }
                 vue.showPopup = false;
-			}).catch(function(e){
-				var code = e.error;	
-				switch (code){
+            }).catch(function(e){
+                var code = e.error;	
+                switch (code){
                     default:
-					// case "INCORRECT_PASSWORD":
-					// 	alert("Incorrect password");
-					// 	break;
-					// case "INVALID_USERNAME":
-					// 	alert("Invalid username");
-					// 	break;
-				}
-			});
+                    // case "INCORRECT_PASSWORD":
+                    // 	alert("Incorrect password");
+                    // 	break;
+                    // case "INVALID_USERNAME":
+                    // 	alert("Invalid username");
+                    // 	break;
+                }
+            });
         },
         createTaskPopup: function(){
             this.popupType = this.ACTIVITY_CREATE;
@@ -147,7 +156,7 @@ export default {
                 summary: "",
                 dueDate: "",
                 completedDate: "",
-                status: "",
+                status: "open",
                 percentComplete: "60",
                 startDate: "",
                 deleted: false,
@@ -160,9 +169,9 @@ export default {
             || this.popupTask.dueDate == "" 
             || this.popupTask.status == ""
             || this.popupTask.startDate == ""){
-				alert("You must fill in all of the fields");
-				return;
-			}
+                alert("You must fill in all of the fields");
+                return;
+            }
             var res = Task.createTask(
                 this.$root.$data.user.id, 
                 this.$root.$data.project.id, 
@@ -174,55 +183,55 @@ export default {
                 this.popupTask.status, 
                 this.popupTask.percentComplete
             );
-			var vue = this;
-			res.then(function(response){
-				vue.allTasks.push(response);
+            var vue = this;
+            res.then(function(response){
+                vue.allTasks.push(response);
                 vue.showPopup = false;
-			}).catch(function(e){
-				var code = e.error;	
-				switch (code){
+            }).catch(function(e){
+                var code = e.error;	
+                switch (code){
                     default:
-					// case "INCORRECT_PASSWORD":
-					// 	alert("Incorrect password");
-					// 	break;
-					// case "INVALID_USERNAME":
-					// 	alert("Invalid username");
-					// 	break;
-				}
-			});
+                    // case "INCORRECT_PASSWORD":
+                    // 	alert("Incorrect password");
+                    // 	break;
+                    // case "INVALID_USERNAME":
+                    // 	alert("Invalid username");
+                    // 	break;
+                }
+            });
         },
         getAllTasks: function(){
             var vue = this;
-			var res = Task.getTasksForProjectID(this.$root.$data.project.id);
-			res.then(function(response){
+            var res = Task.getTasksForProjectID(this.$root.$data.project.id);
+            res.then(function(response){
                 vue.allTasks = response;
                 vue.showPopup = false;
-			}).catch(function(e){
-				var code = e.error;
-				switch (code){
+            }).catch(function(e){
+                var code = e.error;
+                switch (code){
                     default:
-					// case "ER_DUP_ENTRY":
-					// 	alert("That username is taken");
-					// 	break;
-				}
-			});
+                    // case "ER_DUP_ENTRY":
+                    // 	alert("That username is taken");
+                    // 	break;
+                }
+            });
         },
         deleteTask: function(taskID){
             var vue = this;
-			var res = Task.deleteTask(taskID);
-			res.then(function(){
+            var res = Task.deleteTask(taskID);
+            res.then(function(){
                 vue.allTasks = vue.allTasks.filter(function(task){
                     return task.id !== taskID;
                 });
-			}).catch(function(e){
-				var code = e.error;
-				switch (code){
+            }).catch(function(e){
+                var code = e.error;
+                switch (code){
                     default:
-					// case "ER_DUP_ENTRY":
-					// 	alert("That username is taken");
-					// 	break;
-				}
-			});
+                    // case "ER_DUP_ENTRY":
+                    // 	alert("That username is taken");
+                    // 	break;
+                }
+            });
         },
         prettyDate: function(dateString){
             var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -241,7 +250,7 @@ export default {
         clockOut: function(){
 
         }
-	}
+    }
 }
 </script>
 

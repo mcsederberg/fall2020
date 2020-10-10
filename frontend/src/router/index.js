@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import Tasks from '../views/Tasks.vue'
 import Chart from '../views/Chart.vue'
 import Login from '../views/Login.vue'
@@ -13,11 +12,6 @@ const routes = [
 		path: '/',
 		name: 'Login',
 		component: Login
-	},
-	{
-		path: '/home',
-		name: 'Home',
-		component: Home
 	},
 	{
 		path: '/projects',

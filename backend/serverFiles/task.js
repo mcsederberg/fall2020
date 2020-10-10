@@ -35,7 +35,7 @@ router.post("/create", async(req, res) => {
 });
 
 //update task
-router.put("/api/task/update", async(req, res) => {
+router.put("/update", async(req, res) => {
 	var model = req.body;
 	try{
 		var queryString = `UPDATE task SET title ='${model.title}',	summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', status = '${model.status}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;

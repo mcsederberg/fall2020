@@ -53,6 +53,10 @@ export default {
 	mounted: function(){
 		gantt.config.xml_date = "%Y-%m-%d";
 		gantt.config.readonly = true;
+		gantt.config.scales = [{
+			unit: "week",
+			step: 1
+		}]
         gantt.init(this.$refs.gantt);
         this.$root.$data.project = {id: "12345678911"};
         this.$root.$data.user = {id: "b8dca12f9a28"}
@@ -76,7 +80,7 @@ export default {
                 }
 
 				vue.allTasks = response;
-				vue.displayTasks.data = displayTasks;
+				vue.displayTasks.data = displayTasks.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
 				vue.showPopup = false;
 				gantt.parse(vue.displayTasks);
 			}).catch(function(e){
