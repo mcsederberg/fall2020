@@ -1,25 +1,32 @@
 <template>
-    <div id="app">
-        <div id="header" class="bg-header flex flex-col fixed w-full z-10">
-            <div id="headerTabs" class="flex flex-row border-orange border-b" v-if="$route.name !== 'Login' && $route.name !== 'Projects'">
+    <div v-if="!$route.Login" id="app">
+        <div id="header" class="bg-header flex flex-col w-full z-10" v-if="$route.name !== 'Login' && $route.name !== 'Projects'">
+            <div id="headerTabs" class="flex flex-row border-orange border-b">
                 <router-link to="/tasks" class="sidebarOption">My Tasks</router-link>
                 <router-link to="/chart" class="sidebarOption">Team Progress</router-link> 
                 <router-link to="/messages" class="sidebarOption">Idea Board</router-link> 
-
-                <router-link to="/profile" class="sidebarOption ml-auto">My Profile</router-link> 
+                <div @mouseover="openProfileDropdown = true" @mouseleave="openProfileDropdown = false" class="sidebarOption ml-auto">
+                    <div class="">My Profile</div>
+                    <div v-if="openProfileDropdown" class="mt-3 w-full border-b border-l border-r border-orange bg-header absolute">
+                        <div @click="logout"class="m-2">Logout</div>
+                    </div> 
+                </div>
             </div>
-            <div class="flex text-xxxlg mr-5">
+            <div class="flex text-xxxlg m-5">
                 <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
                 <span class="self-center">
                     Project: {{projectName}} <router-link to="/projects" class="sidebarOption"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
                 </span>
                 <div v-if="$route.name === 'Tasks'" class="taskHours flex justify-between ml-auto text-sm">
                     <p class="self-center mr-4">Hours: {{projectHours}}</p>
-                    <div class="flex self0center"><p class="cursor-pointer border px-6 py-1 rounded-l-lg text-dark self-center" :class="[{'bg-orange':clockedIn, 'bg-gray':!clockedIn}]"  @click="clockIn()">in</p><p class="cursor-pointer border px-6 py-1 rounded-r-lg text-dark self-center" :class="[{'bg-orange':!clockedIn, 'bg-gray':clockedIn}]" @click="clockOut()">out</p></div>
+                    <div class="flex self-center">
+                        <p class="cursor-pointer py-1 rounded-l-lg text-darkBlue flex justify-center w-16" :class="[{'bg-orange':clockedIn, 'bg-gray':!clockedIn}]"  @click="clockIn()">in</p>
+                        <p class="cursor-pointer py-1 rounded-r-lg text-darkBlue flex justify-center w-16" :class="[{'bg-orange':!clockedIn, 'bg-gray':clockedIn}]" @click="clockOut()">out</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="mainWrapper" style="margin-top: 102px; ">
+        <div id="mainWrapper">
             <router-view/>
         </div>
     </div>
@@ -35,13 +42,24 @@ export default {
             projectName: "Forklift",
             projectHours: 0,
             clockedIn: false,
+            openProfileDropdown: false
 		}
 	},
 	mounted: function(){
 
 	},
 	methods: {
-		
+		logout: function() {
+            this.$root.$data.user = {};
+            this.$root.$data.project = {};
+            this.$router.push('/');
+        },
+        clockIn: function() {
+            this.clockedIn = true;
+        },
+        clockOut: function() {
+            this.clockedIn = false;
+        }
 	}
 }
 </script>
@@ -72,7 +90,7 @@ export default {
 
 #headerTabs a.router-link-exact-active {
     color: #ef8354;
-    border-bottom: 1px solid #ef8354;
+    border-bottom: 2px solid #ef8354;
 }
 .title{
     margin: auto 0px;
