@@ -1,5 +1,5 @@
-sele<template>
-    <div class="w-full h-full bg-lightBlue">
+<template>
+    <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
         <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8">
             <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
             <div class="w-full h-full flex flex-col">
@@ -7,13 +7,17 @@ sele<template>
                     <div class="text-xxxlg">My Tasks</div>
                 </div>
                 <div v-for="(task, index) in sortedTasks" :key="index" class="flex flex-col self-center w-1/2 border my-3 p-4 bg-header">
-                <i class="fa fa-times cursor-pointer ml-auto" @click="deleteTask(task.id)"/>
-                    <div class="taskHeader flex justify-between">
-                        <p class="text-center text-lg">{{task.title}}  <i class="far fa-edit cursor-pointer text-teal" @click="editActivityPopup(task)"/></p><p class="float-right">Due: {{prettyDate(task.dueDate)}}</p>
+                    <i class="fa fa-times cursor-pointer ml-auto" @click="deleteTask(task.id)"/>
+                    <div class="taskHeader flex justify-between items-center mt-2">
+                        <p class="text-center text-lg">{{task.title}}
+                            <i class="far fa-edit cursor-pointer text-teal" @click="editActivityPopup(task)"/>
+                        </p>
+                        <p class="float-right">Due: {{prettyDate(task.dueDate)}}</p>
                     </div>
-                    <div class="taskDescription ml-2">
+                    <div class="taskDescription ml-3 mt-3">
                         {{task.summary}}
                     </div>
+                    <div class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
                 </div>
             </div>
         </div>
@@ -30,7 +34,7 @@ sele<template>
                         <div class="my-1 ml-2"><label for="newDueDate">Due Date: </label><input id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
                     </div>
                     <div class="my-1"><label for="newCompletedDate">Completed Date: </label><input id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
-                    <div class="my-1"><label for="newStatus">Status: </label>
+                    <div class="my-1 cursor-pointer"><label for="newStatus">Status: </label>
                         <select class="bg-darkBlue border" v-model="popupTask.status">
                             <option default class="bg-darkBlue border" value="open">In Progress</option>
                             <option class="bg-darkBlue border" value="closed">Completed</option>
@@ -244,12 +248,6 @@ export default {
         popupDate: function(dateString){
             return new Date(dateString).toString("MMM dd yyyy");
         },
-        clockIn: function(){
-
-        },
-        clockOut: function(){
-
-        }
     }
 }
 </script>
