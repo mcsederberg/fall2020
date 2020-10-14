@@ -21,10 +21,10 @@ const hour = require("./serverFiles/hour.js");
 app.use('/api/hour', hour.routes);
 
 const message = require("./serverFiles/message.js");
-app.use('/api/hour', message.routes);
+app.use('/api/message', message.routes);
 
 const project = require("./serverFiles/project.js");
-app.use('/api/hour', project.routes);
+app.use('/api/project', project.routes);
 
 var connection = mysql.createConnection({
 	host: '34.71.2.189',
@@ -57,6 +57,15 @@ var methods = {
 			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
 			return v.toString(16);
 		});
+	},
+	SQLDateTime: function(date){
+		if (date == ""){
+			return "";
+		}
+		return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+	},
+	SQLNow: function(){
+		return new Date().toISOString().slice(0, 19).replace('T', ' ');
 	}
 };
 

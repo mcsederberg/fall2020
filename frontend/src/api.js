@@ -3,6 +3,7 @@ import axios from 'axios'
 import Task from './models/Task';
 import User from './models/User';
 import Hour from './models/Hour';
+import Project from './models/Project';
 
 const client = axios.create({
 //   baseURL: 'http://18.218.126.54:3000',
@@ -201,9 +202,9 @@ export default {
 
 	/*      HOURS        */
 	
-	async createHours(userID, parentID, parentType){
+	async clockIn(userID, parentID, parentType){
 		return new Promise(function(resolve, reject){
-			var res = client.post("/api/hour/create", {
+			var res = client.post("/api/hour/clockIn", {
 				userID: userID,
 				parentID: parentID,
 				parentType: parentType,
@@ -220,7 +221,7 @@ export default {
 				var model = response.data.model;
 				resolve({
 					status: "OK",
-					task: new Hour(model.id, "", model.userID, model.parentID, model.parentType)
+					hour: new Hour(model.id, model.userID, model.parentID, model.parentType, model.clockedIn, model.clockedOut)
 				})
 				return;
 			}).catch(function(e){
@@ -228,5 +229,88 @@ export default {
 			});
 		});
 	},
+	async clockOut(hourID){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/hour/clockOut", {
+				hourID: hourID
+			});
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					hour: new Hour(model.id, model.userID, model.parentID, model.parentType, model.clockedIn, model.clockedOut)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async getHoursByParentIDAndUserID(parentID, userID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/hour/getHours/parentID/" + parentID + "/userID/" + userID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var models = response.data.models;
+				var hours = []
+				for (var i = 0; i < models.length; i++){
+					var model = models[i];
+					hours.push(new Hour(model.id, model.userID, model.parentID, model.parentType, model.clockedIn, model.clockedOut));
+				}
+				resolve({
+					status: "OK",
+					hours: hours
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+
+	/*           MAPPERS            */
 	
+	async getProjectsByUserID(userID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/project/getProjects/userID/" + userID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var models = response.data.projects;
+				var projects = []
+				for (var i = 0; i < models.length; i++){
+					var model = models[i];
+					projects.push(new Project(model.projectID, model.title, model.summary, model.ownerID, model.deleted));
+				}
+				resolve({
+					status: "OK",
+					projects: projects
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 }

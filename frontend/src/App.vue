@@ -8,7 +8,7 @@
                 <div @mouseover="openProfileDropdown = true" @mouseleave="openProfileDropdown = false" class="sidebarOption ml-auto">
                     <div class="">My Profile</div>
                     <div v-if="openProfileDropdown" class="mt-3 w-full border-b border-l border-r border-orange bg-header absolute">
-                        <div @click="logout"class="m-2">Logout</div>
+                        <div @click="logout" class="m-2">Logout</div>
                     </div> 
                 </div>
             </div>

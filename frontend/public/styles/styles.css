@@ -7,6 +7,9 @@ body, html, #app, #mainWrapper{
     height: 100%;
     width: 100%;
 }
+html{
+    min-height: fit-content;
+}
 #app{
     display: flex;
     flex-direction: column;
