@@ -52,11 +52,11 @@
 <script>
 import Task from '../models/Task';
 export default {
-    name: 'Tasks',
-    components: {
-    },
-    data: function(){
-        return{
+	name: 'Tasks',
+	components: {
+	},
+	data: function(){
+		return{
             showPopup: false,
             popupTask: {
                 title: "",

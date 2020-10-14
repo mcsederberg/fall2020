@@ -14,7 +14,7 @@
 			</div>
 			<div class="my-1 flex flex-col">
 				<label for="loginPassword">Password: </label>
-				<input id="loginPassword" v-model="loginPassword" type="password" class="px-1 float-right text-dark"/>
+				<input id="loginPassword" @keyup.enter="login" v-model="loginPassword" type="password" class="px-1 float-right text-dark"/>
 			</div>
 			<button class="mt-3 bg-orange" @click="login">Login</button>
 		</div>

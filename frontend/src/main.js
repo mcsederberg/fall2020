@@ -6,7 +6,8 @@ import './tailwind-vue.css'
 Vue.config.productionTip = false
 
 let data = {
-	user: null
+	user: null,
+	project: null
 }
 
 new Vue({
