@@ -9,12 +9,12 @@
                 </template>
                 <div @mouseover="openProfileDropdown = true" @mouseleave="openProfileDropdown = false" class="sidebarOption ml-auto">
                     <div class="">My Profile</div>
-                    <div v-if="openProfileDropdown" class="mt-3 w-full border-b border-l border-r border-orange bg-header absolute">
+                    <div v-if="openProfileDropdown" class="mt-3 border-b border-l border-r border-orange bg-header absolute">
                         <div @click="logout" class="m-2">Logout</div>
                     </div> 
                 </div>
             </div>
-            <div class="flex text-xxxlg m-5">
+            <div class="flex text-xxxlg m-5 w-2/3 self-center">
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
                     <span class="self-center">
@@ -29,7 +29,7 @@
                     </div>
                 </template>
                 <template v-else>
-                    <span class="ml-12">My Projects</span>
+                    <span class="ml-4">My Projects</span>
                 </template>
             </div>
         </div>
@@ -52,8 +52,18 @@ export default {
             openProfileDropdown: false
 		}
 	},
-	mounted: function(){
-
+    created: function() {
+        if (this.$route.name == 'Login') {
+            document.body.style.overflow = 'hidden';
+        }
+    },
+	beforeUpdate: function(){
+        if (this.$route.name == 'Login') {
+            document.body.style.overflow = 'hidden';
+        }
+        else {
+            document.body.style.removeProperty("overflow");
+        }
 	},
 	methods: {
 		logout: function() {

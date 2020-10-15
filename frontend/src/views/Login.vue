@@ -1,12 +1,18 @@
 
 <template>
 	<div class="w-full h-full flex bg-darkBlue">
-		<div v-if="screen === 'main'" class="flex flex-col m-auto w-64 h-64 bg-header">
+		<div class="absolute">
+			<div id="decoration" class="top relative border-orange transform origin-center h-16 -rotate-45"></div>
+		</div>
+		<div class="absolute right-0 bottom-0 ">
+			<div id="decoration" class="bottom relative border-orange transform origin-center h-16 -rotate-45"></div>
+		</div>
+		<div v-if="screen === 'main'" id="loginRegisterBox" class="text-lg flex flex-col m-auto bg-header">
 			<button @click="setScreen('login')"    class="mt-auto mx-auto w-1/2 border mb-3">Login</button>
 			<button @click="setScreen('register')" class="mb-auto mx-auto w-1/2 border">Register</button>
 		</div>
-		<div v-else-if="screen === 'login'" class="flex flex-col m-auto p-10 bg-header loginWidth">
-			<img src="../../public/images/forklift-white.png" class="max-w-none w-24 self-center py-10"/>
+		<div v-else-if="screen === 'login'" id="loginRegisterBox" class="flex flex-col justify-center text-md m-auto p-16 bg-header loginWidth">
+			<img src="../../public/images/forklift-white.png" class="max-w-none w-24 self-center pb-10"/>
 			<div class="flex"><i @click="reset" class="fa fa-arrow-left cursor-pointer"/></div>
 			<div class="my-1 flex flex-col">
 				<label for="loginUsername">Username: </label>
@@ -18,8 +24,8 @@
 			</div>
 			<button class="mt-3 bg-orange" @click="login">Login</button>
 		</div>
-		<div v-else-if="screen === 'register'" class="flex flex-col m-auto p-10 bg-header loginWidth">
-			<img src="../../public/images/forklift-white.png" class="max-w-none w-24 self-center py-10"/>
+		<div v-else-if="screen === 'register'" id="loginRegisterBox" class="flex flex-col justify-center text-md m-auto p-16 bg-header loginWidth">
+			<img src="../../public/images/forklift-white.png" class="max-w-none w-24 self-center pb-10"/>
 			<div class="flex"><i @click="reset" class="fa fa-arrow-left cursor-pointer"/></div>
 			<div class="my-1 flex flex-col">
 				<label for="registerFirstName">First name: </label>
@@ -43,8 +49,22 @@
 </template>
 
 <style scoped>
-.loginWidth {
-	width: 20rem;
+#decoration {
+	border-width: 24px;
+	width: 28rem;
+}
+.top {
+	top: 6rem;
+	right: 20%;
+}
+.bottom {
+	bottom: 6rem;
+	left: 20%;
+}
+
+#loginRegisterBox {
+	width: 30rem;
+	height: 36rem;
 }
 </style>
 
