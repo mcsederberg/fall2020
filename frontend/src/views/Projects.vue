@@ -39,7 +39,17 @@ export default {
 	},
 	methods: {
 		createProject: function() {
-
+			let vue = this;
+			var res = Project.createProject(this.newProject.title, this.newProject.summary, this.$root.$data.user.id);
+            res.then(function(response){
+				console.log(response);
+				vue.projects.unshift(response);
+				vue.newProject = {};
+				vue.showPopup = false;
+            }).catch(function(e){
+				var code = e.error;
+				console.log(code);
+            });
 		},
 		getAllProjects: function(){
 			var vue = this;

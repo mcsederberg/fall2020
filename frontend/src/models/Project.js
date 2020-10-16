@@ -23,6 +23,20 @@ export default class Project {
             });
         });
     }
+    static async createProject(title, summary, userID) {
+        return new Promise(function(resolve, reject){
+            var res = api.createProject(userID, title, summary);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.project);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
     toJSON(){
         return {
             id: this.id,
