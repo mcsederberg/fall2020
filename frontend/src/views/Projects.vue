@@ -10,9 +10,9 @@
 
 
 		<Popup v-if="showPopup" id="newProjectPopup" @closed="showPopup = false" title="New Project">
-			<div class="my-1"><label for="newTitle">Title: </label><input id="newTitle" v-model="newProject.title" class="ml-2 px-1 float-right text-dark"/></div>
-			<div class="my-1"><label for="newSummary">Summary: </label><input id="newSummary" v-model="newProject.summary" class="ml-2 px-1 float-right text-dark"/></div>
-			<div class="self-center border padding-2 cursor-pointer" @click="createProject">Create</div>
+			<div class="my-4"><label for="newTitle">Title: </label><input id="newTitle" v-model="newProject.title" class="ml-2 px-1 float-right bg-darkBlue border"/></div>
+			<div class="my-4"><label for="newSummary">Summary: </label><input id="newSummary" v-model="newProject.summary" class="ml-2 px-1 float-right bg-darkBlue border"/></div>
+			<div class="float-right px-4 py-2 self-center border padding-2 cursor-pointer" @click="createProject">Create</div>
 			<!--Todo, add members to the project-->
 		</Popup>
 	</div>

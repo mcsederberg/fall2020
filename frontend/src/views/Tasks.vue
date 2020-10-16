@@ -23,11 +23,8 @@
         </div>
 
 
-        <div v-if="showPopup" class="w-screen h-screen fixed top-0 left-0 bg-blur">
-            <div id="newTaskPopup" class="flex flex-col absolute border-8 p-3 bg-darkBlue" style="left: 40%; top: 20%;">
-                <div class="flex">
-                    <p class="self-center text-xxxlg">{{popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'}}</p> <i @click="showPopup=false" class="ml-auto float-right fa fa-remove cursor-pointer"/>
-                </div>
+        <Popup v-if="showPopup" id="newTaskPopup" :title="popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'" @closed="showPopup=false">
+            <div class="flex flex-col">
                 <div class="border px-3 pt-3">
                     <div class="flex flex-row">
                         <div class="my-1"><label for="newStartDate">Start Date: </label><input id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
@@ -45,15 +42,17 @@
                 </div>
                 <div class="ml-auto mt-3 border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
             </div>
-        </div>
+        </Popup>
     </div>
 </template>
 
 <script>
 import Task from '../models/Task';
+import Popup from '../components/Popup';
 export default {
 	name: 'Tasks',
 	components: {
+        Popup:Popup
 	},
 	data: function(){
 		return{
