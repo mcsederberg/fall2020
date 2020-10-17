@@ -20,8 +20,10 @@
 </template>
 
 <script>
-import Project from '../models/Project'
-import Popup from '../components/Popup'
+import Project from '../models/Project';
+import User from '../models/User';
+import Popup from '../components/Popup';
+import  Cookies from '../mixins/Cookies'
 export default {
 	name: 'Projects',
 	components: {
@@ -35,12 +37,14 @@ export default {
 		}
 	},
 	mounted: function(){
+		var userObj = JSON.parse(Cookies.getCookie("user"));
+		this.user = new User(userObj.id, userObj.username, userObj.password, userObj.firstName, userObj.lastName);
 		this.getAllProjects();
 	},
 	methods: {
 		createProject: function() {
 			let vue = this;
-			var res = Project.createProject(this.newProject.title, this.newProject.summary, this.$root.$data.user.id);
+			var res = Project.createProject(this.newProject.title, this.newProject.summary, this.user.id);
             res.then(function(response){
 				console.log(response);
 				vue.projects.unshift(response);
@@ -53,7 +57,7 @@ export default {
 		},
 		getAllProjects: function(){
 			var vue = this;
-            var res = Project.getUserProjects(this.$root.$data.user.id);
+            var res = Project.getUserProjects(this.user.id);
             res.then(function(response){
                 vue.projects = response;
             }).catch(function(e){
@@ -62,7 +66,8 @@ export default {
             });
 		},
 		openProject: function(id) {
-			this.$root.$data.project = this.projects.find(project => project.id == id);
+			var project = this.projects.find(project => project.id == id);
+			Cookies.setCookie("project", JSON.stringify(project), "1");
 			this.$router.push('/tasks');
 		}
 	}

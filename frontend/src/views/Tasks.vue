@@ -49,6 +49,7 @@
 <script>
 import Task from '../models/Task';
 import Popup from '../components/Popup';
+import Cookies from '../mixins/Cookies';
 export default {
 	name: 'Tasks',
 	components: {
@@ -73,12 +74,12 @@ export default {
             ACTIVITY_CREATE: 0,
             ACTIVITY_EDIT: 1,
             clockedIn: false,
+            user: {},
+            project: {},
         }
     },
     mounted: function(){
-        this.$root.$data.project = {id: "12345678911"};
-        this.$root.$data.user = {id: "b8dca12f9a28"}
-
+        this.getCookies();
         this.getAllTasks();
     },
     computed: {
@@ -87,6 +88,10 @@ export default {
         }
     },
     methods: {
+        getCookies: function(){
+            this.user = Cookies.getUser();
+            this.project = Cookies.getProject();
+        },
         SQLDateTime: function(date){
             if (date == ""){
                 return "";
@@ -120,8 +125,8 @@ export default {
             }
             var res = Task.updateTask(
                 this.popupTask.id, 
-                this.$root.$data.user.id, 
-                this.$root.$data.project.id,
+                this.user.id, 
+                this.project.id,
                 this.popupTask.title, 
                 this.popupTask.summary,
                 this.SQLDateTime(this.popupTask.dueDate), 
@@ -176,8 +181,8 @@ export default {
                 return;
             }
             var res = Task.createTask(
-                this.$root.$data.user.id, 
-                this.$root.$data.project.id, 
+                this.user.id, 
+                this.project.id, 
                 this.popupTask.title, 
                 this.popupTask.summary, 
                 this.SQLDateTime(this.popupTask.dueDate), 
@@ -205,7 +210,7 @@ export default {
         },
         getAllTasks: function(){
             var vue = this;
-            var res = Task.getTasksForProjectID(this.$root.$data.project.id);
+            var res = Task.getTasksForProjectID(this.project.id);
             res.then(function(response){
                 vue.allTasks = response;
                 vue.showPopup = false;

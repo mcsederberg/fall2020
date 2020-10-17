@@ -26,22 +26,40 @@ app.use('/api/message', message.routes);
 const project = require("./serverFiles/project.js");
 app.use('/api/project', project.routes);
 
-var connection = mysql.createConnection({
-	host: '34.71.2.189',
-	user: 'forklift',
-	password: 'tomato',
-	database: 'forklift'
-});
 
-connection.connect(function(err){
-	if (err){
-		console.log("Couldn't connect: " + err);
-		throw err;
-	} 
-	console.log("connected to database");
-	app.listen(3000, () => console.log('Server listening on port 3000!!'));
-});
 
+
+
+
+var connection;
+
+function handleDisconnect() {
+	connection = mysql.createConnection({
+		host: '34.71.2.189',
+		user: 'forklift',
+		password: 'tomato',
+		database: 'forklift'
+	});
+
+	connection.connect(function(err){
+		if (err){
+			console.log("Couldn't connect: " + err);
+			throw err;
+		} 
+		console.log("connected to database");
+		app.listen(3000, () => console.log('Server listening on port 3000!!'));
+	});
+	connection.on('error', function(err) {
+		console.log('db error', err);
+		if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
+			handleDisconnect();   
+		} else {                                      
+			throw err;                                 
+		}
+	});
+}
+
+handleDisconnect();
 var methods = {
 	async query(sql, successCallback, errorCallback){ //TODO move these to a shared location
 		connection.query(sql, function (err, result) {

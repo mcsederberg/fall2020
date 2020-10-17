@@ -8,6 +8,7 @@
 <script>
 import {gantt} from 'dhtmlx-gantt';
 import Task from '../models/Task';
+import  Cookies from '../mixins/Cookies'
 export default {
 	name: 'Projects',
 	components: {
@@ -58,14 +59,14 @@ export default {
 			step: 1
 		}]
         gantt.init(this.$refs.gantt);
-        this.$root.$data.project = {id: "12345678911"};
-        this.$root.$data.user = {id: "b8dca12f9a28"}
+		this.user = Cookies.getUser();
+		this.project = Cookies.getProject();
 		this.getAllTasks();
 	},
 	methods: {
 		getAllTasks: function(){
             var vue = this;
-			var res = Task.getTasksForProjectID(this.$root.$data.project.id);
+			var res = Task.getTasksForProjectID(this.project.id);
 			res.then(function(response){
 				var displayTasks = [];
 				for (var i in response) {

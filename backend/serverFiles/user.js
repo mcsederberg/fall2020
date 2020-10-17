@@ -35,8 +35,8 @@ router.post('/login', async (req, res) => {
 					id: model.id,
 					username: model.username,
 					password: model.password,
-					first: model.first,
-					last: model.last
+					firstName: model.firstName,
+					lastName: model.lastName
 				}
 			});
 		}
