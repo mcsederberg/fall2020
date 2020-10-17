@@ -130,6 +130,22 @@ router.put("/delete/task/:taskID", async(req,res) =>{
 		res.send(error);
 	}
 });
+//Complete task
+router.put("/complete/task/:taskID", async(req,res) =>{
+	var id = req.params.taskID;
+	try{
+		var queryString = `UPDATE task SET status = 'closed' WHERE id = '${id}'`;
+		server.data.query(queryString, function(result){
+			res.send({
+				code: "OK"
+			});
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+});
 
 module.exports = {
 	routes: router,

@@ -1,6 +1,6 @@
 {{ src/components/Gantt.vue }}
 <template>
-  <div class="about w-full h-full">
+  <div class="about w-full" :style="aboutStyle">
     <div class="w-full h-full" ref="gantt"></div>
   </div>
 </template>
@@ -15,39 +15,6 @@ export default {
 	},
 	data: function(){
 		return{
-			tasks: {
-				data: [
-					{
-						id: 1, 
-						text: "Create DBs", 
-						start_date: "2020-09-28", 
-						duration: 3, 
-						progress: .6
-					},
-					{
-						id: 2, 
-						text: "Create Vue pages", 
-						start_date: "2020-09-28", 
-						duration: 8, 
-						progress: .6
-					},
-					// {
-					// 	id: 3, 
-					// 	text: "Create API", 
-					// 	start_date: "2020-10-5", 
-					// 	duration: 17, 
-					// 	progress: .6
-					// }
-				],
-				links: [
-					{
-						id: 1,
-						source: 1,
-						target: 2,
-						type: '0'
-					}
-				]
-			},
 			displayTasks: {data: [], links: []}
 		}
 	},
@@ -58,10 +25,18 @@ export default {
 			unit: "week",
 			step: 1
 		}]
+		gantt.config.autofit = true;
         gantt.init(this.$refs.gantt);
 		this.user = Cookies.getUser();
 		this.project = Cookies.getProject();
 		this.getAllTasks();
+	},
+	computed: {
+		aboutStyle: function(){
+			var rows = this.displayTasks.data.length + 1;
+			var height = rows * 35;
+			return "height: " + height + "px;";
+		}
 	},
 	methods: {
 		getAllTasks: function(){
@@ -84,6 +59,7 @@ export default {
 				vue.displayTasks.data = displayTasks.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
 				vue.showPopup = false;
 				gantt.parse(vue.displayTasks);
+				gantt.render();
 			}).catch(function(e){
 				var code = e.error;
 				switch (code){
@@ -110,15 +86,15 @@ export default {
 	[aria-label="New task"], .gantt_link_point, .gantt_task_progress_drag{
 		display: none !important;
 	}
-	.gantt_container, .gantt_tooltip, .gantt_task_row, .gantt_row{
+	/* .gantt_container, .gantt_tooltip, .gantt_task_row, .gantt_row{
 		background-color: rgb(36,36,36) !important;
 		color: white
-	}
-	.gantt_cell{
+	} */
+	/* .gantt_cell{
 		color: white !important;
-	}
-	.gantt_grid_head_cell, .gantt_scale_line, .gantt_grid_scale{
+	} */
+	/* .gantt_grid_head_cell, .gantt_scale_line, .gantt_grid_scale{
 		background: #353535 !important
-	}
+	} */
 </style>
 
