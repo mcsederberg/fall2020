@@ -3,12 +3,15 @@ body{
     font-family: Metropolis,"Source Sans","Myriad Pro",Arial,sans-serif;
     color: white
 }
-body, html, #app, #mainWrapper{
+body, #app, #mainWrapper{
     height: 100%;
     width: 100%;
 }
 html{
     min-height: fit-content;
+    width: 100%;
+    height: -webkit-fill-available;
+    background: #bfc0c0;
 }
 #app{
     display: flex;

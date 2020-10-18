@@ -2,7 +2,7 @@
     <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
         <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8">
             <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
-            <div class="w-full h-full flex flex-col">
+            <div class="w-full flex flex-col">
                 <div class="flex w-1/2 mx-auto mt-4">
                     <div class="text-xxxlg">My Tasks</div>
                 </div>
@@ -17,17 +17,15 @@
                     <div class="taskDescription ml-3 mt-3">
                         {{task.summary}}
                     </div>
-                    <div class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
+                    <div v-if="task.status=='open'" class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3 " @click="markComplete(task)">Mark Complete</div>
+                    <div v-else class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3 ">Completed</div>
                 </div>
             </div>
         </div>
 
 
-        <div v-if="showPopup" class="w-screen h-screen fixed top-0 left-0 bg-blur">
-            <div id="newTaskPopup" class="flex flex-col absolute border-8 p-3 bg-darkBlue" style="left: 40%; top: 20%;">
-                <div class="flex">
-                    <p class="self-center text-xxxlg">{{popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'}}</p> <i @click="showPopup=false" class="ml-auto float-right fa fa-remove cursor-pointer"/>
-                </div>
+        <Popup v-if="showPopup" id="newTaskPopup" :title="popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'" @closed="showPopup=false">
+            <div class="flex flex-col">
                 <div class="border px-3 pt-3">
                     <div class="flex flex-row">
                         <div class="my-1"><label for="newStartDate">Start Date: </label><input id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
@@ -45,15 +43,18 @@
                 </div>
                 <div class="ml-auto mt-3 border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
             </div>
-        </div>
+        </Popup>
     </div>
 </template>
 
 <script>
 import Task from '../models/Task';
+import Popup from '../components/Popup';
+import Cookies from '../mixins/Cookies';
 export default {
 	name: 'Tasks',
 	components: {
+        Popup:Popup
 	},
 	data: function(){
 		return{
@@ -74,12 +75,12 @@ export default {
             ACTIVITY_CREATE: 0,
             ACTIVITY_EDIT: 1,
             clockedIn: false,
+            user: {},
+            project: {},
         }
     },
     mounted: function(){
-        this.$root.$data.project = {id: "12345678911"};
-        this.$root.$data.user = {id: "b8dca12f9a28"}
-
+        this.getCookies();
         this.getAllTasks();
     },
     computed: {
@@ -88,6 +89,25 @@ export default {
         }
     },
     methods: {
+        getCookies: function(){
+            this.user = Cookies.getUser();
+            this.project = Cookies.getProject();
+        },
+        markComplete: function(task){
+            var vue = this;
+            var res = Task.complete(task.id);
+            res.then(function(response){
+                task.status = "closed";
+                for (var i = 0; i < vue.allTasks.length; i++){
+                    var tempTask = vue.allTasks[i];
+                    if (tempTask.id == task.id){
+                        vue.$set(vue.allTasks, i, task);
+                    }
+                }
+            }).catch(function(e){
+
+            });
+        },  
         SQLDateTime: function(date){
             if (date == ""){
                 return "";
@@ -121,8 +141,8 @@ export default {
             }
             var res = Task.updateTask(
                 this.popupTask.id, 
-                this.$root.$data.user.id, 
-                this.$root.$data.project.id,
+                this.user.id, 
+                this.project.id,
                 this.popupTask.title, 
                 this.popupTask.summary,
                 this.SQLDateTime(this.popupTask.dueDate), 
@@ -177,8 +197,8 @@ export default {
                 return;
             }
             var res = Task.createTask(
-                this.$root.$data.user.id, 
-                this.$root.$data.project.id, 
+                this.user.id, 
+                this.project.id, 
                 this.popupTask.title, 
                 this.popupTask.summary, 
                 this.SQLDateTime(this.popupTask.dueDate), 
@@ -206,7 +226,7 @@ export default {
         },
         getAllTasks: function(){
             var vue = this;
-            var res = Task.getTasksForProjectID(this.$root.$data.project.id);
+            var res = Task.getTasksForProjectID(this.project.id);
             res.then(function(response){
                 vue.allTasks = response;
                 vue.showPopup = false;

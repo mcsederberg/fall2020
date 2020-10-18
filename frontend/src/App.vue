@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!$route.Login" id="app">
+    <div v-if="!$route.Login" id="app" class="bg-lightBlue">
         <div id="header" class="bg-header flex flex-col w-full z-10" v-if="$route.name !== 'Login'">
             <div id="headerTabs" class="flex flex-row border-orange border-b">
                 <template v-if="$route.name !=='Projects'">
@@ -18,7 +18,7 @@
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
                     <span class="self-center">
-                        Project: {{projectName}} <router-link to="/projects" class="sidebarOption"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
+                        Project: {{project.title}} <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
                     </span>
                     <div v-if="$route.name === 'Tasks'" class="taskHours flex justify-between ml-auto text-sm">
                         <p class="self-center mr-4">Hours: {{projectHours}}</p>
@@ -40,16 +40,17 @@
 </template>
 
 <script>
+import  Cookies from './mixins/Cookies'
 export default {
 	name: 'App',
 	components: {
 	},
 	data: function(){
 		return{
-            projectName: "Forklift",
             projectHours: 0,
             clockedIn: false,
-            openProfileDropdown: false
+            openProfileDropdown: false,
+            project: {}
 		}
 	},
     created: function() {
@@ -64,11 +65,17 @@ export default {
         else {
             document.body.style.removeProperty("overflow");
         }
+    },
+	mounted: function(){
+        this.project = Cookies.getProject();
+
 	},
 	methods: {
 		logout: function() {
             this.$root.$data.user = {};
             this.$root.$data.project = {};
+            Cookies.deleteCookie("user");
+            Cookies.deleteCookie("project");
             this.$router.push('/');
         },
         clockIn: function() {
@@ -84,15 +91,6 @@ export default {
 <style>
 #mainWrapper{
     display: flex;
-    background: #242424;
-}
-#sidebar{
-    width: 235px;
-    color: white;
-    background: #353535;
-    display: flex;
-    flex-direction: column;
-    padding-top: 10px;
 }
 .sidebarOption{
     padding: 10px 20px;

@@ -2,7 +2,7 @@
 <div class="w-full h-full bg-lightBlue" >
     <div class="w-2/3 mx-auto h-full bg-darkBlue border-orange border-l-8 border-r-8">
 		<i @click="showPopup = true" class="fa fa-plus text-orange float-right cursor-pointer relative" style="right: 15px; top: 15px; font-size: 35px;"/>
-		<div class="w-full h-full flex flex-col">
+		<div class="w-full flex flex-col">
 			<div v-for="project in projects" :key="project.id"  @click="openProject(project.id)" class="flex flex-col self-center w-2/3 my-3 p-4 bg-header cursor-pointer border-4 border-darkBlue hover:border-gray">
 				<p class="text-center text-lg">{{project.title}}</p>
 			</div>
@@ -10,18 +10,19 @@
 
 
 		<Popup v-if="showPopup" id="newProjectPopup" @closed="showPopup = false" title="New Project">
-			<div class="my-1"><label for="newTitle">Title: </label><input id="newTitle" v-model="newProject.title" class="ml-2 px-1 float-right text-dark"/></div>
-			<div class="my-1"><label for="newSummary">Summary: </label><input id="newSummary" v-model="newProject.summary" class="ml-2 px-1 float-right text-dark"/></div>
-			<div class="self-center border padding-2 cursor-pointer" @click="createProject">Create</div>
-			<!--Todo, add members to the project-->
+			<div class="my-4"><label for="newTitle">Title: </label><input id="newTitle" v-model="newProject.title" class="ml-2 px-1 float-right bg-darkBlue border"/></div>
+			<div class="my-4"><label for="newSummary">Summary: </label><input id="newSummary" v-model="newProject.summary" class="ml-2 px-1 float-right bg-darkBlue border"/></div>
+			<div class="float-right px-4 py-2 self-center border padding-2 cursor-pointer" @click="createProject">Create</div>
 		</Popup>
 	</div>
 </div>
 </template>
 
 <script>
-import Project from '../models/Project'
-import Popup from '../components/Popup'
+import Project from '../models/Project';
+import User from '../models/User';
+import Popup from '../components/Popup';
+import  Cookies from '../mixins/Cookies'
 export default {
 	name: 'Projects',
 	components: {
@@ -35,15 +36,27 @@ export default {
 		}
 	},
 	mounted: function(){
+		var userObj = JSON.parse(Cookies.getCookie("user"));
+		this.user = new User(userObj.id, userObj.username, userObj.password, userObj.firstName, userObj.lastName);
 		this.getAllProjects();
 	},
 	methods: {
 		createProject: function() {
-
+			let vue = this;
+			var res = Project.createProject(this.newProject.title, this.newProject.summary, this.user.id);
+            res.then(function(response){
+				console.log(response);
+				vue.projects.unshift(response);
+				vue.newProject = {};
+				vue.showPopup = false;
+            }).catch(function(e){
+				var code = e.error;
+				console.log(code);
+            });
 		},
 		getAllProjects: function(){
 			var vue = this;
-            var res = Project.getUserProjects(this.$root.$data.user.id);
+            var res = Project.getUserProjects(this.user.id);
             res.then(function(response){
                 vue.projects = response;
             }).catch(function(e){
@@ -52,7 +65,8 @@ export default {
             });
 		},
 		openProject: function(id) {
-			this.$root.$data.project = this.projects.find(project => project.id == id);
+			var project = this.projects.find(project => project.id == id);
+			Cookies.setCookie("project", JSON.stringify(project), "1");
 			this.$router.push('/tasks');
 		}
 	}

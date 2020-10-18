@@ -148,6 +148,27 @@ export default {
 			});
 		});
 	},
+	async completeTask(id){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/task/complete/task/"+id);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				resolve({
+					status: "OK"
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 	async deleteTask(id){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/task/delete/task/"+id);
@@ -306,6 +327,37 @@ export default {
 				resolve({
 					status: "OK",
 					projects: projects
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	/*
+		PROJECTS
+	*/
+
+	async createProject(userID, title, summary){
+		return new Promise(function(resolve, reject){
+			var res = client.post("/api/project/create", {
+				ownerID: userID,
+				title: title,
+				summary: summary,
+			});
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					project: new Project(model.id, model.title, model.summary, model.ownerID, model.deleted)
 				})
 				return;
 			}).catch(function(e){

@@ -46,7 +46,8 @@ export default class User {
 			username: this.username,
 			firstName: this.firstName,
 			lastName: this.lastName,
-			password: this.password
+			password: this.password,
+			id: this.id,
 		}
 	}
 }

@@ -8,7 +8,7 @@ router.post('/create', async (req, res) => {
 	var deleted = 0;
 	var id = server.data.generateUID();
 	try{
-		var queryString = `INSERT INTO project (id, title, summary, ownerID, deleted) VALUES ('${id}', '${model.title}', '${model.summary}', '${model.ownerID}', '${deleted}')`;
+		var queryString = `INSERT INTO project (projectID, title, summary, ownerID, deleted) VALUES ('${id}', '${model.title}', '${model.summary}', '${model.ownerID}', '${deleted}')`;
 		server.data.query(queryString, function(result){
 			try{
 				var mapperQueryString = `INSERT INTO projectUsers (projectID, userID) VALUES ('${id}', '${model.ownerID}')`;
@@ -41,7 +41,7 @@ router.post('/create', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
 	try{
-		var queryString = `SELECT * FROM project WHERE id = '${req.params.id}' AND deleted = 0`;
+		var queryString = `SELECT * FROM project WHERE projectID = '${req.params.id}' AND deleted = 0`;
 		server.data.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
@@ -74,7 +74,7 @@ router.put('/update/:id', async (req, res) => {
 	//probably need to make a check to see if it is already deleted.
 	try{
 		var queryString = `UPDATE project SET (ownerID, title, summary, deleted) VALUES (${model.title}', '${model.summary}', '${model.ownerID}', '${model.deleted}')
-							WHERE id = '${req.params.id}'`;
+							WHERE projectID = '${req.params.id}'`;
 		server.data.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
@@ -105,7 +105,7 @@ router.put('/update/:id', async (req, res) => {
 router.put("/delete/:id", async(req,res) =>{
 	var id = req.params.projectID;
 	try{
-		var queryString = `UPDATE project SET deleted = 1 WHERE id = ${id}`;
+		var queryString = `UPDATE project SET deleted = 1 WHERE projectID = ${id}`;
 		server.data.query(queryString, function(result){
 			res.send({
 				code: "OK"

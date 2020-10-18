@@ -71,6 +71,7 @@
 <script>
 // import api from '@/api'
 import User from '../models/User'
+import  Cookies from '../mixins/Cookies'
 export default {
 	name: 'Login',
 	components: {
@@ -87,6 +88,10 @@ export default {
 		}
 	},
 	mounted: function(){
+		var user = Cookies.getUser();
+		if (user != ""){
+			this.$router.push('/projects'); //do this instead of changing window href so it retains data
+		}
 	},
 	methods: {
 		reset: function(){
@@ -110,6 +115,7 @@ export default {
 			var vue = this;
 			res.then(function(response){
 				vue.$root.$data.user = response;
+				Cookies.setCookie("user",JSON.stringify(response), 2);
 				vue.$router.push('/projects'); //do this instead of changing window href so it retains data
 			}).catch(function(e){
 				var code = e.error;	
