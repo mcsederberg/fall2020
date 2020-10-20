@@ -1,6 +1,6 @@
 <template>
     <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
-        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8">
+        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8 h-full">
             <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
             <div class="w-full flex flex-col">
                 <div class="flex w-1/2 mx-auto mt-4">
@@ -17,8 +17,7 @@
                     <div class="taskDescription ml-3 mt-3">
                         {{task.summary}}
                     </div>
-                    <div v-if="task.status=='open'" class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3 " @click="markComplete(task)">Mark Complete</div>
-                    <div v-else class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3 ">Completed</div>
+                    <div class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
                 </div>
             </div>
         </div>
@@ -93,21 +92,6 @@ export default {
             this.user = Cookies.getUser();
             this.project = Cookies.getProject();
         },
-        markComplete: function(task){
-            var vue = this;
-            var res = Task.complete(task.id);
-            res.then(function(response){
-                task.status = "closed";
-                for (var i = 0; i < vue.allTasks.length; i++){
-                    var tempTask = vue.allTasks[i];
-                    if (tempTask.id == task.id){
-                        vue.$set(vue.allTasks, i, task);
-                    }
-                }
-            }).catch(function(e){
-
-            });
-        },  
         SQLDateTime: function(date){
             if (date == ""){
                 return "";

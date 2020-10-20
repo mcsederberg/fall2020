@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import Task from '../models/Task';
 import  Cookies from '../mixins/Cookies'
 export default {
 	name: 'ProjectSettings',

@@ -52,8 +52,6 @@ export default {
             clockedIn: false,
             openProfileDropdown: false,
             project: {}
-            userID: '',
-            projectID: ''
 		}
 	},
     created: function() {
@@ -71,7 +69,6 @@ export default {
     },
 	mounted: function(){
         this.project = Cookies.getProject();
-
 	},
     mounted: function() {
         var vue = this;
@@ -86,8 +83,6 @@ export default {
     },
 	methods: {
 		logout: function() {
-            this.$root.$data.user = {};
-            this.$root.$data.project = {};
             Cookies.deleteCookie("user");
             Cookies.deleteCookie("project");
             this.$router.push('/');
@@ -133,6 +128,15 @@ export default {
 <style>
 #mainWrapper{
     display: flex;
+    background: #242424;
+}
+#sidebar{
+    width: 235px;
+    color: white;
+    background: #353535;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
 }
 .sidebarOption{
     padding: 10px 20px;
@@ -154,11 +158,7 @@ export default {
     font-size: 30px;
 }
 #header{
-    /* height: 63px; */
     border-bottom: 1px solid #a4a4a4;
-    /* padding-left: 40px; */
-    /* background: #242424; */
     color: white;
-    display: flex;
 }
 </style>
