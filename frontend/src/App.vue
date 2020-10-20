@@ -41,6 +41,7 @@
 
 <script>
 import  Cookies from './mixins/Cookies'
+import Hour from 'C:/my_docs/Schoolage/2020 Fall/fall2020/frontend/src/models/Hour';
 export default {
 	name: 'App',
 	components: {
@@ -51,6 +52,8 @@ export default {
             clockedIn: false,
             openProfileDropdown: false,
             project: {}
+            userID: '',
+            projectID: ''
 		}
 	},
     created: function() {
@@ -70,6 +73,17 @@ export default {
         this.project = Cookies.getProject();
 
 	},
+    mounted: function() {
+        var vue = this;
+        var res = Hour.getClockedIn(this.$root.$data.user.id, this.$root.$data.project.id);
+        res.then(function(result) {
+            vue.clockedIn = result;
+        }).catch(function(e) {
+            console.log(e);
+        })
+
+        this.calculateProjectHours();
+    },
 	methods: {
 		logout: function() {
             this.$root.$data.user = {};
@@ -79,10 +93,38 @@ export default {
             this.$router.push('/');
         },
         clockIn: function() {
-            this.clockedIn = true;
+            var vue = this;
+            var res = Hour.clockIn(this.$root.$data.user.id, this.$root.$data.project.id, "project");
+            res.then(function(){
+                vue.clockedIn = true;
+            }).catch(function(e){
+                console.log(e);
+                var code = e.error;
+                switch (code){
+                    default:
+                }
+            });
         },
         clockOut: function() {
-            this.clockedIn = false;
+            var vue = this;
+            var res = Hour.clockOut(this.$root.$data.user.id, this.$root.$data.project.id);
+            res.then(function(){
+                vue.clockedIn = false;
+            }).catch(function(e){
+                var code = e.error;
+                switch (code){
+                    default:
+                }
+            });
+        },
+        calculateProjectHours() {
+            var vue = this;
+            var res = Hour.getHours(this.$root.$data.user.id, this.$root.$data.project.id);
+            res.then(function(result) {
+                vue.projectHours = result;
+            }).catch(function(e) {
+                console.log(e);
+            })
         }
 	}
 }

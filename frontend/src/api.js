@@ -250,10 +250,11 @@ export default {
 			});
 		});
 	},
-	async clockOut(hourID){
+	async clockOut(userID, parentID){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/hour/clockOut", {
-				hourID: hourID
+				userID: userID,
+				parentID: parentID
 			});
 			res.then(function(response){
 				var code = response.data.code;
@@ -275,9 +276,59 @@ export default {
 			});
 		});
 	},
-	async getHoursByParentIDAndUserID(parentID, userID){
+	async getClockedIn(userID, parentID){
 		return new Promise(function(resolve, reject){
-			var res = client.get("/api/hour/getHours/parentID/" + parentID + "/userID/" + userID);
+			var res = client.get("/api/hour/getClockedIn/parentID/" + parentID + "/userID/" + userID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				resolve({
+					status: "OK",
+					clockedIn: response.data.clockedIn
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async getHoursByUserIDAndParentID(userID, parentID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/hour/getHours/userID/" + userID + "/parentID/" + parentID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var models = response.data.models;
+				var hours = []
+				for (var i = 0; i < models.length; i++){
+					var model = models[i];
+					hours.push(new Hour(model.id, model.userID, model.parentID, model.parentType, model.clockedIn, model.clockedOut));
+				}
+				resolve({
+					status: "OK",
+					hours: hours
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async getTimeForUser(userID, parentID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/hour/getTime/userID/" + userID + "/parentID/" + parentID);
 			res.then(function(response){
 				var code = response.data.code;
 				if (code !== "OK"){

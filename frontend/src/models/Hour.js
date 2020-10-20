@@ -8,7 +8,35 @@ export default class Hour {
 		this.userID = userID;
 		this.parentID = parentID;
 		this.parentType = parentType;
-	}
+    }
+    static async getClockedIn(userID, parentID){
+        return new Promise(function(resolve, reject){
+            var res = api.getClockedIn(userID, parentID);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.clockedIn);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
+    static async getHours(userID, parentID){
+        return new Promise(function(resolve, reject){
+            var res = api.getTimeForUser(userID, parentID);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.hours);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
 	static async clockIn(userID, parentID, parentType){
         return new Promise(function(resolve, reject){
             var res = api.clockIn(userID, parentID, parentType);
@@ -23,9 +51,9 @@ export default class Hour {
             });
         });
     }
-	static async clockOut(hourID){
+	static async clockOut(userID, parentID){
         return new Promise(function(resolve, reject){
-            var res = api.clockOut(hourID);
+            var res = api.clockOut(userID, parentID);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
