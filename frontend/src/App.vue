@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!$route.Login" id="app">
+    <div v-if="!$route.Login" id="app" class="bg-lightBlue">
         <div id="header" class="bg-header flex flex-col w-full z-10" v-if="$route.name !== 'Login'">
             <div id="headerTabs" class="flex flex-row border-orange border-b">
                 <template v-if="$route.name !=='Projects'">
@@ -18,7 +18,7 @@
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
                     <span class="self-center">
-                        Project: {{projectName}} <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
+                        Project: {{project.title}} <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
                     </span>
                     <div v-if="$route.name === 'Tasks'" class="taskHours flex justify-between ml-auto text-sm">
                         <p class="self-center mr-4">Hours: {{projectHours}}</p>
@@ -47,19 +47,17 @@ export default {
 	},
 	data: function(){
 		return{
-            projectName: "Forklift",
             projectHours: 0,
             clockedIn: false,
-            openProfileDropdown: false
+            openProfileDropdown: false,
+            project: {},
 		}
 	},
 	mounted: function(){
-
+        this.project = Cookies.getProject();
 	},
 	methods: {
 		logout: function() {
-            this.$root.$data.user = {};
-            this.$root.$data.project = {};
             Cookies.deleteCookie("user");
             Cookies.deleteCookie("project");
             this.$router.push('/');
@@ -107,11 +105,7 @@ export default {
     font-size: 30px;
 }
 #header{
-    /* height: 63px; */
     border-bottom: 1px solid #a4a4a4;
-    /* padding-left: 40px; */
-    /* background: #242424; */
     color: white;
-    display: flex;
 }
 </style>
