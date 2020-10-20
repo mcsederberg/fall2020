@@ -1,8 +1,8 @@
 <template>
     <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
-        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8">
+        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8 h-full">
             <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
-            <div class="w-full h-full flex flex-col">
+            <div class="w-full flex flex-col">
                 <div class="flex w-1/2 mx-auto mt-4">
                     <div class="text-xxxlg">My Tasks</div>
                 </div>
