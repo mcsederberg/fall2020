@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!$route.Login" id="app" class="bg-lightBlue">
+    <div v-if="!$route.Login" id="app">
         <div id="header" class="bg-header flex flex-col w-full z-10" v-if="$route.name !== 'Login'">
             <div id="headerTabs" class="flex flex-row border-orange border-b">
                 <template v-if="$route.name !=='Projects'">
@@ -18,7 +18,7 @@
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
                     <span class="self-center">
-                        Project: {{project.title}} <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
+                        Project: {{projectName}} <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
                     </span>
                     <div v-if="$route.name === 'Tasks'" class="taskHours flex justify-between ml-auto text-sm">
                         <p class="self-center mr-4">Hours: {{projectHours}}</p>
@@ -47,14 +47,13 @@ export default {
 	},
 	data: function(){
 		return{
+            projectName: "Forklift",
             projectHours: 0,
             clockedIn: false,
-            openProfileDropdown: false,
-            project: {}
+            openProfileDropdown: false
 		}
 	},
 	mounted: function(){
-        this.project = Cookies.getProject();
 
 	},
 	methods: {
@@ -78,6 +77,15 @@ export default {
 <style>
 #mainWrapper{
     display: flex;
+    background: #242424;
+}
+#sidebar{
+    width: 235px;
+    color: white;
+    background: #353535;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
 }
 .sidebarOption{
     padding: 10px 20px;

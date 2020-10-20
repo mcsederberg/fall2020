@@ -73,23 +73,8 @@ export default class Task {
             });
         });
     }
-    static async complete(taskID){
-        return new Promise(function(resolve, reject){
-            var res = api.completeTask(taskID);
-            res.then(function(response){
-                if (response.status !== "OK"){
-                    reject();
-                    return;
-                }
-                resolve("OK");
-            }).catch(function(e){
-                reject(e);
-            });
-        });
-    }
     duplicate(){
-        var dup = JSON.parse(JSON.stringify(this));
-        return new Task(dup.id, dup.userID, dup.projectID, dup.title, dup.summary, dup.dueDate, dup.startDate, dup.completedDate, dup.status, dup.percentComplete, dup.deleted);
+        return JSON.parse(JSON.stringify(this));
     }
     toJSON(){
         return {
