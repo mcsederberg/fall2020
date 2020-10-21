@@ -53,7 +53,7 @@ export default {
             project: {},
 		}
 	},
-	mounted: function(){
+	created: function(){
         this.project = Cookies.getProject();
 	},
 	methods: {
