@@ -317,12 +317,14 @@ export default {
 					});
 					return;
 				}
-				var models = response.data.models;
-				var hours = []
+				var models = response.data.hours;
+				var totalTime = 0
 				for (var i = 0; i < models.length; i++){
 					var model = models[i];
-					hours.push(new Hour(model.id, model.userID, model.parentID, model.parentType, model.clockedIn, model.clockedOut));
+					totalTime += (new Date(model.clockedOut) - new Date(model.clockedIn));
 				}
+				//totalTime is in seconds, convert to hours
+				var hours = new Date(totalTime).toISOString().substr(11,5)
 				resolve({
 					status: "OK",
 					hours: hours

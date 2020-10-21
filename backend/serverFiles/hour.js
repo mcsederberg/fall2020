@@ -156,19 +156,15 @@ router.get('/getTime/userID/:userID/parentID/:parentID', async(req, res) => {
 		let queryString = `SELECT * FROM hour WHERE userID = '${req.params.userID}' AND parentID = '${req.params.parentID}'`
 		server.data.query(queryString, 
 			function(result){
-				if (result.length == 0) {
-					res.send({
-						code: "NO_TIME"
-					})
-					return;
-				}
 				res.send({
 					code: "OK",
 					hours: result
-			})
-		}, function(error){
-			res.send(error);
-		})
+				})
+			},  
+			function(error){
+				res.send(error);
+			}
+		)
 	} catch (error){
 		res.send(error);
 	}

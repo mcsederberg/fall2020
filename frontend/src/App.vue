@@ -51,7 +51,8 @@ export default {
             projectHours: 0,
             clockedIn: false,
             openProfileDropdown: false,
-            project: {}
+            project: {},
+            user: {}
 		}
 	},
     created: function() {
@@ -67,12 +68,11 @@ export default {
             document.body.style.removeProperty("overflow");
         }
     },
-	mounted: function(){
-        this.project = Cookies.getProject();
-	},
     mounted: function() {
+        this.project = Cookies.getProject();
+        this.user = Cookies.getUser();
         var vue = this;
-        var res = Hour.getClockedIn(this.$root.$data.user.id, this.$root.$data.project.id);
+        var res = Hour.getClockedIn(this.user.id, this.project.id);
         res.then(function(result) {
             vue.clockedIn = result;
         }).catch(function(e) {
@@ -89,7 +89,7 @@ export default {
         },
         clockIn: function() {
             var vue = this;
-            var res = Hour.clockIn(this.$root.$data.user.id, this.$root.$data.project.id, "project");
+            var res = Hour.clockIn(this.user.id, this.project.id, "project");
             res.then(function(){
                 vue.clockedIn = true;
             }).catch(function(e){
@@ -102,7 +102,7 @@ export default {
         },
         clockOut: function() {
             var vue = this;
-            var res = Hour.clockOut(this.$root.$data.user.id, this.$root.$data.project.id);
+            var res = Hour.clockOut(this.user.id, this.project.id);
             res.then(function(){
                 vue.clockedIn = false;
             }).catch(function(e){
@@ -114,7 +114,7 @@ export default {
         },
         calculateProjectHours() {
             var vue = this;
-            var res = Hour.getHours(this.$root.$data.user.id, this.$root.$data.project.id);
+            var res = Hour.getHours(this.user.id, this.project.id);
             res.then(function(result) {
                 vue.projectHours = result;
             }).catch(function(e) {
