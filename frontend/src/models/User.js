@@ -41,6 +41,22 @@ export default class User {
 			});
 		});
 	}
+	static async getUsersForProject(projectID){
+		return new Promise(function(resolve, reject){
+			var res = api.getUsersForProject(projectID);
+			res.then(function(response) {
+				if (response.status !== "OK"){
+					console.error("Something terrible has happened");
+					reject();
+					return;
+				}
+				resolve(response.users);
+				return;
+			}).catch(function(e) {
+				reject(e);
+			});
+		});
+	}
 	toJSON(){
 		return {
 			username: this.username,

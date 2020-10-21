@@ -76,6 +76,35 @@ export default {
 		});
 	},
 
+	async getUsersForProject(projectID){
+		return new Promise(function(resolve, reject){
+			var res =  client.get("/api/user/getUsersForProject/"+projectID);	
+			res.then(function(response) {
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var usersData = response.data.users;
+				var users = [];
+				for (var i = 0; i < usersData.length; i++){
+					var model = usersData[i];
+					users.push(new User(model.id, model.username, model.password, model.firstName, model.lastName))
+				}
+				resolve({
+					status: "OK",
+					users: users
+				})
+			}).catch(function(e) {
+				console.log("error", e);
+				return e;
+			})
+		});
+	},
+
 
 	/*
 		TASKS
@@ -397,4 +426,71 @@ export default {
 			});
 		});
 	},
+	async updateProject(project){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/project/update/"+project.id, project);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					project: new Project(model.id, model.title, model.summary, model.ownerID, model.deleted)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async deleteProject(project){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/project/delete/"+project.id);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				resolve({
+					status: "OK"
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async addUser(username, projectID){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/project/addUser/username/"+username+"/projectID/"+projectID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					user: new User(model.id, model.username, model.password, model.firstName, model.lastName)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	}
 }

@@ -55,11 +55,6 @@ export default {
             user: {}
 		}
 	},
-    created: function() {
-        if (this.$route.name == 'Login') {
-            document.body.style.overflow = 'hidden';
-        }
-    },
 	beforeUpdate: function(){
         if (this.$route.name == 'Login') {
             document.body.style.overflow = 'hidden';
@@ -68,7 +63,10 @@ export default {
             document.body.style.removeProperty("overflow");
         }
     },
-    mounted: function() {
+	created: function(){
+        if (this.$route.name == 'Login') {
+            document.body.style.overflow = 'hidden';
+        }
         this.project = Cookies.getProject();
         this.user = Cookies.getUser();
         var vue = this;

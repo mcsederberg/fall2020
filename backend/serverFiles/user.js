@@ -1,4 +1,5 @@
 
+const { query } = require("express");
 const express = require("express")
 const passwordHash = require('password-hash');
 const router = express.Router();
@@ -51,7 +52,6 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register', async (req, res) => {
-	console.log(req.body);
 	var first = req.body.firstName;
 	var last = req.body.lastName;
 	var username = req.body.username;
@@ -70,6 +70,26 @@ router.post('/register', async (req, res) => {
 					first: first,
 					last: last
 				}
+			});
+		}
+		var errorCallback = function(error){
+			res.send(error);
+		}
+		server.data.query(queryString, successCallback, errorCallback);
+	} catch (error){
+		console.log("Error in register" + error);
+		res.send(error);
+	}
+});
+
+router.get("/getUsersForProject/:projectID", async(req, res)=>{
+	var projectID = req.params.projectID;
+	try{
+		var queryString = `SELECT distinct user.* FROM user INNER JOIN projectUsers ON projectUsers.projectID='${projectID}'`;
+		var successCallback = function(result){
+			res.send({
+				code: "OK",
+				users: result
 			});
 		}
 		var errorCallback = function(error){
