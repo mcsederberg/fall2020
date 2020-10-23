@@ -41,7 +41,7 @@
 
 <script>
 import  Cookies from './mixins/Cookies'
-import Hour from 'C:/my_docs/Schoolage/2020 Fall/fall2020/frontend/src/models/Hour';
+import Hour from './models/Hour';
 export default {
 	name: 'App',
 	components: {
@@ -67,6 +67,7 @@ export default {
         if (this.$route.name == 'Login') {
             document.body.style.overflow = 'hidden';
         }
+
         this.project = Cookies.getProject();
         this.user = Cookies.getUser();
         var vue = this;
