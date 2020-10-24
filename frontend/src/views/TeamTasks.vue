@@ -6,19 +6,12 @@
                 <div class="flex w-1/2 mx-auto mt-4">
                     <div class="text-xxxlg">My Tasks</div>
                 </div>
-                <div v-for="(task, index) in sortedTasks" :key="index" class="flex flex-col self-center w-1/2 border my-3 p-4 bg-header">
-                    <i class="fa fa-times cursor-pointer ml-auto" @click="deleteTask(task.id)"/>
-                    <div class="taskHeader flex justify-between items-center mt-2">
-                        <p class="text-center text-lg">{{task.title}}
-                            <i class="far fa-edit cursor-pointer text-teal" @click="editActivityPopup(task)"/>
-                        </p>
-                        <p class="float-right">Due: {{prettyDate(task.dueDate)}}</p>
-                    </div>
-                    <div class="taskDescription ml-3 mt-3">
-                        {{task.summary}}
-                    </div>
-                    <div class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
-                </div>
+                <Task v-for="task in sortedTasks" :key="task.id" class=" self-center w-1/2"
+                 :title="task.title"
+                 :dueDate="task.dueDate"
+                 :summary="task.summary"
+                 @deleted="deleteTask(task.id)">  
+                </Task>
             </div>
         </div>
 
@@ -50,10 +43,12 @@
 import Task from '../models/Task';
 import Popup from '../components/Popup';
 import Cookies from '../mixins/Cookies';
+import T from '../components/Task'
 export default {
 	name: 'Tasks',
 	components: {
-        Popup:Popup
+        Popup:Popup,
+        Task:T
 	},
 	data: function(){
 		return{
