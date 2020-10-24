@@ -322,6 +322,9 @@ export default {
 				var hours = []
 				for (var i = 0; i < models.length; i++){
 					var model = models[i];
+					if (model.clockedOut == undefined) {
+						model.clockedOut = new Date();
+					}
 					hours.push(new Hour(model.id, model.userID, model.parentID, model.parentType, model.clockedIn, model.clockedOut));
 				}
 				resolve({
@@ -336,6 +339,13 @@ export default {
 	},
 	async getTimeForUser(userID, parentID){
 		return new Promise(function(resolve, reject){
+			if (!userID || !parentID) {
+				reject({
+					status: "BAD",
+					error: "Incomplete information"
+				});
+				return;
+			}
 			var res = client.get("/api/hour/getTime/userID/" + userID + "/parentID/" + parentID);
 			res.then(function(response){
 				var code = response.data.code;
@@ -350,6 +360,9 @@ export default {
 				var totalTime = 0
 				for (var i = 0; i < models.length; i++){
 					var model = models[i];
+					if (model.clockedOut == undefined) {
+						model.clockedOut = new Date().toISOString();
+					}
 					totalTime += (new Date(model.clockedOut) - new Date(model.clockedIn));
 				}
 				//totalTime is in seconds, convert to hours

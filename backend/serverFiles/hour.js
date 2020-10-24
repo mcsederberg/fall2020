@@ -88,7 +88,6 @@ router.get('/getHours/userID/:userID/parentID/:parentID', async(req, res)=> {
 	var userID = req.params.userID;
 	try{
 		var queryString = `SELECT * FROM hour WHERE parentID = '${parentID}' AND userID = '${userID}'`;
-		console.log(queryString);
 		server.data.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({

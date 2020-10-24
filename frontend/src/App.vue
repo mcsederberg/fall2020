@@ -3,7 +3,8 @@
         <div id="header" class="bg-header flex flex-col w-full z-10" v-if="$route.name !== 'Login'">
             <div id="headerTabs" class="flex flex-row border-orange border-b">
                 <template v-if="$route.name !=='Projects'">
-                    <router-link to="/tasks" class="sidebarOption">My Tasks</router-link>
+                    <router-link to="/mytasks" class="sidebarOption">My Tasks</router-link>
+                    <router-link to="/teamtasks" class="sidebarOption">Team Tasks</router-link>
                     <router-link to="/chart" class="sidebarOption">Team Progress</router-link> 
                     <router-link to="/messages" class="sidebarOption">Idea Board</router-link> 
                 </template>
