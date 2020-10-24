@@ -68,6 +68,7 @@ export default {
 		openProject: function(id) {
 			var project = this.projects.find(project => project.id == id);
 			Cookies.setCookie("project", JSON.stringify(project), "1");
+			this.$emit("updateProject");
 			this.$router.push('/mytasks');
 		}
 	}

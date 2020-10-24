@@ -35,7 +35,7 @@
             </div>
         </div>
         <div id="mainWrapper">
-            <router-view/>
+            <router-view @updateProject="updateProject"/>
         </div>
     </div>
 </template>
@@ -120,6 +120,9 @@ export default {
             }).catch(function(e) {
                 console.log(e);
             })
+        },
+        updateProject: function() {
+            this.project = Cookies.getProject();
         }
 	}
 }
