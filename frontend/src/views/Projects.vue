@@ -21,9 +21,8 @@
 
 <script>
 import Project from '../models/Project';
-import User from '../models/User';
 import Popup from '../components/Popup';
-import  Cookies from '../mixins/Cookies'
+import Cookies from '../mixins/Cookies'
 export default {
 	name: 'Projects',
 	components: {
@@ -37,8 +36,7 @@ export default {
 		}
 	},
 	mounted: function(){
-		var userObj = JSON.parse(Cookies.getCookie("user"));
-		this.user = new User(userObj.id, userObj.username, userObj.password, userObj.firstName, userObj.lastName);
+		this.user = Cookies.getUser();
 		this.getAllProjects();
 	},
 	methods: {
