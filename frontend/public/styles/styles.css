@@ -4,7 +4,8 @@ body{
     color: white
 }
 body, #app, #mainWrapper{
-    height: 100%;
+    /* height: 100%; */
+    height: -webkit-fill-available;
     width: 100%;
 }
 html{

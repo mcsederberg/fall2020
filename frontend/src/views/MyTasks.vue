@@ -1,6 +1,6 @@
 <template>
     <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
-        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8 h-full">
+        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8" style="min-height: 100%;">
             <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
             <div class="w-full flex flex-col">
                 <div class="flex w-1/2 mx-auto mt-4">
