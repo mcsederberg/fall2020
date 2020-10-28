@@ -21,7 +21,7 @@
                     <span class="self-center">
                         Project: {{project.title}} <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
                     </span>
-                    <div v-if="$route.name === 'Tasks'" class="taskHours flex justify-between ml-auto text-sm">
+                    <div v-if="$route.name === 'MyTasks' || $route.name === 'TeamTasks'" class="taskHours flex justify-between ml-auto text-sm">
                         <p class="self-center mr-4">Hours: {{projectHours}}</p>
                         <div class="flex self-center">
                             <p class="cursor-pointer py-1 rounded-l-lg text-darkBlue flex justify-center w-16" :class="[{'bg-orange':clockedIn, 'bg-gray':!clockedIn}]"  @click="clockIn()">in</p>
