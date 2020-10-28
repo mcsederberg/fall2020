@@ -10,11 +10,11 @@
 				<div class="flex flex-col self-center">
 					<span class="text-xxlg">Current Users:</span>
 					<div v-for="user in users" :key='user.id'>
-						{{user.firstName}} {{user.lastName}}
+						{{user.firstName}} {{user.lastName}} <i v-if="isOwner && user.id != currentUser.id" @click="removeUser(user.id)" class="cursor-pointer fa fa-remove"/>
 					</div>
 				</div>
 				<div class="flex self-center"><span class="text-xxlg">Add user by username: </span> <input v-model="newUsername" class="ml-2 text-dark"/><button class="ml-3 bg-orange px-3"  @click="addUser">Add User</button></div>
-				<button @click="deleteProject">DELETE PROJECT</button>
+				<button v-if="isOwner" @click="deleteProject">DELETE PROJECT</button>
             </div>
         </div>
     </div>
@@ -30,18 +30,22 @@ export default {
 	},
 	data: function(){
 		return{
-			user: {},
+			currentUser: {},
 			project: {
 				title: ''
 			},
 			users: [],
 			newUsername: "",
+			isOwner: false
 		}
 	},
 	mounted: function(){
-		this.user = Cookies.getUser();
+		this.currentUser = Cookies.getUser();
 		this.project = Cookies.getProject();
 		this.getUsersForProject();
+		if (this.project.ownerID === this.currentUser.id){
+			this.isOwner = true;
+		}
 	},
 	methods: {
 		saveTitle: function(){

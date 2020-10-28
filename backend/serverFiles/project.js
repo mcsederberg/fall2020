@@ -132,7 +132,7 @@ router.get('/getProjects/userID/:userID', async(req, res)=> {
 		res.send(error);
 	}
 })
-		   //addUser/username/"+username+"/projectID/"+projectID
+
 router.put("/addUser/username/:username/projectID/:projectID", async(req,res)=> {
 	console.log("HI");
 	var username = req.params.username;

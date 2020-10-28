@@ -85,7 +85,7 @@ router.post('/register', async (req, res) => {
 router.get("/getUsersForProject/:projectID", async(req, res)=>{
 	var projectID = req.params.projectID;
 	try{
-		var queryString = `SELECT distinct user.* FROM user INNER JOIN projectUsers ON projectUsers.projectID='${projectID}'`;
+		var queryString = `select * from user where user.id in (select projectUsers.userID from projectUsers where projectUsers.projectID = "${projectID}")`;
 		var successCallback = function(result){
 			res.send({
 				code: "OK",
