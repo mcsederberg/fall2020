@@ -80,7 +80,7 @@ export default {
 						text: task.title,
 						start_date: vue.ganttDate(task.startDate),
 						duration: vue.dayDiff(new Date(task.startDate), new Date(task.dueDate)),
-						progress: 0,
+						progress: task.percentComplete/100,
 					});
                 }
 
