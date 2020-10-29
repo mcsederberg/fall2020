@@ -231,12 +231,13 @@ export default {
 
 	/*      HOURS        */
 	
-	async clockIn(userID, parentID, parentType){
+	async clockIn(userID, parentID, parentType,clockedIn){
 		return new Promise(function(resolve, reject){
 			var res = client.post("/api/hour/clockIn", {
 				userID: userID,
 				parentID: parentID,
 				parentType: parentType,
+				clockedIn: clockedIn
 			});
 			res.then(function(response){
 				var code = response.data.code;
@@ -258,11 +259,12 @@ export default {
 			});
 		});
 	},
-	async clockOut(userID, parentID){
+	async clockOut(userID, parentID, clockedOut){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/hour/clockOut", {
 				userID: userID,
-				parentID: parentID
+				parentID: parentID,
+				clockedOut: clockedOut
 			});
 			res.then(function(response){
 				var code = response.data.code;

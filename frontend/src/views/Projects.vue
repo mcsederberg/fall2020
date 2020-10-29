@@ -2,7 +2,7 @@
 <div class="w-full h-full bg-lightBlue" >
     <div class="w-2/3 mx-auto h-full bg-darkBlue border-orange border-l-8 border-r-8">
 		<i @click="showPopup = true" class="fa fa-plus text-orange float-right cursor-pointer relative" style="right: 15px; top: 15px; font-size: 35px;"/>
-		<div class="w-full h-full flex flex-col">
+		<div class="w-full flex flex-col">
 			<div v-for="project in projects" :key="project.id"  @click="openProject(project.id)" class="flex flex-col self-center w-2/3 my-3 p-4 bg-header cursor-pointer border-4 border-darkBlue hover:border-gray">
 				<p class="text-center text-lg">{{project.title}}</p>
 			</div>

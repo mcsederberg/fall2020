@@ -38,8 +38,9 @@ export default class Hour {
         });
     }
 	static async clockIn(userID, parentID, parentType){
+        var clockedIn = this.SQLNow();
         return new Promise(function(resolve, reject){
-            var res = api.clockIn(userID, parentID, parentType);
+            var res = api.clockIn(userID, parentID, parentType, clockedIn);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
@@ -52,8 +53,9 @@ export default class Hour {
         });
     }
 	static async clockOut(userID, parentID){
+        var clockedOut = this.SQLNow();
         return new Promise(function(resolve, reject){
-            var res = api.clockOut(userID, parentID);
+            var res = api.clockOut(userID, parentID, clockedOut);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
@@ -65,6 +67,9 @@ export default class Hour {
             });
         });
     }
+	static SQLNow(){
+		return (new Date ((new Date((new Date(new Date())).toISOString() )).getTime() - ((new Date()).getTimezoneOffset()*60000))).toISOString().slice(0, 19).replace('T', ' ');
+	}
 	toJSON(){
 		return {
 			hourID: this.hourID,
