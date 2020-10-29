@@ -2,7 +2,7 @@
     <div v-if="!$route.Login" id="app" class="bg-lightBlue">
         <div id="header" class="bg-header flex flex-col w-full z-10" v-if="$route.name !== 'Login'">
             <div id="headerTabs" class="flex flex-row border-orange border-b">
-                <template v-if="$route.name !=='Projects'">
+                <template v-if="$route.name !=='Projects' && $route.name !== 'ProjectSettings'">
                     <router-link to="/mytasks" class="sidebarOption">My Tasks</router-link>
                     <router-link to="/teamtasks" class="sidebarOption">Team Tasks</router-link>
                     <router-link to="/chart" class="sidebarOption">Team Progress</router-link> 
@@ -19,7 +19,7 @@
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
                     <span class="self-center">
-                        Project: {{project.title}} <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
+                        Project: {{project.title}} <span v-if="$route.name == 'ProjectSettings'">Settings</span> <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
                     </span>
                     <div v-if="$route.name === 'MyTasks' || $route.name === 'TeamTasks'" class="taskHours flex justify-between ml-auto text-sm">
                         <p class="self-center mr-4">Hours: {{projectHours}}</p>
@@ -147,9 +147,6 @@ export default {
     color: white;
 	font-size: 18px;
 	text-decoration: none;
-}
-.sidebarOption:hover{
-    background-color: #242424;
 }
 
 #headerTabs a.router-link-exact-active {

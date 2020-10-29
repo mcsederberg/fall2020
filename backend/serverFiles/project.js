@@ -84,7 +84,7 @@ router.put('/update/:id', async (req, res) => {
 			res.send({ //also not sure if we need to send the model back here...
 				code: "OK",
 				model:{
-					id: model.projectID,
+					id: model.id,
 					title: model.title,
 					summary: model.summary,
 					ownerID: model.ownerID,
