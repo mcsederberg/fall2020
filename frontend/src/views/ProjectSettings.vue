@@ -2,11 +2,11 @@
    <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
         <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8" style="min-height: 100%">
             <div class="w-full flex flex-col">
-				<div class="flex w-3/4 bg-header self-center mt-6 p-6 text-xlg">Title <input v-model="project.title" class="px-2 ml-2 text-dark w-full"/></div>
-				<div class="flex flex-col w-3/4 bg-header self-center mt-6 p-6 text-xlg">Description <textarea v-model="project.summary" class="px-2 text-dark w-full"/></div>
+				<div class="flex w-3/4 bg-header self-center mt-6 p-6 text-xlg">Title <input v-model="project.title" class="px-2 ml-2 text-dark w-full bg-lightBlue"/></div>
+				<div class="flex flex-col w-3/4 bg-header self-center mt-6 p-6 text-xlg">Description <textarea v-model="project.summary" class="px-2 text-dark w-full bg-lightBlue"/></div>
 				<div class="flex flex-col w-3/4 bg-header self-center mt-6 p-6 text-xlg">
 					Add Members by username
-					<div class="flex self-center w-full"> <input v-model="newUsername" class="w-full text-dark mr-3"/><button class="bg-orange px-3 text-dark"  @click="addUser">Add</button></div>
+					<div class="flex self-center w-full"> <input v-model="newUsername" class="w-full text-dark mr-3 bg-lightBlue"/><button class="bg-orange px-3 text-dark"  @click="addUser">Add</button></div>
 					<template>
 						Current members: 
 						<div v-for="user in users" :key='user.id'>
@@ -15,7 +15,7 @@
 					</template>
 				</div>
 				<div class="flex mx-auto mt-5 w-3/4">
-					<button v-if="isOwner"  class="rounded-lg ml-3 bg-orange px-3 text-dark ml-auto" @click="deleteProject">Delete Project</button>
+					<button v-if="isOwner"  class="rounded-lg ml-3 bg-lightGray px-3 text-dark ml-auto" @click="deleteProject">Delete Project</button>
 					<button class="rounded-lg ml-3 bg-green px-3 text-dark" @click="saveProject">Save</button>
 				</div>
             </div>
