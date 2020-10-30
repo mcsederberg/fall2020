@@ -5,6 +5,8 @@
 		<div class="w-full flex flex-col">
 			<div v-for="project in projects" :key="project.id"  @click="openProject(project.id)" class="flex flex-col self-center w-2/3 my-3 p-4 bg-header cursor-pointer border-4 border-darkBlue hover:border-gray">
 				<p class="text-center text-lg">{{project.title}}</p>
+				<div class="border my-2"/>
+				<p class="text-center">{{project.summary}}</p>
 			</div>
 		</div>
 
