@@ -4,6 +4,7 @@ import Task from './models/Task';
 import User from './models/User';
 import Hour from './models/Hour';
 import Project from './models/Project';
+//import task from '../../backend/serverFiles/task';
 
 const client = axios.create({
 //   baseURL: 'http://18.218.126.54:3000',
@@ -211,10 +212,64 @@ export default {
 					return;
 				}
 				var tasksData = response.data.tasks;
+				var delayedTasks = [];
+				var inProgressTasks = [];
+				var completedTasks = [];
+				var futureTasks = [];
+				var errors = [];
+				for (var i = 0; i < tasksData.length; i++){
+					var model = tasksData[i];
+					var task = new Task(model.id, model.userID, model.firstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted);
+					var today = new Date();
+					if (new Date(task.dueDate) < today && !task.completed) {
+						delayedTasks.push(task);
+					}
+					else if (new Date(task.startDate) <= today && new Date(task.dueDate) > today && !task.completed) {
+						inProgressTasks.push(task);
+					}
+					else if (task.completed) {
+						completedTasks.push(task);
+					}
+					else if (new Date(task.startDate) > today && !task.completed) {
+						futureTasks.push(task);
+					}
+					else {
+						errors.push(task);
+					}
+				}
+				resolve({
+					status: "OK",
+					tasks: {
+						delayedTasks: delayedTasks,
+						inProgressTasks: inProgressTasks,
+						completedTasks: completedTasks,
+						futureTasks: futureTasks,
+						error: errors
+					}
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async getTasksForUserAndProject(projectID, userID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/task/projectID/" + projectID + "/userID/" + userID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var tasksData = response.data.tasks;
 				var tasks = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					tasks.push(new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted))
+					tasks.push(new Task(model.id, model.userID, model.userFirstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted))
 				}
 				resolve({
 					status: "OK",

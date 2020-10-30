@@ -7,14 +7,14 @@
                     <div class="text-xxxlg">My Tasks</div>
                 </div>
                 <Task v-for="task in sortedTasks" :key="task.id" class=" self-center w-1/2"
-                 :title="task.title"
-                 :dueDate="task.dueDate"
-                 :summary="task.summary"
-                 @deleted="deleteTask(task.id)">  
+                    :userFirstName="task.userFirstName"
+                    :title="task.title"
+                    :dueDate="task.dueDate"
+                    :summary="task.summary"
+                    @deleted="deleteTask(task.id)">  
                 </Task>
             </div>
         </div>
-
 
         <Popup v-if="showPopup" id="newTaskPopup" :title="popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'" @closed="showPopup=false">
             <div class="flex flex-col">
@@ -205,7 +205,7 @@ export default {
         },
         getAllTasks: function(){
             var vue = this;
-            var res = Task.getTasksForProjectID(this.project.id);
+            var res = Task.getTasksForProjectID(this.project.id, this.user.id);
             res.then(function(response){
                 vue.allTasks = response;
                 vue.showPopup = false;

@@ -1,7 +1,7 @@
 <template>
 <div>
 	<div class="border my-3 p-4 bg-header flex flex-col">
-		<i class="fa fa-times cursor-pointer ml-auto" @click="deleteTask(task.id)"/>
+		<div>{{userFirstName}}</div><i class="fa fa-times cursor-pointer ml-auto" @click="deleteTask(task.id)"/>
 		<div class="taskHeader flex justify-between items-center mt-2">
 			<p class="text-center text-lg">{{title}}
 				<i class="far fa-edit cursor-pointer text-teal" @click="editActivityPopup(task)"/>
@@ -11,7 +11,7 @@
 		<div class="taskDescription ml-3 mt-3">
 			{{summary}}
 		</div>
-		<div class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
+		<div class="self-end bg-orange text-darkBlue rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
 	</div>
 
 </div>
@@ -21,6 +21,9 @@
 export default {
 	name: 'Task',
 	props: {
+		userFirstName: {
+			type: String,
+		},
 		title: {
 			type: String, 
 			required: true

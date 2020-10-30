@@ -4,17 +4,78 @@
             <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
             <div class="w-full flex flex-col">
                 <div class="flex w-1/2 mx-auto mt-4">
-                    <div class="text-xxxlg">My Tasks</div>
+                    <div class="text-xxxlg">Team Tasks</div>
                 </div>
-                <Task v-for="task in sortedTasks" :key="task.id" class=" self-center w-1/2"
-                 :title="task.title"
-                 :dueDate="task.dueDate"
-                 :summary="task.summary"
-                 @deleted="deleteTask(task.id)">  
-                </Task>
+                <div @click="overdueTasksOpen = !overdueTasksOpen" class="flex flex-col w-1/2 mx-auto">
+                    <div class="flex items-center cursor-pointer">
+                        <div class="text-xlg mr-3">Overdue</div>
+                        <i v-if="overdueTasksOpen" class="fas fa-caret-down"></i>
+                        <i v-else class="fas fa-caret-up"></i>
+                    </div>
+                    <div v-if="overdueTasksOpen">
+                        <Task v-for="task in sortedOverdueTasks" :key="task.id" class=" self-center w-full"
+                            :userFirstName="task.userFirstName"
+                            :title="task.title"
+                            :dueDate="task.dueDate"
+                            :summary="task.summary"
+                            @deleted="deleteTask(task.id)">  
+                        </Task>
+                        <div v-if="sortedOverdueTasks.length == 0">No Overdue Tasks!</div>
+                    </div>
+                </div>
+                <div @click="inProgressTasksOpen = !inProgressTasksOpen" class="flex flex-col w-1/2 mx-auto">
+                    <div class="flex items-center cursor-pointer">
+                        <div class="text-xlg mr-3">In Progress</div>
+                        <i v-if="inProgressTasksOpen" class="fas fa-caret-down"></i>
+                        <i v-else class="fas fa-caret-up"></i>
+                    </div>
+                    <div v-if="inProgressTasksOpen">
+                        <Task v-for="task in sortedInProgressTasks" :key="task.id" class=" self-center w-full"
+                            :userFirstName="task.userFirstName"
+                            :title="task.title"
+                            :dueDate="task.dueDate"
+                            :summary="task.summary"
+                            @deleted="deleteTask(task.id)">  
+                        </Task>
+                        <div v-if="sortedInProgressTasks.length == 0">No In Progress Tasks!</div>
+                    </div>
+                </div>
+                <div @click="completedTasksOpen = !completedTasksOpen" class="flex flex-col w-1/2 mx-auto">
+                    <div class="flex items-center cursor-pointer">
+                        <div class="text-xlg mr-3">Completed</div>
+                        <i v-if="completedTasksOpen" class="fas fa-caret-down"></i>
+                        <i v-else class="fas fa-caret-up"></i>
+                    </div>
+                    <div v-if="completedTasksOpen">
+                        <Task v-for="task in sortedCompletedTasks" :key="task.id" class=" self-center w-full"
+                            :userFirstName="task.userFirstName"
+                            :title="task.title"
+                            :dueDate="task.dueDate"
+                            :summary="task.summary"
+                            @deleted="deleteTask(task.id)">  
+                        </Task>
+                        <div v-if="sortedCompletedTasks.length == 0">No Completed Tasks!</div>
+                    </div>
+                </div>
+                <div @click="futureTasksOpen = !futureTasksOpen" class="flex flex-col w-1/2 mx-auto">
+                    <div class="flex items-center cursor-pointer">
+                        <div class="text-xlg mr-3">Future</div>
+                        <i v-if="futureTasksOpen" class="fas fa-caret-down"></i>
+                        <i v-else class="fas fa-caret-up"></i>
+                    </div>
+                    <div v-if="futureTasksOpen"> 
+                        <Task v-for="task in sortedFutureTasks" :key="task.id" class=" self-center w-full"
+                            :userFirstName="task.userFirstName"
+                            :title="task.title"
+                            :dueDate="task.dueDate"
+                            :summary="task.summary"
+                            @deleted="deleteTask(task.id)">  
+                        </Task>
+                        <div v-if="sortedFutureTasks.length == 0">No Future Tasks!</div>
+                    </div>
+                </div>
             </div>
         </div>
-
 
         <Popup v-if="showPopup" id="newTaskPopup" :title="popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'" @closed="showPopup=false">
             <div class="flex flex-col">
@@ -63,7 +124,10 @@ export default {
                 startDate: "",
                 deleted: false,
             },
-            allTasks: [],
+            overdueTasks: [],
+            inProgressTasks: [],
+            completedTasks: [],
+            futureTasks: [],
             projectHours: 0,
             popupType: null,
             ACTIVITY_CREATE: 0,
@@ -71,6 +135,10 @@ export default {
             clockedIn: false,
             user: {},
             project: {},
+            overdueTasksOpen: false,
+            inProgressTasksOpen: false,
+            completedTasksOpen: false,
+            futureTasksOpen: false 
         }
     },
     mounted: function(){
@@ -78,8 +146,17 @@ export default {
         this.getAllTasks();
     },
     computed: {
-        sortedTasks: function(){
-            return this.allTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+        sortedOverdueTasks: function() {
+            return this.overdueTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+        },
+        sortedInProgressTasks: function() {
+            return this.inProgressTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+        },
+        sortedCompletedTasks: function() {
+            return this.completedTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+        },
+        sortedFutureTasks: function() {
+            return this.futureTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
         }
     },
     methods: {
@@ -207,15 +284,18 @@ export default {
             var vue = this;
             var res = Task.getTasksForProjectID(this.project.id);
             res.then(function(response){
-                vue.allTasks = response;
+                vue.delayedTasks = response.delayedTasks;
+                vue.inProgressTasks = response.inProgressTasks;
+                vue.completedTasks = response.completedTasks;
+                vue.futureTasks = response.futureTasks;
+                if (response.error.length > 0) {
+                    throw "Error when sorting tasks!";
+                }
                 vue.showPopup = false;
             }).catch(function(e){
                 var code = e.error;
                 switch (code){
                     default:
-                    // case "ER_DUP_ENTRY":
-                    // 	alert("That username is taken");
-                    // 	break;
                 }
             });
         },
