@@ -38,6 +38,20 @@ export default class Task {
             });
         });
     }
+    static async getSortedTasksForProjectID(projectID){
+        return new Promise(function(resolve, reject){
+            var res = api.getSortedTasksForProjectID(projectID);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.tasks);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
     static async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
         return new Promise(function(resolve, reject){
             var res = api.createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete);
@@ -55,6 +69,21 @@ export default class Task {
     static async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
         return new Promise(function(resolve, reject){
             var res = api.updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.task);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
+    static async completeTask(taskID){
+        var completeDate = this.SQLNow();
+        return new Promise(function(resolve, reject){
+            var res = api.completeTask(taskID, completeDate);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();

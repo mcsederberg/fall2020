@@ -2,7 +2,7 @@
     <div v-if="!$route.Login" id="app" class="bg-lightBlue">
         <div id="header" class="bg-header flex flex-col w-full z-10" v-if="$route.name !== 'Login'">
             <div id="headerTabs" class="flex flex-row border-orange border-b">
-                <template v-if="$route.name !=='Projects' && $route.name !== 'ProjectSettings'">
+                <template v-if="$route.name !=='Projects'">
                     <router-link to="/mytasks" class="sidebarOption">My Tasks</router-link>
                     <router-link to="/teamtasks" class="sidebarOption">Team Tasks</router-link>
                     <router-link to="/chart" class="sidebarOption">Team Progress</router-link> 
@@ -18,7 +18,7 @@
             <div class="flex text-xxxlg m-5 w-2/3 self-center">
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
-                    <span class="self-center">
+                    <span class="self-center font-sans">
                         Project: {{project.title}} <span v-if="$route.name == 'ProjectSettings'">Settings</span> <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
                     </span>
                     <div v-if="$route.name === 'MyTasks' || $route.name === 'TeamTasks'" class="taskHours flex justify-between ml-auto text-sm">
@@ -129,6 +129,11 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css?family=Poppins");
+.font-poppins {
+    font-family: 'Poppins', serif;
+}
+
 #mainWrapper{
     display: flex;
     background: #242424;

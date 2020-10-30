@@ -6,17 +6,17 @@
 				<div class="flex flex-col w-3/4 bg-header self-center mt-6 p-6 text-xlg">Description <textarea v-model="project.summary" class="px-2 text-dark w-full bg-lightBlue"/></div>
 				<div class="flex flex-col w-3/4 bg-header self-center mt-6 p-6 text-xlg">
 					Add Members by username
-					<div class="flex self-center w-full"> <input v-model="newUsername" class="w-full text-dark mr-3 bg-lightBlue"/><button class="bg-orange px-3 text-dark"  @click="addUser">Add</button></div>
-					<template>
-						Current members: 
+					<div class="flex self-center w-full"> <input v-model="newUsername" class="w-full text-dark mr-3 bg-lightBlue"/><button class="bg-orange px-3 text-darkBlue"  @click="addUser">Add</button></div>
+					<div class="border mt-4 p-2">
+						<u>Current members:</u> 
 						<div v-for="user in users" :key='user.id'>
 							{{user.firstName}} {{user.lastName}} <i v-if="isOwner && user.id != currentUser.id" @click="removeUser(user.id)" class="cursor-pointer fa fa-remove"/>
 						</div>
-					</template>
+					</div>
 				</div>
-				<div class="flex mx-auto mt-5 w-3/4">
-					<button v-if="isOwner"  class="rounded-lg ml-3 bg-lightGray px-3 text-dark ml-auto" @click="deleteProject">Delete Project</button>
-					<button class="rounded-lg ml-3 bg-green px-3 text-dark" @click="saveProject">Save</button>
+				<div class="flex mx-auto mt-5 w-3/4 justify-end">
+					<button v-if="isOwner" class="rounded-lg ml-3 bg-lightBlue px-3 text-darkBlue text-lg ml-auto" @click="deleteProject">Delete Project</button>
+					<button class="rounded-lg ml-3 bg-green px-3 text-lg text-darkBlue" @click="saveProject">Save</button>
 				</div>
             </div>
         </div>

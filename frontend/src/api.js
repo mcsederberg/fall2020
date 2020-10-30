@@ -178,6 +178,29 @@ export default {
 			});
 		});
 	},
+	async completeTask(taskID, completeDate){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/task/complete", {taskID: taskID, completeDate: completeDate});
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 	async deleteTask(id){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/task/delete/task/"+id);
@@ -199,7 +222,7 @@ export default {
 			});
 		});
 	},
-	async getTasksForProjectID(projectID){
+	async getSortedTasksForProjectID(projectID){
 		return new Promise(function(resolve, reject){
 			var res = client.get("/api/task/projectID/" + projectID);
 			res.then(function(response){
@@ -221,16 +244,16 @@ export default {
 					var model = tasksData[i];
 					var task = new Task(model.id, model.userID, model.firstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted);
 					var today = new Date();
-					if (new Date(task.dueDate) < today && !task.completed) {
+					if (new Date(task.dueDate) < today && !task.completedDate) {
 						delayedTasks.push(task);
 					}
-					else if (new Date(task.startDate) <= today && new Date(task.dueDate) > today && !task.completed) {
+					else if (new Date(task.startDate) <= today && new Date(task.dueDate) > today && !task.completedDate) {
 						inProgressTasks.push(task);
 					}
-					else if (task.completed) {
+					else if (task.completedDate) {
 						completedTasks.push(task);
 					}
-					else if (new Date(task.startDate) > today && !task.completed) {
+					else if (new Date(task.startDate) > today && !task.completedDate) {
 						futureTasks.push(task);
 					}
 					else {
@@ -246,6 +269,28 @@ export default {
 						futureTasks: futureTasks,
 						error: errors
 					}
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async getTasksForProjectID(projectID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/task/projectID/" + projectID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				resolve({
+					status: "OK",
+					tasks: response.data.tasks
 				})
 				return;
 			}).catch(function(e){

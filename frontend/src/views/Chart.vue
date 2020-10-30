@@ -3,10 +3,10 @@
 	<div class="about w-full h-full bg-lightBlue">
 		<div class="w-2/3 mx-auto h-full bg-darkBlue">
 			<div class="flex w-1/2 mx-auto pt-4">
-				<div class="text-xxxlg">My Tasks</div>
+				<div class="text-xxxlg font-sans">Team Progress</div>
 			</div>
 			<div class="flex w-1/2 mx-auto pl-4 pt-4">
-				<div class="text-xxlg">Gantt Chart</div><span @click="chartIsBig=!chartIsBig" class="ml-2 self-center text-2xs text-gray">(Click to enlarge)</span>
+				<div class="text-xxlg">Gantt Chart</div><span @click="chartIsBig=!chartIsBig" class="ml-2 self-center text-2xs text-gray cursor-pointer">(Click to enlarge)</span>
 			</div>
 			<div @click="chartIsBig=!chartIsBig">
 				<div :class="chartClasses" ref="gantt" :style="aboutStyle"></div>

@@ -11,16 +11,21 @@
 		<div class="taskDescription ml-3 mt-3">
 			{{summary}}
 		</div>
-		<div class="self-end bg-orange text-darkBlue rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
+		<div @click="completeTask()" class="self-end bg-orange text-darkBlue rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
 	</div>
 
 </div>
 </template>
 
 <script>
+import Task from '../models/Task';
 export default {
 	name: 'Task',
 	props: {
+		taskID: {
+			type: String,
+			required:true
+		},
 		userFirstName: {
 			type: String,
 		},
@@ -48,6 +53,17 @@ export default {
             var year = date.getFullYear();
             return months[monthIndex] + " " + day + ", " + year;
         },
+		completeTask: function() {
+			var res = Task.completeTask(this.taskID);
+			res.then(function(){
+                
+            }).catch(function(e){
+                var code = e.error;	
+                switch (code){
+                    default:
+                }
+            });
+		}
 	}
 }
 </script>
