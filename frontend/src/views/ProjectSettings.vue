@@ -83,7 +83,7 @@ export default {
 				console.log(code);
             });
 		},
-		removeUser: function(userID){
+		removeUser: function(){
 
 		},
 		deleteProject: function(){
