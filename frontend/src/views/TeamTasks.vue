@@ -10,7 +10,9 @@
                  :title="task.title"
                  :dueDate="task.dueDate"
                  :summary="task.summary"
-                 @deleted="deleteTask(task.id)">  
+                 :percent="task.percentComplete"
+                 @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                 @editTask="editActivityPopup(task)">  
                 </Task>
             </div>
         </div>
@@ -34,6 +36,12 @@
                     <div class="my-1"><label for="newSummary">Description (Optional): </label><br><textarea id="newSummary" v-model="popupTask.summary" class="w-full px-1 bg-darkBlue border"/></div>
                 </div>
                 <div class="ml-auto mt-3 border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
+            </div>
+        </Popup>
+        <Popup v-if="deletePopupOpen" title="Are you sure you want to delete this task?" @closed="deletePopupOpen = false; toDeleteID = null">
+            <div class="flex justify-center">
+                <div class="mr-2 mt-3 border p-2 cursor-pointer" @click="deleteTask(toDeleteID); deletePopupOpen=false; toDeleteID = null">Yes</div>
+                <div class="ml-2 mt-3 border p-2 cursor-pointer" @click="deletePopupOpen = false; toDeleteID = null">No</div>
             </div>
         </Popup>
     </div>

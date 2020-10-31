@@ -1,10 +1,10 @@
 <template>
 <div>
 	<div class="border my-3 p-4 bg-header flex flex-col">
-		<i class="fa fa-times cursor-pointer ml-auto" @click="deleteTask(task.id)"/>
+		<i class="fa fa-times cursor-pointer ml-auto" @click="deleted()"/>
 		<div class="taskHeader flex justify-between items-center mt-2">
 			<p class="text-center text-lg">{{title}}
-				<i class="far fa-edit cursor-pointer text-teal" @click="editActivityPopup(task)"/>
+				<i class="far fa-edit cursor-pointer text-teal" @click="editTask"/>
 			</p>
 			<p class="float-right">Due: {{prettyDate(dueDate)}}</p>
 		</div>
@@ -18,7 +18,13 @@
 				<span v-if="hover">{{percentComplete}}%</span>
 				<!-- <span v-if="changing">For testing</span> -->
 			</span>
-			<span v-else/> <!--empty span for alignment-->
+			<div v-else>
+				<div class="border" style="min-width:150px">
+					<div :class="['bg-orange', {'pl-2':percentComplete != '0'}]" role="progressbar" :style="'width:' + percentComplete + '%'">
+						{{percentComplete}}%
+					</div>
+				</div>
+			</div>
 			<div class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
 		</div>
 	</div>
@@ -44,11 +50,15 @@ export default {
 		editPercent: {
 			type: Boolean,
 			default: false
+		},
+		percent: {
+			type: [String,Number],
+			default: "0"
 		}
 	},
 	data: function() {
 		return {
-			percentComplete: 0,
+			percentComplete: this.percent,
 			hover:false,
 			changing: false,
 			percentBefore: null
@@ -57,6 +67,9 @@ export default {
 	methods: {
 		deleted: function() {
 			this.$emit("deleted")
+		},
+		editTask: function(task) {
+			this.$emit("editTask", task);
 		},
 		prettyDate: function(dateString){
 			var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];

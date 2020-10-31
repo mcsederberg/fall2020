@@ -11,8 +11,10 @@
                  :dueDate="task.dueDate"
                  :summary="task.summary"
                  :editPercent="true"
-                 @deleted="deleteTask(task.id)"
-                 @savePercent="savePercent">  
+                 :percent="task.percentComplete"
+                 @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                 @editTask="editActivityPopup(task)"
+                 @savePercent="savePercent(task, ...arguments)">  
                 </Task>
             </div>
         </div>
@@ -36,6 +38,12 @@
                     <div class="my-1"><label for="newSummary">Description (Optional): </label><br><textarea id="newSummary" v-model="popupTask.summary" class="w-full px-1 bg-darkBlue border"/></div>
                 </div>
                 <div class="ml-auto mt-3 border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
+            </div>
+        </Popup>
+        <Popup v-if="deletePopupOpen" title="Are you sure you want to delete this task?" @closed="deletePopupOpen = false; toDeleteID = null">
+            <div class="flex justify-center">
+                <div class="mr-2 mt-3 border p-2 cursor-pointer" @click="deleteTask(toDeleteID); deletePopupOpen=false; toDeleteID = null">Yes</div>
+                <div class="ml-2 mt-3 border p-2 cursor-pointer" @click="deletePopupOpen = false; toDeleteID = null">No</div>
             </div>
         </Popup>
     </div>
@@ -81,8 +89,14 @@ export default {
             });
         },
         //updates database with percentage set by slider
-        savePercent: function() {
-            console.log("todo")
+        savePercent: function(taskInput, percentComplete) {
+            var task = taskInput.duplicate();
+            task.completedDate = this.popupDate(task.completedDate);
+            task.dueDate = this.popupDate(task.dueDate);
+            task.startDate = this.popupDate(task.startDate);
+            task.percentComplete = percentComplete;
+            this.popupTask = task;
+            this.updateTask();
         }
     }
 }

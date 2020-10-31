@@ -23,6 +23,8 @@ export default{
             clockedIn: false,
             user: {},
             project: {},
+            deletePopupOpen:false,
+            toDeleteID:null
 		}
 	},
 	computed: {
