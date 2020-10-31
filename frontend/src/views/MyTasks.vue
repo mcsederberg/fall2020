@@ -75,7 +75,7 @@ export default {
             //todo (should set variable allTasks)
             //for now just get all
             var vue = this;
-            var res = Task.getTasksForProjectID(this.project.id, this.user.id);
+            var res = Task.getTasksForProjectID(this.project.id);
             res.then(function(response){
                 vue.allTasks = response;
                 vue.showPopup = false;

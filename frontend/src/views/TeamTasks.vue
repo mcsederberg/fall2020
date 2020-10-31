@@ -19,7 +19,9 @@
                             :title="task.title"
                             :dueDate="task.dueDate"
                             :summary="task.summary"
-                            @deleted="deleteTask(task.id)">  
+                            :percent="task.percentComplete"
+                            @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                            @editTask="editActivityPopup(task)">  
                         </Task>
                         <div v-if="sortedOverdueTasks.length == 0">No Overdue Tasks!</div>
                     </div>
@@ -37,7 +39,9 @@
                             :title="task.title"
                             :dueDate="task.dueDate"
                             :summary="task.summary"
-                            @deleted="deleteTask(task.id)">  
+                            :percent="task.percentComplete"
+                            @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                            @editTask="editActivityPopup(task)">  
                         </Task>
                         <div v-if="sortedInProgressTasks.length == 0">No In Progress Tasks!</div>
                     </div>
@@ -55,7 +59,9 @@
                             :title="task.title"
                             :dueDate="task.dueDate"
                             :summary="task.summary"
-                            @deleted="deleteTask(task.id)">  
+                            :percent="task.percentComplete"
+                            @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                            @editTask="editActivityPopup(task)">  
                         </Task>
                         <div v-if="sortedCompletedTasks.length == 0">No Completed Tasks!</div>
                     </div>
@@ -73,7 +79,9 @@
                             :title="task.title"
                             :dueDate="task.dueDate"
                             :summary="task.summary"
-                            @deleted="deleteTask(task.id)">  
+                            :percent="task.percentComplete"
+                            @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                            @editTask="editActivityPopup(task)">  
                         </Task>
                         <div v-if="sortedFutureTasks.length == 0">No Future Tasks!</div>
                     </div>
@@ -125,6 +133,10 @@ export default {
     mixins: [taskMixin],
 	data: function(){
 		return{
+            overdueTasks: [],
+            inProgressTasks: [],
+            completedTasks: [],
+            futureTasks: [],
             overdueTasksOpen: false,
             inProgressTasksOpen: false,
             completedTasksOpen: false,
