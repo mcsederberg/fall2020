@@ -18,9 +18,8 @@ router.post('/clockIn', async(req, res)=> {
 			}
 			//Now clock in logic
 			var id = server.data.generateUID();
-			var clockedIn = server.data.SQLNow();
 			try {
-				let queryString = `INSERT INTO hour (hourID, userID, parentID, parentType, clockedIn, clockedOut) VALUES ('${id}', '${req.body.userID}', '${req.body.parentID}', '${req.body.parentType}', '${clockedIn}', NULL)`
+				let queryString = `INSERT INTO hour (hourID, userID, parentID, parentType, clockedIn, clockedOut) VALUES ('${id}', '${req.body.userID}', '${req.body.parentID}', '${req.body.parentType}', '${req.body.clockedIn}', NULL)`
 				server.data.query(queryString, 
 					function(result){
 						res.send({
@@ -30,7 +29,7 @@ router.post('/clockIn', async(req, res)=> {
 								userID: req.body.useID,
 								parentID: req.body.parentID,
 								parentType: req.body.parentType,
-								clockedIn: clockedIn,
+								clockedIn: req.body.clockedIn,
 								clockedOut: null
 							}
 					})
@@ -60,7 +59,7 @@ router.put('/clockOut', async(req, res)=> {
 				return;
 			}
 			try {
-				let queryString = `UPDATE hour SET clockedOut ='${server.data.SQLNow()}' WHERE parentID = '${req.body.parentID}' AND userID = '${req.body.userID}' AND clockedOut IS NULL`;
+				let queryString = `UPDATE hour SET clockedOut ='${req.body.clockedOut}' WHERE parentID = '${req.body.parentID}' AND userID = '${req.body.userID}' AND clockedOut IS NULL`;
 				server.data.query(queryString, 
 					function(result){
 						res.send({

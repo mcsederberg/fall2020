@@ -1,9 +1,10 @@
 import api from '@/api'
 
 export default class Task {
-    constructor(id, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete, deleted) {
+    constructor(id, userID, userFirstName, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete, deleted) {
         this.id = id;
         this.userID = userID;
+        this.userFirstName = userFirstName;
         this.projectID = projectID;
         this.title = title;
         this.summary = summary;
@@ -17,9 +18,29 @@ export default class Task {
     static getTask(id){
         return api.getTask(id);
     }
-    static async getTasksForProjectID(projectID){
+    static async getTasksForProjectID(projectID, userID = undefined){
         return new Promise(function(resolve, reject){
-            var res = api.getTasksForProjectID(projectID);
+            var res = ""
+            if (userID) {
+                res = api.getTasksForUserAndProject(projectID, userID);
+            }
+            else {
+                res = api.getTasksForProjectID(projectID);
+            }
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.tasks);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
+    static async getSortedTasksForProjectID(projectID){
+        return new Promise(function(resolve, reject){
+            var res = api.getSortedTasksForProjectID(projectID);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
@@ -48,6 +69,21 @@ export default class Task {
     static async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
         return new Promise(function(resolve, reject){
             var res = api.updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.task);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
+    static async completeTask(taskID){
+        var completeDate = this.SQLNow();
+        return new Promise(function(resolve, reject){
+            var res = api.completeTask(taskID, completeDate);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();

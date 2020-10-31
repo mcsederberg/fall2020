@@ -32,6 +32,7 @@ let bgColors = {
 	"orange": "#ef8354",
 	"teal": "#15aabf",
 	"gray": "#bfc0c0",
+	"green": "#7aa94b"
 };
 
 let fgColors = {
@@ -43,6 +44,7 @@ let fgColors = {
 	"teal": bgColors['teal'],
 	"gray": bgColors['gray'],
 	"dark": "black",
+	"green": bgColors['green'],
 };
 
 let borderColors = Object.assign({}, {
@@ -53,6 +55,7 @@ let borderColors = Object.assign({}, {
 	"transparent": "transparent",
 	"teal": bgColors['teal'],
 	"gray": bgColors['gray'],
+	"green": bgColors['green'],
 });
 
 

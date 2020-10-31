@@ -1,6 +1,7 @@
 <template>
 <div>
 	<div class="border my-3 p-4 bg-header flex flex-col">
+		<div>{{userFirstName}}</div>
 		<i class="fa fa-times cursor-pointer ml-auto" @click="deleted()"/>
 		<div class="taskHeader flex justify-between items-center mt-2">
 			<p class="text-center text-lg">{{title}}
@@ -25,7 +26,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="self-end bg-orange rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
+			<div @click="completeTask()" class="self-end bg-orange text-darkBlue rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
 		</div>
 	</div>
 
@@ -33,9 +34,17 @@
 </template>
 
 <script>
+import Task from '../models/Task';
 export default {
 	name: 'Task',
 	props: {
+		taskID: {
+			type: String,
+			required:true
+		},
+		userFirstName: {
+			type: String,
+		},
 		title: {
 			type: String, 
 			required: true
@@ -89,6 +98,17 @@ export default {
 			if (valueToSet != this.percentBefore) {
 				this.$emit("savePercent", valueToSet);
 			}
+        },
+		completeTask: function() {
+			var res = Task.completeTask(this.taskID);
+			res.then(function(){
+                
+            }).catch(function(e){
+                var code = e.error;	
+                switch (code){
+                    default:
+                }
+            });
 		}
 	}
 }

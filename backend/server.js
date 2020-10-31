@@ -81,9 +81,6 @@ var methods = {
 			return "";
 		}
 		return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
-	},
-	SQLNow: function(){
-		return new Date().toISOString().slice(0, 19).replace('T', ' ');
 	}
 };
 

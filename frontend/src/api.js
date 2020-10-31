@@ -4,6 +4,7 @@ import Task from './models/Task';
 import User from './models/User';
 import Hour from './models/Hour';
 import Project from './models/Project';
+//import task from '../../backend/serverFiles/task';
 
 const client = axios.create({
 //   baseURL: 'http://18.218.126.54:3000',
@@ -177,6 +178,29 @@ export default {
 			});
 		});
 	},
+	async completeTask(taskID, completeDate){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/task/complete", {taskID: taskID, completeDate: completeDate});
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 	async deleteTask(id){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/task/delete/task/"+id);
@@ -198,9 +222,85 @@ export default {
 			});
 		});
 	},
+	async getSortedTasksForProjectID(projectID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/task/projectID/" + projectID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var tasksData = response.data.tasks;
+				var delayedTasks = [];
+				var inProgressTasks = [];
+				var completedTasks = [];
+				var futureTasks = [];
+				var errors = [];
+				for (var i = 0; i < tasksData.length; i++){
+					var model = tasksData[i];
+					var task = new Task(model.id, model.userID, model.firstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted);
+					var today = new Date();
+					if (new Date(task.dueDate) < today && !task.completedDate) {
+						delayedTasks.push(task);
+					}
+					else if (new Date(task.startDate) <= today && new Date(task.dueDate) > today && !task.completedDate) {
+						inProgressTasks.push(task);
+					}
+					else if (task.completedDate) {
+						completedTasks.push(task);
+					}
+					else if (new Date(task.startDate) > today && !task.completedDate) {
+						futureTasks.push(task);
+					}
+					else {
+						errors.push(task);
+					}
+				}
+				resolve({
+					status: "OK",
+					tasks: {
+						delayedTasks: delayedTasks,
+						inProgressTasks: inProgressTasks,
+						completedTasks: completedTasks,
+						futureTasks: futureTasks,
+						error: errors
+					}
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 	async getTasksForProjectID(projectID){
 		return new Promise(function(resolve, reject){
 			var res = client.get("/api/task/projectID/" + projectID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				resolve({
+					status: "OK",
+					tasks: response.data.tasks
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async getTasksForUserAndProject(projectID, userID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/task/projectID/" + projectID + "/userID/" + userID);
 			res.then(function(response){
 				var code = response.data.code;
 				if (code !== "OK"){
@@ -214,7 +314,7 @@ export default {
 				var tasks = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					tasks.push(new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted))
+					tasks.push(new Task(model.id, model.userID, model.userFirstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted))
 				}
 				resolve({
 					status: "OK",
@@ -231,12 +331,13 @@ export default {
 
 	/*      HOURS        */
 	
-	async clockIn(userID, parentID, parentType){
+	async clockIn(userID, parentID, parentType,clockedIn){
 		return new Promise(function(resolve, reject){
 			var res = client.post("/api/hour/clockIn", {
 				userID: userID,
 				parentID: parentID,
 				parentType: parentType,
+				clockedIn: clockedIn
 			});
 			res.then(function(response){
 				var code = response.data.code;
@@ -258,11 +359,12 @@ export default {
 			});
 		});
 	},
-	async clockOut(userID, parentID){
+	async clockOut(userID, parentID, clockedOut){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/hour/clockOut", {
 				userID: userID,
-				parentID: parentID
+				parentID: parentID,
+				clockedOut: clockedOut
 			});
 			res.then(function(response){
 				var code = response.data.code;

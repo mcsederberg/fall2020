@@ -1,12 +1,14 @@
 <template>
     <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
-        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8 h-full">
+        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8" style="min-height: 100%;">
             <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
             <div class="w-full flex flex-col">
                 <div class="flex w-1/2 mx-auto mt-4">
-                    <div class="text-xxxlg">My Tasks</div>
+                    <div class="text-xxxlg font-sans">My Tasks</div>
                 </div>
                 <Task v-for="task in sortedTasks" :key="task.id" class=" self-center w-1/2"
+                 :taskID="task.id"
+                 :userFirstName="task.userFirstName"
                  :title="task.title"
                  :dueDate="task.dueDate"
                  :summary="task.summary"
@@ -19,7 +21,6 @@
             </div>
         </div>
 
-
         <Popup v-if="showPopup" id="newTaskPopup" :title="popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'" @closed="showPopup=false">
             <div class="flex flex-col">
                 <div class="border px-3 pt-3">
@@ -27,7 +28,7 @@
                         <div class="my-1"><label for="newStartDate">Start Date: </label><input id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
                         <div class="my-1 ml-2"><label for="newDueDate">Due Date: </label><input id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
                     </div>
-                    <div class="my-1"><label for="newCompletedDate">Completed Date: </label><input id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
+                    <div class="my-1"><label for="newCompletedDate">Completed Date (Optional): </label><input id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
                     <div class="my-1 cursor-pointer"><label for="newStatus">Status: </label>
                         <select class="bg-darkBlue border" v-model="popupTask.status">
                             <option default class="bg-darkBlue border" value="open">In Progress</option>
@@ -55,7 +56,7 @@ import Popup from '../components/Popup';
 import T from '../components/Task'
 import taskMixin from '../mixins/taskMixin'
 export default {
-	name: 'Tasks',
+	name: 'MyTasks',
 	components: {
         Popup:Popup,
         Task:T
@@ -74,7 +75,7 @@ export default {
             //todo (should set variable allTasks)
             //for now just get all
             var vue = this;
-            var res = Task.getTasksForProjectID(this.project.id);
+            var res = Task.getTasksForProjectID(this.project.id, this.user.id);
             res.then(function(response){
                 vue.allTasks = response;
                 vue.showPopup = false;

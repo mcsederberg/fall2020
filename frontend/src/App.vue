@@ -18,8 +18,8 @@
             <div class="flex text-xxxlg m-5 w-2/3 self-center">
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
-                    <span class="self-center">
-                        Project: {{project.title}} <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
+                    <span class="self-center font-sans">
+                        Project: {{project.title}} <span v-if="$route.name == 'ProjectSettings'">Settings</span> <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
                     </span>
                     <div v-if="$route.name === 'MyTasks' || $route.name === 'TeamTasks'" class="taskHours flex justify-between ml-auto text-sm">
                         <p class="self-center mr-4">Hours: {{projectHours}}</p>
@@ -129,6 +129,11 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css?family=Poppins");
+.font-poppins {
+    font-family: 'Poppins', serif;
+}
+
 #mainWrapper{
     display: flex;
     background: #242424;
@@ -147,9 +152,6 @@ export default {
     color: white;
 	font-size: 18px;
 	text-decoration: none;
-}
-.sidebarOption:hover{
-    background-color: #242424;
 }
 
 #headerTabs a.router-link-exact-active {

@@ -2,9 +2,11 @@
 <div class="w-full h-full bg-lightBlue" >
     <div class="w-2/3 mx-auto h-full bg-darkBlue border-orange border-l-8 border-r-8">
 		<i @click="showPopup = true" class="fa fa-plus text-orange float-right cursor-pointer relative" style="right: 15px; top: 15px; font-size: 35px;"/>
-		<div class="w-full h-full flex flex-col">
+		<div class="w-full flex flex-col">
 			<div v-for="project in projects" :key="project.id"  @click="openProject(project.id)" class="flex flex-col self-center w-2/3 my-3 p-4 bg-header cursor-pointer border-4 border-darkBlue hover:border-gray">
 				<p class="text-center text-lg">{{project.title}}</p>
+				<div class="border my-2"/>
+				<p class="text-center">{{project.summary}}</p>
 			</div>
 		</div>
 
@@ -21,9 +23,8 @@
 
 <script>
 import Project from '../models/Project';
-import User from '../models/User';
 import Popup from '../components/Popup';
-import  Cookies from '../mixins/Cookies'
+import Cookies from '../mixins/Cookies'
 export default {
 	name: 'Projects',
 	components: {
@@ -37,8 +38,7 @@ export default {
 		}
 	},
 	mounted: function(){
-		var userObj = JSON.parse(Cookies.getCookie("user"));
-		this.user = new User(userObj.id, userObj.username, userObj.password, userObj.firstName, userObj.lastName);
+		this.user = Cookies.getUser();
 		this.getAllProjects();
 	},
 	methods: {

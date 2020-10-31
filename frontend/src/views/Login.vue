@@ -138,6 +138,7 @@ export default {
 			var res = User.register(this.registerUsername, this.registerPassword, this.registerFirstName, this.registerLastName);
 			res.then(function(response){
 				vue.$root.$data.user = response;
+				Cookies.setCookie("user",JSON.stringify(response), 2);
 				window.location.href = "/projects";
 			}).catch(function(e){
 				var code = e.error;
