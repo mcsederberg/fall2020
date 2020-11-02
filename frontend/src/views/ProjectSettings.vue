@@ -15,21 +15,29 @@
 					</div>
 				</div>
 				<div class="flex mx-auto mt-5 w-3/4 justify-end">
-					<button v-if="isOwner" class="rounded-lg ml-3 bg-lightBlue px-3 text-darkBlue text-lg ml-auto" @click="deleteProject">Delete Project</button>
+					<button v-if="isOwner" class="rounded-lg ml-3 bg-lightBlue px-3 text-darkBlue text-lg ml-auto" @click="deletePopupOpen = true">Delete Project</button>
 					<button class="rounded-lg ml-3 bg-green px-3 text-lg text-darkBlue" @click="saveProject">Save</button>
 				</div>
             </div>
         </div>
+		<Popup v-if="deletePopupOpen" title="Are you sure you want to delete this project?" @closed="deletePopupOpen = false;">
+            <div class="flex justify-center">
+                <div class="mr-2 mt-3 border p-2 cursor-pointer" @click="deleteProject(); deletePopupOpen=false;">Yes</div>
+                <div class="ml-2 mt-3 border p-2 cursor-pointer" @click="deletePopupOpen = false;">No</div>
+            </div>
+        </Popup>
     </div>
 </template>
 
 <script>
 import  Cookies from '../mixins/Cookies'
+import Popup from '../components/Popup'
 import User from '../models/User';
 import Project from '../models/Project';
 export default {
 	name: 'ProjectSettings',
 	components: {
+		Popup:Popup
 	},
 	data: function(){
 		return{
@@ -39,7 +47,8 @@ export default {
 			},
 			users: [],
 			newUsername: "",
-			isOwner: false
+			isOwner: false,
+			deletePopupOpen: false
 		}
 	},
 	mounted: function(){
