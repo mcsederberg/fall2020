@@ -111,7 +111,7 @@ export default {
 		TASKS
 	*/
 
-	async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
+	async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete){
 		return new Promise(function(resolve, reject){
 			var res = client.post("/api/task/create", {
 				userID: userID,
@@ -121,7 +121,6 @@ export default {
 				dueDate: dueDate,
 				startDate: startDate,
 				completedDate: completedDate,
-				status: status,
 				percentComplete: percentComplete
 			});
 			res.then(function(response){
@@ -136,7 +135,7 @@ export default {
 				var model = response.data.model;
 				resolve({
 					status: "OK",
-					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted)
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted)
 				})
 				return;
 			}).catch(function(e){
@@ -144,7 +143,7 @@ export default {
 			});
 		});
 	},
-	async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
+	async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/task/update", {
 				taskID: taskID,
@@ -155,7 +154,6 @@ export default {
 				dueDate: dueDate,
 				startDate: startDate,
 				completedDate: completedDate,
-				status: status,
 				percentComplete: percentComplete
 			});
 			res.then(function(response){
@@ -170,7 +168,7 @@ export default {
 				var model = response.data.model;
 				resolve({
 					status: "OK",
-					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted)
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted)
 				})
 				return;
 			}).catch(function(e){
@@ -193,7 +191,7 @@ export default {
 				var model = response.data.model;
 				resolve({
 					status: "OK",
-					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted)
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted)
 				})
 				return;
 			}).catch(function(e){
@@ -242,7 +240,7 @@ export default {
 				var errors = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					var task = new Task(model.id, model.userID, model.firstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted);
+					var task = new Task(model.id, model.userID, model.firstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted);
 					var today = new Date();
 					if (new Date(task.dueDate) < today && !task.completedDate) {
 						delayedTasks.push(task);
@@ -314,7 +312,7 @@ export default {
 				var tasks = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					tasks.push(new Task(model.id, model.userID, model.userFirstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.status, model.percentComplete, model.deleted))
+					tasks.push(new Task(model.id, model.userID, model.userFirstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted))
 				}
 				resolve({
 					status: "OK",

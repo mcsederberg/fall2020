@@ -66,7 +66,7 @@
                         <div v-if="sortedCompletedTasks.length == 0">No Completed Tasks!</div>
                     </div>
                 </div>
-                <div @click="futureTasksOpen = !futureTasksOpen" class="flex flex-col w-1/2 mx-auto">
+                <div @click="futureTasksOpen = !futureTasksOpen" class="flex flex-col w-1/2 mb-4 mx-auto">
                     <div class="flex items-center cursor-pointer">
                         <div class="text-xlg mr-3">Future</div>
                         <i v-if="futureTasksOpen" class="fas fa-caret-down"></i>
@@ -90,23 +90,17 @@
         </div>
 
         <Popup v-if="showPopup" id="newTaskPopup" :title="popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'" @closed="showPopup=false">
-            <div class="flex flex-col">
+            <div class="flex flex-col text-lg">
                 <div class="border px-3 pt-3">
                     <div class="flex flex-row">
-                        <div class="my-1"><label for="newStartDate">Start Date: </label><input id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
-                        <div class="my-1 ml-2"><label for="newDueDate">Due Date: </label><input id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
+                        <div class="my-1"><label for="newStartDate">Start Date: </label><input type="date" id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
+                        <div class="my-1 ml-2"><label for="newDueDate">Due Date: </label><input type="date" id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
                     </div>
-                    <div class="my-1"><label for="newCompletedDate">Completed Date (Optional): </label><input id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
-                    <div class="my-1 cursor-pointer"><label for="newStatus">Status: </label>
-                        <select class="bg-darkBlue border" v-model="popupTask.status">
-                            <option default class="bg-darkBlue border" value="open">In Progress</option>
-                            <option class="bg-darkBlue border" value="closed">Completed</option>
-                        </select>
-                    </div>
+                    <div class="my-1"><label for="newCompletedDate">Completed Date (If already complete): </label><input type="date" id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
                     <div class="my-1"><label for="newTitle">Title: </label><input id="newTitle" v-model="popupTask.title" class="ml-2 px-1 bg-darkBlue border"/></div>
                     <div class="my-1"><label for="newSummary">Description (Optional): </label><br><textarea id="newSummary" v-model="popupTask.summary" class="w-full px-1 bg-darkBlue border"/></div>
                 </div>
-                <div class="ml-auto mt-3 border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
+                <div class="ml-auto mt-3 px-2 py-1 cursor-pointer bg-green text-darkBlue rounded-lg" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
             </div>
         </Popup>
         <Popup v-if="deletePopupOpen" title="Are you sure you want to delete this task?" @closed="deletePopupOpen = false; toDeleteID = null">
@@ -161,7 +155,7 @@ export default {
             return this.futureTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
         }
     },
-    methods: { //see mixin for methods
+    methods: {
         getAllTasks: function(){
             var vue = this;
             var res = Task.getSortedTasksForProjectID(this.project.id);

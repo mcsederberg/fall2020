@@ -22,21 +22,15 @@
         </div>
 
         <Popup v-if="showPopup" id="newTaskPopup" :title="popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'" @closed="showPopup=false">
-            <div class="flex flex-col">
+            <div class="flex flex-col text-lg">
                 <div class="border px-3 pt-3">
                     <div class="flex flex-row">
-                        <div class="my-1"><label for="newStartDate">Start Date: </label><input id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
-                        <div class="my-1 ml-2"><label for="newDueDate">Due Date: </label><input id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
+                        <div class="py-2"><label for="newStartDate">Start Date: </label><input id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
+                        <div class="py-2 ml-2"><label for="newDueDate">Due Date: </label><input id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
                     </div>
-                    <div class="my-1"><label for="newCompletedDate">Completed Date (Optional): </label><input id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
-                    <div class="my-1 cursor-pointer"><label for="newStatus">Status: </label>
-                        <select class="bg-darkBlue border" v-model="popupTask.status">
-                            <option default class="bg-darkBlue border" value="open">In Progress</option>
-                            <option class="bg-darkBlue border" value="closed">Completed</option>
-                        </select>
-                    </div>
-                    <div class="my-1"><label for="newTitle">Title: </label><input id="newTitle" v-model="popupTask.title" class="ml-2 px-1 bg-darkBlue border"/></div>
-                    <div class="my-1"><label for="newSummary">Description (Optional): </label><br><textarea id="newSummary" v-model="popupTask.summary" class="w-full px-1 bg-darkBlue border"/></div>
+                    <div class="py-2"><label for="newCompletedDate">Completed Date (If already complete): </label><input id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
+                    <div class="py-2"><label for="newTitle">Title: </label><input id="newTitle" v-model="popupTask.title" class="ml-2 px-1 bg-darkBlue border"/></div>
+                    <div class="py-2"><label for="newSummary">Description (Optional): </label><br><textarea id="newSummary" v-model="popupTask.summary" class="w-full px-1 bg-darkBlue border"/></div>
                 </div>
                 <div class="ml-auto mt-3 border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
             </div>
@@ -62,18 +56,12 @@ export default {
         Task:T
     },
     mixins: [taskMixin],
-	data: function(){
-		return{
-        }
-    },
     mounted: function(){
         this.getCookies();
         this.getMyTasks();
     },
-    methods: { //see mixin!
-        getMyTasks: function() {
-            //todo (should set variable allTasks)
-            //for now just get all
+    methods: {
+        getMyTasks: function(){
             var vue = this;
             var res = Task.getTasksForProjectID(this.project.id);
             res.then(function(response){

@@ -1,8 +1,10 @@
 <template>
 <div>
 	<div class="border my-3 p-4 bg-header flex flex-col">
-		<div>{{userFirstName}}</div>
-		<i class="fa fa-times cursor-pointer ml-auto" @click="deleted()"/>
+		<div class="flex flex-row">
+			<div>Assigned to: {{userFirstName}}</div>
+			<i class="fa fa-times cursor-pointer ml-auto" @click="deleted()"/>
+		</div>
 		<div class="taskHeader flex justify-between items-center mt-2">
 			<p class="text-center text-lg">{{title}}
 				<i class="far fa-edit cursor-pointer text-teal" @click="editTask"/>

@@ -10,7 +10,6 @@ export default{
                 summary: "",
                 dueDate: "",
                 completedDate: "",
-                status: "open",
                 percentComplete: "",
                 startDate: "",
                 deleted: false,
@@ -62,8 +61,7 @@ export default{
         updateTask: function(){
             if (this.popupTask.title == "" 
             || this.popupTask.summary == "" 
-            || this.popupTask.dueDate == "" 
-            || this.popupTask.status == ""
+            || this.popupTask.dueDate == ""
             || this.popupTask.startDate == ""){
                 alert("You must fill in all of the fields");
                 return;
@@ -76,8 +74,7 @@ export default{
                 this.popupTask.summary,
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
-                this.SQLDateTime(this.popupTask.completedDate), 
-                this.popupTask.status, 
+                this.SQLDateTime(this.popupTask.completedDate),
                 this.popupTask.percentComplete
             );
             var vue = this;
@@ -103,7 +100,6 @@ export default{
                 summary: "",
                 dueDate: "",
                 completedDate: "",
-                status: "open",
                 percentComplete: "0",
                 startDate: "",
                 deleted: false,
@@ -114,7 +110,6 @@ export default{
             if (this.popupTask.title == "" 
             || this.popupTask.summary == "" 
             || this.popupTask.dueDate == "" 
-            || this.popupTask.status == ""
             || this.popupTask.startDate == ""){
                 alert("You must fill in all of the fields");
                 return;
@@ -127,7 +122,6 @@ export default{
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
                 this.SQLDateTime(this.popupTask.completedDate), 
-                this.popupTask.status, 
                 this.popupTask.percentComplete
             );
             var vue = this;

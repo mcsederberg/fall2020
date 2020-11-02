@@ -1,7 +1,7 @@
 import api from '@/api'
 
 export default class Task {
-    constructor(id, userID, userFirstName, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete, deleted) {
+    constructor(id, userID, userFirstName, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, deleted) {
         this.id = id;
         this.userID = userID;
         this.userFirstName = userFirstName;
@@ -11,7 +11,6 @@ export default class Task {
         this.dueDate = dueDate;
         this.startDate = startDate;
         this.completedDate = completedDate;
-        this.status = status;
         this.percentComplete = percentComplete;
         this.deleted = deleted;
     }
@@ -52,9 +51,9 @@ export default class Task {
             });
         });
     }
-    static async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
+    static async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete){
         return new Promise(function(resolve, reject){
-            var res = api.createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete);
+            var res = api.createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
@@ -66,9 +65,9 @@ export default class Task {
             });
         });
     }
-    static async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete){
+    static async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete){
         return new Promise(function(resolve, reject){
-            var res = api.updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, status, percentComplete);
+            var res = api.updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
@@ -122,7 +121,6 @@ export default class Task {
             dueDate: this.dueDate,
             startDate: this.startDate,
             completedDate: this.completedDate,
-            status: this.status,
             percentComplete: this.percentComplete,
             deleted: this.deleted
         }

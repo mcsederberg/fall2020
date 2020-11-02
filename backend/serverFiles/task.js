@@ -8,7 +8,7 @@ router.post("/create", async(req, res) => {
 	var id = server.data.generateUID();
 	var model = req.body;
 	try{
-		var queryString = `INSERT INTO task (id, userID, projectID, title, summary, dueDate, completedDate, status, percentComplete, startDate, deleted) VALUES ('${id}', '${model.userID}','${model.projectID}','${model.title}','${model.summary}','${model.dueDate}','${model.completedDate}','${model.status}','${model.percentComplete}','${model.startDate}','0')`;
+		var queryString = `INSERT INTO task (id, userID, projectID, title, summary, dueDate, completedDate, percentComplete, startDate, deleted) VALUES ('${id}', '${model.userID}','${model.projectID}','${model.title}','${model.summary}','${model.dueDate}','${model.completedDate}','${model.percentComplete}','${model.startDate}','0')`;
 		server.data.query(queryString, function(result){
 			res.send({
 				code: "OK",
@@ -20,7 +20,6 @@ router.post("/create", async(req, res) => {
 					summary: model.summary,
 					dueDate: model.dueDate,
 					completedDate: model.completedDate,
-					status: model.status,
 					percentComplete: model.percentComplete,
 					startDate: model.startDate,
 					deleted: model.deleted
@@ -38,7 +37,7 @@ router.post("/create", async(req, res) => {
 router.put("/update", async(req, res) => {
 	var model = req.body;
 	try{
-		var queryString = `UPDATE task SET title ='${model.title}',	summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', status = '${model.status}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
+		var queryString = `UPDATE task SET title ='${model.title}',	summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
 		server.data.query(queryString, function(result){
 			res.send({
 				code: "OK",
@@ -50,7 +49,6 @@ router.put("/update", async(req, res) => {
 					summary: model.summary,
 					dueDate: model.dueDate,
 					completedDate: model.completedDate,
-					status: model.status,
 					percentComplete: model.percentComplete,
 					startDate: model.startDate,
 					deleted: model.deleted
@@ -80,7 +78,6 @@ router.put("/complete", async(req, res) => {
 					summary: model.summary,
 					dueDate: model.dueDate,
 					completedDate: model.completedDate,
-					status: model.status,
 					percentComplete: model.percentComplete,
 					startDate: model.startDate,
 					deleted: model.deleted
