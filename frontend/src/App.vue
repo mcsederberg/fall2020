@@ -19,7 +19,7 @@
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
                     <span class="self-center font-sans">
-                        Project: {{project.title}} <span v-if="$route.name == 'ProjectSettings'">Settings</span> <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg" @click="editActivityPopup(task)"/></router-link>
+                        Project: {{project.title}} <span v-if="$route.name == 'ProjectSettings'">Settings</span> <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg"/></router-link>
                     </span>
                     <div v-if="$route.name === 'MyTasks' || $route.name === 'TeamTasks'" class="taskHours flex justify-between ml-auto text-sm">
                         <p class="self-center mr-4">Hours: {{projectHours}}</p>
