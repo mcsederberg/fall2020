@@ -110,7 +110,7 @@ export default class Task {
         });
     }
     duplicate(){
-        return JSON.parse(JSON.stringify(this));
+        return new Task("", this.userID, this.userFirstName, this.projectID, this.title, this.summary, this.dueDate, this.startDate, this.completedDate, this.status, this.percentComplete, this.deleted);
     }
     toJSON(){
         return {
