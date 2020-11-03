@@ -38,7 +38,7 @@ export default{
         },
         SQLDateTime: function(date){
             if (date == ""){
-                return "";
+                return null;
             }
             return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
         },
@@ -59,8 +59,7 @@ export default{
             this.showPopup = true;
         },
         updateTask: function(){
-            if (this.popupTask.title == "" 
-            || this.popupTask.summary == "" 
+            if (this.popupTask.title == ""
             || this.popupTask.dueDate == ""
             || this.popupTask.startDate == ""){
                 alert("You must fill in all of the fields");
@@ -93,6 +92,24 @@ export default{
                 }
             });
         },
+        completeTask: function(taskID) {
+            var res = Task.completeTask(taskID);
+            var vue = this;
+			res.then(function(completedDate){
+				for (var i in vue.allTasks) {
+                    if (vue.allTasks[i].id == taskID) {
+                        vue.$set(vue.allTasks[i], 'completedDate', completedDate);
+                        vue.$set(vue.allTasks[i], 'percentComplete', 100);
+                        break;
+                    }
+                }
+            }).catch(function(e){
+                var code = e.error;	
+                switch (code){
+                    default:
+                }
+            });
+        },
         createTaskPopup: function(){
             this.popupType = this.ACTIVITY_CREATE;
             this.popupTask = {
@@ -108,7 +125,6 @@ export default{
         },
         createTask: function(){
             if (this.popupTask.title == "" 
-            || this.popupTask.summary == "" 
             || this.popupTask.dueDate == "" 
             || this.popupTask.startDate == ""){
                 alert("You must fill in all of the fields");

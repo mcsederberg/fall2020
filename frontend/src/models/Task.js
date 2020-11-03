@@ -1,10 +1,9 @@
 import api from '@/api'
 
 export default class Task {
-    constructor(id, userID, userFirstName, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, deleted) {
+    constructor(id, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, deleted, userFirstName) {
         this.id = id;
         this.userID = userID;
-        this.userFirstName = userFirstName;
         this.projectID = projectID;
         this.title = title;
         this.summary = summary;
@@ -13,6 +12,7 @@ export default class Task {
         this.completedDate = completedDate;
         this.percentComplete = percentComplete;
         this.deleted = deleted;
+        this.userFirstName = userFirstName;
     }
     static getTask(id){
         return api.getTask(id);
@@ -80,20 +80,23 @@ export default class Task {
         });
     }
     static async completeTask(taskID){
-        var completeDate = this.SQLNow();
+        var completedDate = this.SQLNow();
         return new Promise(function(resolve, reject){
-            var res = api.completeTask(taskID, completeDate);
+            var res = api.completeTask(taskID, completedDate);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
                     return;
                 }
-                resolve(response.task);
+                resolve(response.completedDate);
             }).catch(function(e){
                 reject(e);
             });
         });
     }
+	static SQLNow(){
+		return (new Date ((new Date((new Date(new Date())).toISOString() )).getTime() - ((new Date()).getTimezoneOffset()*60000))).toISOString().slice(0, 19).replace('T', ' ');
+	}
     static async deleteTask(taskID){
         return new Promise(function(resolve, reject){
             var res = api.deleteTask(taskID);

@@ -14,13 +14,9 @@
                     </div>
                     <div v-if="overdueTasksOpen">
                         <Task v-for="task in sortedOverdueTasks" :key="task.id" class=" self-center w-full"
-                            :taskID="task.id"
-                            :userFirstName="task.userFirstName"
-                            :title="task.title"
-                            :dueDate="task.dueDate"
-                            :summary="task.summary"
-                            :percent="task.percentComplete"
+                            :task="task"
                             @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                            @completeTask="completeTask"
                             @editTask="editActivityPopup(task)">  
                         </Task>
                         <div v-if="sortedOverdueTasks.length == 0">No Overdue Tasks!</div>
@@ -34,13 +30,9 @@
                     </div>
                     <div v-if="inProgressTasksOpen">
                         <Task v-for="task in sortedInProgressTasks" :key="task.id" class=" self-center w-full"
-                            :taskID="task.id"
-                            :userFirstName="task.userFirstName"
-                            :title="task.title"
-                            :dueDate="task.dueDate"
-                            :summary="task.summary"
-                            :percent="task.percentComplete"
+                            :task="task"
                             @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                            @completeTask="completeTask"
                             @editTask="editActivityPopup(task)">  
                         </Task>
                         <div v-if="sortedInProgressTasks.length == 0">No In Progress Tasks!</div>
@@ -54,13 +46,9 @@
                     </div>
                     <div v-if="completedTasksOpen">
                         <Task v-for="task in sortedCompletedTasks" :key="task.id" class=" self-center w-full"
-                            :taskID="task.id"
-                            :userFirstName="task.userFirstName"
-                            :title="task.title"
-                            :dueDate="task.dueDate"
-                            :summary="task.summary"
-                            :percent="task.percentComplete"
+                            :task="task"
                             @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                            @completeTask="completeTask"
                             @editTask="editActivityPopup(task)">  
                         </Task>
                         <div v-if="sortedCompletedTasks.length == 0">No Completed Tasks!</div>
@@ -74,13 +62,9 @@
                     </div>
                     <div v-if="futureTasksOpen"> 
                         <Task v-for="task in sortedFutureTasks" :key="task.id" class=" self-center w-full"
-                            :taskID="task.id"
-                            :userFirstName="task.userFirstName"
-                            :title="task.title"
-                            :dueDate="task.dueDate"
-                            :summary="task.summary"
-                            :percent="task.percentComplete"
+                            :task="task"
                             @deleted="deletePopupOpen = true; toDeleteID=task.id"
+                            @completeTask="completeTask"
                             @editTask="editActivityPopup(task)">  
                         </Task>
                         <div v-if="sortedFutureTasks.length == 0">No Future Tasks!</div>
@@ -89,20 +73,11 @@
             </div>
         </div>
 
-        <Popup v-if="showPopup" id="newTaskPopup" :title="popupType == ACTIVITY_CREATE? 'Add Task' : 'Update Task'" @closed="showPopup=false">
-            <div class="flex flex-col text-lg">
-                <div class="border px-3 pt-3">
-                    <div class="flex flex-row">
-                        <div class="my-1"><label for="newStartDate">Start Date: </label><input type="date" id="newStartDate" v-model="popupTask.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
-                        <div class="my-1 ml-2"><label for="newDueDate">Due Date: </label><input type="date" id="newDueDate" v-model="popupTask.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/></div>
-                    </div>
-                    <div class="my-1"><label for="newCompletedDate">Completed Date (If already complete): </label><input type="date" id="newCompletedDate" v-model="popupTask.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/></div>
-                    <div class="my-1"><label for="newTitle">Title: </label><input id="newTitle" v-model="popupTask.title" class="ml-2 px-1 bg-darkBlue border"/></div>
-                    <div class="my-1"><label for="newSummary">Description (Optional): </label><br><textarea id="newSummary" v-model="popupTask.summary" class="w-full px-1 bg-darkBlue border"/></div>
-                </div>
-                <div class="ml-auto mt-3 px-2 py-1 cursor-pointer bg-green text-darkBlue rounded-lg" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
-            </div>
-        </Popup>
+        <TaskPopup v-if="showPopup" 
+            :popupType="popupType"
+            :popupTask="popupTask"
+            @taskPopupFunction="taskPopupFunction"
+            @closePopup="showPopup=false"/>
         <Popup v-if="deletePopupOpen" title="Are you sure you want to delete this task?" @closed="deletePopupOpen = false; toDeleteID = null">
             <div class="flex justify-center">
                 <div class="mr-2 mt-3 border p-2 cursor-pointer" @click="deleteTask(toDeleteID); deletePopupOpen=false; toDeleteID = null">Yes</div>
@@ -115,6 +90,7 @@
 <script>
 import Task from '../models/Task';
 import Popup from '../components/Popup';
+import TaskPopup from '../components/TaskPopup';
 // import Cookies from '../mixins/Cookies';
 import T from '../components/Task'
 import taskMixin from '../mixins/taskMixin'
@@ -122,6 +98,7 @@ export default {
 	name: 'TeamTasks',
 	components: {
         Popup:Popup,
+        TaskPopup: TaskPopup,
         Task:T
     },
     mixins: [taskMixin],

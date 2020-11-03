@@ -135,7 +135,7 @@ export default {
 				var model = response.data.model;
 				resolve({
 					status: "OK",
-					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted)
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted, model.userFirstName)
 				})
 				return;
 			}).catch(function(e){
@@ -176,9 +176,9 @@ export default {
 			});
 		});
 	},
-	async completeTask(taskID, completeDate){
+	async completeTask(taskID, completedDate){
 		return new Promise(function(resolve, reject){
-			var res = client.put("/api/task/complete", {taskID: taskID, completeDate: completeDate});
+			var res = client.put("/api/task/complete", {taskID: taskID, completedDate: completedDate});
 			res.then(function(response){
 				var code = response.data.code;
 				if (code !== "OK"){
@@ -188,10 +188,9 @@ export default {
 					});
 					return;
 				}
-				var model = response.data.model;
 				resolve({
 					status: "OK",
-					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted)
+					completedDate: response.data.completedDate
 				})
 				return;
 			}).catch(function(e){
@@ -240,7 +239,7 @@ export default {
 				var errors = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					var task = new Task(model.id, model.userID, model.firstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted);
+					var task = new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted, model.firstName,);
 					var today = new Date();
 					if (new Date(task.dueDate) < today && !task.completedDate) {
 						delayedTasks.push(task);
@@ -312,7 +311,7 @@ export default {
 				var tasks = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					tasks.push(new Task(model.id, model.userID, model.userFirstName, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted))
+					tasks.push(new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted))
 				}
 				resolve({
 					status: "OK",
