@@ -7,6 +7,7 @@
                     <router-link to="/teamtasks" class="sidebarOption">Team Tasks</router-link>
                     <router-link to="/chart" class="sidebarOption">Team Progress</router-link> 
                     <router-link to="/messages" class="sidebarOption">Idea Board</router-link> 
+                    <router-link to="/projectSettings" class="sidebarOption">Project Settings</router-link> 
                 </template>
                 <div @mouseover="openProfileDropdown = true" @mouseleave="openProfileDropdown = false" class="sidebarOption ml-auto">
                     <div class="">My Profile</div>
@@ -19,7 +20,7 @@
                 <template v-if="$route.name !=='Projects'">
                     <router-link to="/projects" class="sidebarOption"><i class="fa fa-arrow-left text-xxlg"/></router-link>
                     <span class="self-center font-sans">
-                        Project: {{project.title}} <span v-if="$route.name == 'ProjectSettings'">Settings</span> <router-link to="/projectSettings" class="sidebarOption" v-if="$route.name !== 'ProjectSettings'"><i class="far fa-edit cursor-pointer text-teal text-xlg"/></router-link>
+                        Project: {{project.title}} <span v-if="$route.name == 'ProjectSettings'"/> 
                     </span>
                     <div v-if="$route.name === 'MyTasks' || $route.name === 'TeamTasks'" class="taskHours flex justify-between ml-auto text-sm">
                         <p class="self-center mr-4">Hours: {{projectHours}}</p>

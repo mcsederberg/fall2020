@@ -26,7 +26,7 @@
                     <textarea id="newSummary" v-model="task.summary" class="w-full px-1 bg-darkBlue border"/>
                 </div>
             </div>
-            <div class="ml-auto mt-3 border p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
+            <div class="ml-auto mt-3 border bg-green text-darkBlue p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
         </div>
     </Popup>
 </template>
