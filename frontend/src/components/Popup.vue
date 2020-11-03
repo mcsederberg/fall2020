@@ -3,7 +3,7 @@
 	<div class="self-center mx-auto absolute border-8 p-6 bg-darkBlue">
 		<div class="flex">
             <p class="self-center text-xxxlg">{{title}}</p>
-			<i @click="closed" class="fa fa-remove ml-auto float-right cursor-pointer"/> 
+			<i @click="closed" class="fa fa-remove p-2 ml-auto float-right cursor-pointer"/> 
 		</div>
 		<slot/>
 	</div>

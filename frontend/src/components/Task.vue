@@ -2,24 +2,23 @@
 <div>
 	<div class="border my-3 p-4 bg-header flex flex-col">
 		<div class="flex flex-row">
-			<div>Assigned to: {{userFirstName}}</div>
+			<div v-if="task.userFirstName">Assigned to: {{task.userFirstName}}</div>
 			<i class="fa fa-times cursor-pointer ml-auto" @click="deleted()"/>
 		</div>
-		<div class="taskHeader flex justify-between items-center mt-2">
-			<p class="text-center text-lg">{{title}}
+		<div class="taskHeader flex flex-col lg:flex-row justify-between items-center mt-2">
+			<p class="text-center text-lg">{{task.title}}
 				<i class="far fa-edit cursor-pointer text-teal" @click="editTask"/>
 			</p>
-			<p class="float-right">Due: {{prettyDate(dueDate)}}</p>
+			<p class="float-right">Due: {{prettyDate(task.dueDate)}}</p>
 		</div>
 		<div class="taskDescription ml-3 mt-3">
-			{{summary}}
+			{{task.summary}}
 		</div>
 		<div class="flex flex-col lg:flex-row justify-between mt-2">
 			<span v-if="editPercent" @mouseover="hover = true" @mouseleave="hover = false" >
 				Percent Complete: 
 				<input type="range" min="0" max="100" v-model="percentComplete" class="slider bg-white" id="myRange" @mousedown="willChange" @mouseup="doneChanging">
 				<span v-if="hover">{{percentComplete}}%</span>
-				<!-- <span v-if="changing">For testing</span> -->
 			</span>
 			<div v-else>
 				<div class="border" style="min-width:150px">
@@ -28,7 +27,8 @@
 					</div>
 				</div>
 			</div>
-			<div @click="completeTask()" class="self-end bg-orange text-darkBlue rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
+			<div v-if="!task.completedDate" @click="completeTask()" class="self-end bg-orange text-darkBlue rounded-lg cursor-pointer mt-1 py-1 px-3">Mark Complete</div>
+			<div v-else class="self-end text-teal rounded-lg mt-1 py-1">Completed {{prettyDate(task.completedDate)}}</div>
 		</div>
 	</div>
 
@@ -36,40 +36,21 @@
 </template>
 
 <script>
-import Task from '../models/Task';
 export default {
 	name: 'Task',
 	props: {
-		taskID: {
-			type: String,
-			required:true
-		},
-		userFirstName: {
-			type: String,
-		},
-		title: {
-			type: String, 
+		task: {
+			type: Object,
 			required: true
-		},
-		dueDate: {
-			required:true
-		},
-		summary: {
-			type: String,
-			required:true
 		},
 		editPercent: {
 			type: Boolean,
 			default: false
 		},
-		percent: {
-			type: [String,Number],
-			default: "0"
-		}
 	},
 	data: function() {
 		return {
-			percentComplete: this.percent,
+			percentComplete: this.task.percentComplete,
 			hover:false,
 			changing: false,
 			percentBefore: null
@@ -102,15 +83,7 @@ export default {
 			}
         },
 		completeTask: function() {
-			var res = Task.completeTask(this.taskID);
-			res.then(function(){
-                
-            }).catch(function(e){
-                var code = e.error;	
-                switch (code){
-                    default:
-                }
-            });
+			this.$emit('completeTask', this.task.id);
 		}
 	}
 }
