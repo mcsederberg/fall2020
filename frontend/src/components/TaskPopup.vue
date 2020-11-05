@@ -25,6 +25,12 @@
                     <br>
                     <textarea id="newSummary" v-model="task.summary" class="w-full px-1 bg-darkBlue border"/>
                 </div>
+                <div class="py-2">
+                    <label for="assignee">Assignee: </label>
+                    <select name="assignee" id="assignee" class="bg-darkBlue border w-48" v-model="task.user">
+                        <option v-for="user in users" :key="user.id" :value="user">{{user.firstName}} {{user.lastName}}</option>
+                    </select>
+                </div>
             </div>
             <div class="ml-auto mt-3 border bg-green text-darkBlue p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
         </div>
@@ -32,9 +38,10 @@
 </template>
 
 <script>
+import Cookies from '../mixins/Cookies';
 import Popup from '../components/Popup';
 export default {
-	name: 'MyTasks',
+	name: 'TaskPopup',
 	components: {
         Popup:Popup,
     },
@@ -52,6 +59,7 @@ export default {
             task: this.popupTask,
             ACTIVITY_CREATE: 0,
             ACTIVITY_EDIT: 1,
+            users: []
         }
     },
     methods: {
@@ -61,6 +69,9 @@ export default {
         closePopup: function() {
             this.$emit('closePopup');
         }
+    },
+    created: function() {
+        this.users = Cookies.getUsers();
     }
 }
 </script>

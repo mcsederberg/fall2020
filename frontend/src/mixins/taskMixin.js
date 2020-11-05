@@ -13,6 +13,7 @@ export default{
                 percentComplete: "",
                 startDate: "",
                 deleted: false,
+                user: {}
             },
             allTasks: [],
             projectHours: 0,
@@ -57,6 +58,9 @@ export default{
             task.completedDate = this.popupDate(task.completedDate);
             task.dueDate = this.popupDate(task.dueDate);
             task.startDate = this.popupDate(task.startDate);
+            task.user = this.projectUsers.find(us => {
+                return us.id == task.userID
+            })
             this.popupTask = task;
             this.showPopup = true;
         },
@@ -69,7 +73,7 @@ export default{
             }
             var res = Task.updateTask(
                 this.popupTask.id, 
-                this.user.id, 
+                this.popupTask.user.id, 
                 this.project.id,
                 this.popupTask.title, 
                 this.popupTask.summary,
@@ -122,6 +126,7 @@ export default{
                 percentComplete: "0",
                 startDate: "",
                 deleted: false,
+                user: this.user
             };
             this.showPopup = true;
         },
@@ -133,7 +138,7 @@ export default{
                 return;
             }
             var res = Task.createTask(
-                this.user.id, 
+                this.popupTask.user.id, 
                 this.project.id, 
                 this.popupTask.title, 
                 this.popupTask.summary, 
