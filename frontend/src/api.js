@@ -476,6 +476,42 @@ export default {
 			});
 		});
 	},
+	async getHoursForProject(projectID){
+		return new Promise(function(resolve, reject){
+			var res = client.get("/api/hour/getHoursForProject/projectID/" + projectID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var models = response.data.hours;
+				var hoursPerUser = {};
+				for (var i = 0; i < models.length; i++){
+					var model = models[i];
+					if (model.clockedOut == undefined) {
+						model.clockedOut = new Date().toISOString();
+					}
+					if (!hoursPerUser[model.userID]){
+						hoursPerUser[model.userID] = 0;
+					}
+					hoursPerUser[model.userID] += (new Date(model.clockedOut) - new Date(model.clockedIn));
+				}
+				//totalTime is in seconds, convert to hours
+				// var hours = new Date(totalTime).toISOString().substr(11,5)
+				resolve({
+					status: "OK",
+					hoursPerUser: hoursPerUser
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
 
 	/*           MAPPERS            */
 	

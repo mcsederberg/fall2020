@@ -115,7 +115,7 @@ export default {
 			var vue = this;
 			res.then(function(response){
 				vue.$root.$data.user = response;
-				Cookies.setCookie("user",JSON.stringify(response), 2);
+				Cookies.setUser(response);
 				vue.$router.push('/projects'); //do this instead of changing window href so it retains data
 			}).catch(function(e){
 				var code = e.error;	
@@ -138,7 +138,7 @@ export default {
 			var res = User.register(this.registerUsername, this.registerPassword, this.registerFirstName, this.registerLastName);
 			res.then(function(response){
 				vue.$root.$data.user = response;
-				Cookies.setCookie("user",JSON.stringify(response), 2);
+				Cookies.setUser(response);
 				window.location.href = "/projects";
 			}).catch(function(e){
 				var code = e.error;

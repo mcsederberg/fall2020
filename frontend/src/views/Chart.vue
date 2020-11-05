@@ -1,7 +1,7 @@
 {{ src/components/Gantt.vue }}
 <template>
 	<div class="about w-full h-full bg-lightBlue">
-		<div class="w-2/3 mx-auto h-full bg-darkBlue">
+		<div class="w-2/3 mx-auto bg-darkBlue" style="min-height: 100%">
 			<div class="flex w-1/2 mx-auto pt-4">
 				<div class="text-xxxlg font-sans">Team Progress</div>
 			</div>
@@ -39,7 +39,8 @@ export default {
 			chartIsBig: false,
 			collapsedHours: true,
 			teamHours: 0,
-			individualHours: []
+			individualHours: [],
+			projectUsers: []
 		}
 	},
 	mounted: function(){
@@ -52,7 +53,9 @@ export default {
         gantt.init(this.$refs.gantt);
 		this.user = Cookies.getUser();
 		this.project = Cookies.getProject();
+		this.projectUsers = Cookies.getUsers();
 		this.getAllTasks();
+		this.getTeamHours();
 	},
 	computed: {
 		aboutStyle: function(){

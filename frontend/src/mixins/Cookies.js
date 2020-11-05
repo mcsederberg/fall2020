@@ -27,6 +27,9 @@ export default class Cookies {
     static deleteCookie(cname){
         Cookies.setCookie(cname, "", -1);
     }
+    static setUser(user){
+        Cookies.setCookie("user", JSON.stringify(user), "1");
+    }
     static getUser(){
         var string = Cookies.getCookie("user");
         if (string == ""){
@@ -35,6 +38,9 @@ export default class Cookies {
         var user = JSON.parse(string);
         return new User(user.id, user.username, user.password, user.firstName, user.lastName);
     }
+    static setProject(project){
+        Cookies.setCookie("project", JSON.stringify(project), "1");
+    }
     static getProject(){
         var string = Cookies.getCookie("project");
         if (string == ""){
@@ -42,5 +48,16 @@ export default class Cookies {
         }
         var project = JSON.parse(string);
         return new Project(project.id, project.title, project.summary, project.ownerID, project.deleted);
+    }
+    static setUsers(users){
+        Cookies.setCookie("users", JSON.stringify(users), "1");
+    }
+    static getUsers(){
+        var string = Cookies.getCookie("users");
+        if (string == ""){
+            return "";
+        }
+        var users = JSON.parse(string);
+        return users
     }
 }

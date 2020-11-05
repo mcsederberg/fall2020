@@ -23,6 +23,7 @@
 
 <script>
 import Project from '../models/Project';
+import User from '../models/User';
 import Popup from '../components/Popup';
 import Cookies from '../mixins/Cookies'
 export default {
@@ -34,7 +35,8 @@ export default {
 		return{
 			projects: [],
 			showPopup: false,
-			newProject: {}
+			newProject: {},
+			project: {}
 		}
 	},
 	mounted: function(){
@@ -67,9 +69,22 @@ export default {
 		},
 		openProject: function(id) {
 			var project = this.projects.find(project => project.id == id);
-			Cookies.setCookie("project", JSON.stringify(project), "1");
-			this.$emit("updateProject");
-			this.$router.push('/mytasks');
+			Cookies.setProject(project);
+			this.project = project;
+			this.getUsersForProject();
+		},
+		getUsersForProject: function(){
+			let vue = this;
+			var res = User.getUsersForProject(this.project.id);
+			res.then(function(response){
+				// vue.users = response;
+				Cookies.setUsers(response);
+				vue.$emit("updateProject");
+				vue.$router.push('/mytasks');
+            }).catch(function(e){
+				var code = e.error;
+				console.log(code);
+            });
 		}
 	}
 }

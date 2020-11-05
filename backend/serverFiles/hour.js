@@ -170,8 +170,33 @@ router.get('/getTime/userID/:userID/parentID/:parentID', async(req, res) => {
 
 //get times for all users for a project or a task
 router.get('/getTime/projectTask/:id', async(req, res) => {
+	var id = req.params.id;
 	try {
 		let queryString = `SELECT * FROM hour WHERE parentID = '${id}'`
+		server.data.query(queryString, 
+			function(result){
+				if (result.length == 0) {
+					res.send({
+						code: "NO_TIME"
+					})
+					return;
+				}
+				res.send({
+					code: "OK",
+					hours: result
+			})
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+})
+
+router.get('/getHoursForProject/projectID/:projectID', async(req, res) =>{
+	var projectID = req.params.projectID
+	try {
+		let queryString = `SELECT * FROM hour WHERE parentID = '${projectID}'`
 		server.data.query(queryString, 
 			function(result){
 				if (result.length == 0) {

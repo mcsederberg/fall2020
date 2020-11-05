@@ -6,7 +6,7 @@
                     <router-link to="/mytasks" class="sidebarOption">My Tasks</router-link>
                     <router-link to="/teamtasks" class="sidebarOption">Team Tasks</router-link>
                     <router-link to="/chart" class="sidebarOption">Team Progress</router-link> 
-                    <router-link to="/messages" class="sidebarOption">Idea Board</router-link> 
+                    <!-- <router-link to="/messages" class="sidebarOption">Idea Board</router-link>  -->
                     <router-link to="/projectSettings" class="sidebarOption">Project Settings</router-link> 
                 </template>
                 <div @mouseover="openProfileDropdown = true" @mouseleave="openProfileDropdown = false" class="sidebarOption ml-auto">

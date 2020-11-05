@@ -67,6 +67,20 @@ export default class Hour {
             });
         });
     }
+    static async getHoursForProject(projectID){
+        return new Promise(function(resolve, reject){
+            var res = api.getHoursForProject(projectID);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.hours);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
 	static SQLNow(){
 		return (new Date ((new Date((new Date(new Date())).toISOString() )).getTime() - ((new Date()).getTimezoneOffset()*60000))).toISOString().slice(0, 19).replace('T', ' ');
 	}

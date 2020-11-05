@@ -35,7 +35,7 @@
 <script>
 import  Cookies from '../mixins/Cookies'
 import Popup from '../components/Popup'
-import User from '../models/User';
+// import User from '../models/User';
 import Project from '../models/Project';
 export default {
 	name: 'ProjectSettings',
@@ -57,7 +57,7 @@ export default {
 	mounted: function(){
 		this.currentUser = Cookies.getUser();
 		this.project = Cookies.getProject();
-		this.getUsersForProject();
+		// this.getUsersForProject();
 		if (this.project.ownerID === this.currentUser.id){
 			this.isOwner = true;
 		}
@@ -68,7 +68,7 @@ export default {
 			var res = this.project.update();
 			res.then(function(response){
 				vue.project = response;
-				Cookies.setCookie("project", JSON.stringify(response), "1");
+				Cookies.setProject(response);
             }).catch(function(e){
 				var code = e.error;
 				console.log(code);
@@ -79,7 +79,7 @@ export default {
 			var res = this.project.update();
 			res.then(function(response){
 				vue.project = response;
-				Cookies.setCookie("project", JSON.stringify(response), "1");
+				Cookies.setProject(response);
             }).catch(function(e){
 				var code = e.error;
 				console.log(code);
@@ -109,16 +109,6 @@ export default {
 				console.log(code);
             });
 		},
-		getUsersForProject: function(){
-			let vue = this;
-			var res = User.getUsersForProject(this.project.id);
-			res.then(function(response){
-				vue.users = response;
-            }).catch(function(e){
-				var code = e.error;
-				console.log(code);
-            });
-		}
 	}
 }
 </script>

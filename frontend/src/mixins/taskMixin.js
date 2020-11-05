@@ -23,7 +23,8 @@ export default{
             user: {},
             project: {},
             deletePopupOpen:false,
-            toDeleteID:null
+            toDeleteID:null,
+            projectUsers: []
 		}
 	},
 	computed: {
@@ -35,6 +36,7 @@ export default{
 		getCookies: function(){
             this.user = Cookies.getUser();
             this.project = Cookies.getProject();
+            this.projectUsers = Cookies.getUsers();
         },
         SQLDateTime: function(date){
             if (date == ""){
