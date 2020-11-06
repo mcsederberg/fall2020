@@ -57,6 +57,7 @@ export default {
 	mounted: function(){
 		this.currentUser = Cookies.getUser();
 		this.project = Cookies.getProject();
+		this.users = Cookies.getUsers();
 		// this.getUsersForProject();
 		if (this.project.ownerID === this.currentUser.id){
 			this.isOwner = true;
