@@ -158,14 +158,14 @@ export default{
             res.then(function(response){
                 vue.allTasks.push(response);
                 var today = new Date();
-                for (let i = 0; i < vue.projectUsers.length(); i++) {
+                for (let i = 0; i < vue.projectUsers.length; i++) {
                     if (vue.projectUsers[i].id == response.userID) {
                         response.userFirstName = vue.projectUsers[i].userFirstName;
                         break;
                     }
                 }
                 if (new Date(response.dueDate) < today && !response.completedDate) {
-                    vue.delayedTasks.push(response);
+                    vue.overdueTasks.push(response);
                 }
                 else if (new Date(response.startDate) <= today && new Date(response.dueDate) > today && !response.completedDate) {
                     vue.inProgressTasks.push(response);

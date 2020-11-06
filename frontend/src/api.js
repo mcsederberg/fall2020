@@ -232,7 +232,7 @@ export default {
 					return;
 				}
 				var tasksData = response.data.tasks;
-				var delayedTasks = [];
+				var overdueTasks = [];
 				var inProgressTasks = [];
 				var completedTasks = [];
 				var futureTasks = [];
@@ -242,7 +242,7 @@ export default {
 					var task = new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted, model.firstName);
 					var today = new Date();
 					if (new Date(task.dueDate) < today && !task.completedDate) {
-						delayedTasks.push(task);
+						overdueTasks.push(task);
 					}
 					else if (new Date(task.startDate) <= today && new Date(task.dueDate) > today && !task.completedDate) {
 						inProgressTasks.push(task);
@@ -260,7 +260,7 @@ export default {
 				resolve({
 					status: "OK",
 					tasks: {
-						delayedTasks: delayedTasks,
+						overdueTasks: overdueTasks,
 						inProgressTasks: inProgressTasks,
 						completedTasks: completedTasks,
 						futureTasks: futureTasks,

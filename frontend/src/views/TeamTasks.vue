@@ -6,70 +6,30 @@
                 <div class="flex w-1/2 mx-auto mt-4">
                     <div class="text-xxxlg font-sans">Team Tasks</div>
                 </div>
-                <div class="flex flex-col w-1/2 mx-auto">
-                    <div @click="overdueTasksOpen = !overdueTasksOpen" class="flex items-center cursor-pointer">
-                        <div class="text-xlg mr-3">Overdue</div>
-                        <i v-if="overdueTasksOpen" class="fas fa-caret-down"></i>
-                        <i v-else class="fas fa-caret-up"></i>
-                    </div>
-                    <div v-if="overdueTasksOpen">
-                        <Task v-for="task in sortedOverdueTasks" :key="task.id" class=" self-center w-full"
-                            :task="task"
-                            @deleted="deletePopupOpen = true; toDeleteID=task.id"
-                            @completeTask="completeTask"
-                            @editTask="editActivityPopup(task)">  
-                        </Task>
-                        <div v-if="sortedOverdueTasks.length == 0">No Overdue Tasks!</div>
-                    </div>
-                </div>
-                <div class="flex flex-col w-1/2 mx-auto">
-                    <div @click="inProgressTasksOpen = !inProgressTasksOpen" class="flex items-center cursor-pointer">
-                        <div class="text-xlg mr-3">In Progress</div>
-                        <i v-if="inProgressTasksOpen" class="fas fa-caret-down"></i>
-                        <i v-else class="fas fa-caret-up"></i>
-                    </div>
-                    <div v-if="inProgressTasksOpen">
-                        <Task v-for="task in sortedInProgressTasks" :key="task.id" class=" self-center w-full"
-                            :task="task"
-                            @deleted="deletePopupOpen = true; toDeleteID=task.id"
-                            @completeTask="completeTask"
-                            @editTask="editActivityPopup(task)">  
-                        </Task>
-                        <div v-if="sortedInProgressTasks.length == 0">No In Progress Tasks!</div>
-                    </div>
-                </div>
-                <div class="flex flex-col w-1/2 mx-auto">
-                    <div @click="completedTasksOpen = !completedTasksOpen" class="flex items-center cursor-pointer">
-                        <div class="text-xlg mr-3">Completed</div>
-                        <i v-if="completedTasksOpen" class="fas fa-caret-down"></i>
-                        <i v-else class="fas fa-caret-up"></i>
-                    </div>
-                    <div v-if="completedTasksOpen">
-                        <Task v-for="task in sortedCompletedTasks" :key="task.id" class=" self-center w-full"
-                            :task="task"
-                            @deleted="deletePopupOpen = true; toDeleteID=task.id"
-                            @completeTask="completeTask"
-                            @editTask="editActivityPopup(task)">  
-                        </Task>
-                        <div v-if="sortedCompletedTasks.length == 0">No Completed Tasks!</div>
-                    </div>
-                </div>
-                <div class="flex flex-col w-1/2 mb-4 mx-auto">
-                    <div @click="futureTasksOpen = !futureTasksOpen" class="flex items-center cursor-pointer">
-                        <div class="text-xlg mr-3">Future</div>
-                        <i v-if="futureTasksOpen" class="fas fa-caret-down"></i>
-                        <i v-else class="fas fa-caret-up"></i>
-                    </div>
-                    <div v-if="futureTasksOpen"> 
-                        <Task v-for="task in sortedFutureTasks" :key="task.id" class=" self-center w-full"
-                            :task="task"
-                            @deleted="deletePopupOpen = true; toDeleteID=task.id"
-                            @completeTask="completeTask"
-                            @editTask="editActivityPopup(task)">  
-                        </Task>
-                        <div v-if="sortedFutureTasks.length == 0">No Future Tasks!</div>
-                    </div>
-                </div>
+                <TaskDropdown 
+                    :taskList="sortedOverdueTasks"
+                    taskGroup="Overdue" 
+                    @deleted="deleted"
+                    @completeTask="completeTask"
+                    @editTask="editActivityPopup"/>
+                <TaskDropdown 
+                    :taskList="sortedInProgressTasks"
+                    taskGroup="In Progress" 
+                    @deleted="deleted"
+                    @completeTask="completeTask"
+                    @editTask="editActivityPopup"/>
+                <TaskDropdown 
+                    :taskList="sortedCompletedTasks"
+                    taskGroup="Completed" 
+                    @deleted="deleted"
+                    @completeTask="completeTask"
+                    @editTask="editActivityPopup"/>
+                <TaskDropdown 
+                    :taskList="sortedFutureTasks"
+                    taskGroup="Future" 
+                    @deleted="deleted"
+                    @completeTask="completeTask"
+                    @editTask="editActivityPopup"/>
             </div>
         </div>
 
@@ -91,15 +51,15 @@
 import Task from '../models/Task';
 import Popup from '../components/Popup';
 import TaskPopup from '../components/TaskPopup';
+import TaskDropdown from '../components/TaskDropdown';
 // import Cookies from '../mixins/Cookies';
-import T from '../components/Task'
 import taskMixin from '../mixins/taskMixin'
 export default {
 	name: 'TeamTasks',
 	components: {
         Popup:Popup,
         TaskPopup: TaskPopup,
-        Task:T
+        TaskDropdown: TaskDropdown,
     },
     mixins: [taskMixin],
 	data: function(){
@@ -133,7 +93,7 @@ export default {
             var vue = this;
             var res = Task.getSortedTasksForProjectID(this.project.id);
             res.then(function(response){
-                vue.delayedTasks = response.delayedTasks;
+                vue.overdueTasks = response.overdueTasks;
                 vue.inProgressTasks = response.inProgressTasks;
                 vue.completedTasks = response.completedTasks;
                 vue.futureTasks = response.futureTasks;
@@ -148,6 +108,10 @@ export default {
                 }
             });
         },
+        deleted: function(taskID) {
+            this.deletePopupOpen = true; 
+            this.toDeleteID= taskID;
+        }
     }
 }
 </script>
