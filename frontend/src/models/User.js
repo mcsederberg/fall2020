@@ -57,6 +57,9 @@ export default class User {
 			});
 		});
 	}
+	getFullName(){
+		return this.firstName + " " + this.lastName;
+	}
 	toJSON(){
 		return {
 			username: this.username,

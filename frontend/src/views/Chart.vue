@@ -17,9 +17,11 @@
 			<div class="flex w-1/2 mx-auto pl-4 pt-4">
 				<div  @click="collapsedHours=!collapsedHours" class="cursor-pointer text-xxlg">Individual Hours <i :class="['fa', {'fa-caret-down':collapsedHours, 'fa-caret-up':!collapsedHours}]"/></div>
 			</div>
-			<div v-for="hour in individualHours" :key="hour.id" class=" self-center w-1/2">  
-				{{hour.user}}:{{hour.time}}
-            </div>
+			<div class="flex flex-col w-1/2 mx-auto pl-4 pb-10">
+				<div v-show="!collapsedHours" v-for="(hour, userID) in individualHours" :key="userID" class="flex flex-col">  
+					{{getUsername(userID)}}: {{HMS(hour)}}
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -30,6 +32,7 @@ import Task from '../models/Task';
 import Hour from '../models/Hour';
 import Cookies from '../mixins/Cookies'
 export default {
+	/*global _*/
 	name: 'Projects',
 	components: {
 	},
@@ -40,7 +43,8 @@ export default {
 			collapsedHours: true,
 			teamHours: 0,
 			individualHours: [],
-			projectUsers: []
+			projectUsers: [],
+			projectUsersByID: {}
 		}
 	},
 	mounted: function(){
@@ -54,6 +58,7 @@ export default {
 		this.user = Cookies.getUser();
 		this.project = Cookies.getProject();
 		this.projectUsers = Cookies.getUsers();
+		this.projectUsersByID = _.indexBy(this.projectUsers, "id")
 		this.getAllTasks();
 		this.getTeamHours();
 	},
@@ -102,13 +107,30 @@ export default {
             var vue = this;
 			var res = Hour.getHoursForProject(this.project.id);
 			res.then(function(response){
-				vue.teamHours = response;
+				vue.individualHours = response;
+				var hours = 0;
+				for (const personID in response){
+					hours += response[personID];
+				}
+				vue.teamHours = vue.HMS(hours); 
 			}).catch(function(e){
 				var code = e.error;
 				switch (code){
                     default:
 				}
 			});
+		},
+		HMS: function(d){
+			d = Number(d);
+			var h = Math.floor(d / 3600);
+			var m = Math.floor(d % 3600 / 60);
+			// var s = Math.floor(d % 3600 % 60);
+
+			var hDisplay = h > 0 ? h : "0";
+			var mDisplay = ":" + (m > 0 ? m : "00");
+			// var sDisplay = ":" + (s > 0 ? s : "00");
+			// return hDisplay + mDisplay + sDisplay;
+			return hDisplay + mDisplay;
 		},
 		ganttDate: function(date){
 			return new Date(date).toString("yyyy-MM-dd");
@@ -117,6 +139,10 @@ export default {
 			var Difference_In_Time = date2.getTime() - date1.getTime(); 
 			
 			return Difference_In_Time / (1000 * 3600 * 24); 
+		},
+		getUsername: function(id){
+			var user = this.projectUsersByID[id];
+			return user.getFullName();
 		}
 	}
 }
