@@ -75,7 +75,7 @@ export default class Hour {
                     reject();
                     return;
                 }
-                resolve(response.hours);
+                resolve(response.hoursPerUser);
             }).catch(function(e){
                 reject(e);
             });

@@ -58,6 +58,11 @@ export default class Cookies {
             return "";
         }
         var users = JSON.parse(string);
-        return users
+        var userObjs = [];
+        for (var i = 0; i < users.length; i++){
+            var user = users[i];
+            userObjs.push(new User(user.id, user.username, user.password, user.firstName, user.lastName));
+        }
+        return userObjs;
     }
 }

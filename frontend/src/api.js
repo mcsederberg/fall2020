@@ -500,8 +500,6 @@ export default {
 					}
 					hoursPerUser[model.userID] += (new Date(model.clockedOut) - new Date(model.clockedIn));
 				}
-				//totalTime is in seconds, convert to hours
-				// var hours = new Date(totalTime).toISOString().substr(11,5)
 				resolve({
 					status: "OK",
 					hoursPerUser: hoursPerUser
