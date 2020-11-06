@@ -134,7 +134,6 @@ router.get('/getProjects/userID/:userID', async(req, res)=> {
 })
 
 router.put("/addUser/username/:username/projectID/:projectID", async(req,res)=> {
-	console.log("HI");
 	var username = req.params.username;
 	var projectID = req.params.projectID;
 	try{

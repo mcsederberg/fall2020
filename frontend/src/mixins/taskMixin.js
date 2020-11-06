@@ -16,6 +16,10 @@ export default{
                 user: {}
             },
             allTasks: [],
+            overdueTasks: [],
+            inProgressTasks: [],
+            completedTasks: [],
+            futureTasks: [],
             projectHours: 0,
             popupType: null,
             ACTIVITY_CREATE: 0,
@@ -137,6 +141,9 @@ export default{
                 alert("You must fill in all of the fields");
                 return;
             }
+            if (this.popupTask.completedDate != "") {
+                this.popupTask.percentComplete = 100;
+            }
             var res = Task.createTask(
                 this.popupTask.user.id, 
                 this.project.id, 
@@ -150,6 +157,25 @@ export default{
             var vue = this;
             res.then(function(response){
                 vue.allTasks.push(response);
+                var today = new Date();
+                for (let i = 0; i < vue.projectUsers.length(); i++) {
+                    if (vue.projectUsers[i].id == response.userID) {
+                        response.userFirstName = vue.projectUsers[i].userFirstName;
+                        break;
+                    }
+                }
+                if (new Date(response.dueDate) < today && !response.completedDate) {
+                    vue.delayedTasks.push(response);
+                }
+                else if (new Date(response.startDate) <= today && new Date(response.dueDate) > today && !response.completedDate) {
+                    vue.inProgressTasks.push(response);
+                }
+                else if (response.completedDate) {
+                    vue.completedTasks.push(response);
+                }
+                else if (new Date(response.startDate) > today && !response.completedDate) {
+                    vue.futureTasks.push(response);
+                }
                 vue.showPopup = false;
             }).catch(function(e){
                 var code = e.error;	

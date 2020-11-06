@@ -239,7 +239,7 @@ export default {
 				var errors = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					var task = new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted, model.firstName,);
+					var task = new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted, model.firstName);
 					var today = new Date();
 					if (new Date(task.dueDate) < today && !task.completedDate) {
 						delayedTasks.push(task);

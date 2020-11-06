@@ -6,8 +6,8 @@
                 <div class="flex w-1/2 mx-auto mt-4">
                     <div class="text-xxxlg font-sans">Team Tasks</div>
                 </div>
-                <div @click="overdueTasksOpen = !overdueTasksOpen" class="flex flex-col w-1/2 mx-auto">
-                    <div class="flex items-center cursor-pointer">
+                <div class="flex flex-col w-1/2 mx-auto">
+                    <div @click="overdueTasksOpen = !overdueTasksOpen" class="flex items-center cursor-pointer">
                         <div class="text-xlg mr-3">Overdue</div>
                         <i v-if="overdueTasksOpen" class="fas fa-caret-down"></i>
                         <i v-else class="fas fa-caret-up"></i>
@@ -22,8 +22,8 @@
                         <div v-if="sortedOverdueTasks.length == 0">No Overdue Tasks!</div>
                     </div>
                 </div>
-                <div @click="inProgressTasksOpen = !inProgressTasksOpen" class="flex flex-col w-1/2 mx-auto">
-                    <div class="flex items-center cursor-pointer">
+                <div class="flex flex-col w-1/2 mx-auto">
+                    <div @click="inProgressTasksOpen = !inProgressTasksOpen" class="flex items-center cursor-pointer">
                         <div class="text-xlg mr-3">In Progress</div>
                         <i v-if="inProgressTasksOpen" class="fas fa-caret-down"></i>
                         <i v-else class="fas fa-caret-up"></i>
@@ -38,8 +38,8 @@
                         <div v-if="sortedInProgressTasks.length == 0">No In Progress Tasks!</div>
                     </div>
                 </div>
-                <div @click="completedTasksOpen = !completedTasksOpen" class="flex flex-col w-1/2 mx-auto">
-                    <div class="flex items-center cursor-pointer">
+                <div class="flex flex-col w-1/2 mx-auto">
+                    <div @click="completedTasksOpen = !completedTasksOpen" class="flex items-center cursor-pointer">
                         <div class="text-xlg mr-3">Completed</div>
                         <i v-if="completedTasksOpen" class="fas fa-caret-down"></i>
                         <i v-else class="fas fa-caret-up"></i>
@@ -54,8 +54,8 @@
                         <div v-if="sortedCompletedTasks.length == 0">No Completed Tasks!</div>
                     </div>
                 </div>
-                <div @click="futureTasksOpen = !futureTasksOpen" class="flex flex-col w-1/2 mb-4 mx-auto">
-                    <div class="flex items-center cursor-pointer">
+                <div class="flex flex-col w-1/2 mb-4 mx-auto">
+                    <div @click="futureTasksOpen = !futureTasksOpen" class="flex items-center cursor-pointer">
                         <div class="text-xlg mr-3">Future</div>
                         <i v-if="futureTasksOpen" class="fas fa-caret-down"></i>
                         <i v-else class="fas fa-caret-up"></i>
@@ -104,10 +104,6 @@ export default {
     mixins: [taskMixin],
 	data: function(){
 		return{
-            overdueTasks: [],
-            inProgressTasks: [],
-            completedTasks: [],
-            futureTasks: [],
             overdueTasksOpen: false,
             inProgressTasksOpen: false,
             completedTasksOpen: false,

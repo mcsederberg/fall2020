@@ -25,7 +25,7 @@
                     <br>
                     <textarea id="newSummary" v-model="task.summary" class="w-full px-1 bg-darkBlue border"/>
                 </div>
-                <div class="py-2">
+                <div class="pb-4">
                     <label for="assignee">Assignee: </label>
                     <select name="assignee" id="assignee" class="bg-darkBlue border w-48" v-model="task.user">
                         <option v-for="user in users" :key="user.id" :value="user">{{user.firstName}} {{user.lastName}}</option>
