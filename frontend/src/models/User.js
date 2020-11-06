@@ -1,4 +1,4 @@
-import api from '@/api'
+import api from '../api'
 
 export default class User {
 	constructor(id, username, password, firstName, lastName){

@@ -1,4 +1,4 @@
-import api from '@/api'
+import api from '../api'
 
 export default class Message {
     constructor(projectID, content, userID, timePublished, editDate, priority, deleted) {

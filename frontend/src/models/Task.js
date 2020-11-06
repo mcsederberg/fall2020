@@ -1,4 +1,4 @@
-import api from '@/api'
+import api from '../api'
 
 export default class Task {
     constructor(id, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, deleted, userFirstName) {

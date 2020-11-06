@@ -1,4 +1,4 @@
-import api from '@/api'
+import api from '../api'
 
 export default class Hour {
 	constructor(hourID, userID, parentID, parentType="project", clockedIn, clockedOut=null){
