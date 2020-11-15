@@ -52,7 +52,7 @@ import Task from '../models/Task';
 import Popup from '../components/Popup';
 import TaskPopup from '../components/TaskPopup';
 import TaskDropdown from '../components/TaskDropdown';
-// import Cookies from '../mixins/Cookies';
+// import T from '../components/Task'
 import taskMixin from '../mixins/taskMixin'
 export default {
 	name: 'TeamTasks',

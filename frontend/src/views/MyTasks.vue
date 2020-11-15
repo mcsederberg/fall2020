@@ -8,6 +8,7 @@
                 </div>
                 <Task v-for="task in sortedTasks" :key="task.id" class=" self-center w-1/2"
                  :task="task"
+                 :percent="task.percentComplete"
                  :editPercent="true"
                  @deleted="deletePopupOpen = true; toDeleteID=task.id"
                  @completeTask="completeTask"
@@ -68,7 +69,7 @@ export default {
         },
         //updates database with percentage set by slider
         savePercent: function(taskInput, percentComplete) {
-            var task = taskInput.duplicate();
+            var task = taskInput;
             if (!task.completeDate && percentComplete == 100) {
                 task.completedDate = new Date();
             }

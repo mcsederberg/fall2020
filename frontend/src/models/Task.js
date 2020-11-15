@@ -65,9 +65,9 @@ export default class Task {
             });
         });
     }
-    static async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete){
+    static async updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete){
         return new Promise(function(resolve, reject){
-            var res = api.updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete);
+            var res = api.updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();

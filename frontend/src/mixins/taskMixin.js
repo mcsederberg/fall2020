@@ -59,12 +59,13 @@ export default{
         editActivityPopup: function(taskInput){
             this.popupType = this.ACTIVITY_EDIT;
             var task = {...taskInput};
-            task.completedDate = this.popupDate(taskInput.completedDate);
+            task.completedDate = taskInput.completedDate ? this.popupDate(taskInput.completedDate) : null;
             task.dueDate = this.popupDate(taskInput.dueDate);
             task.startDate = this.popupDate(taskInput.startDate);
             task.user = this.projectUsers.find(us => {
                 return us.id == task.userID
             })
+            task.percentComplete = task.completeDate ? 100 : task.percentComplete; //this isn't working
             this.popupTask = task;
             this.showPopup = true;
         },
@@ -75,15 +76,16 @@ export default{
                 alert("You must fill in all of the fields");
                 return;
             }
+            let userID = this.popupTask.id ? this.popupTask.id : this.user.id; //they can edit the user, but if you are only updating percentage, need a default
             var res = Task.updateTask(
                 this.popupTask.id, 
-                this.popupTask.user.id, 
                 this.project.id,
+                userID,
                 this.popupTask.title, 
                 this.popupTask.summary,
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
-                this.SQLDateTime(this.popupTask.completedDate),
+                this.popupTask.completeDate ? this.SQLDateTime(this.popupTask.completedDate) : null,
                 this.popupTask.percentComplete
             );
             var vue = this;
@@ -91,6 +93,24 @@ export default{
                 for (var i in vue.allTasks) {
                     if (vue.allTasks[i].id == response.id) {
                         vue.$set(vue.allTasks, i, response);
+                        break;
+                    }
+                }
+                for (let i in vue.futureTasks) {
+                    if (vue.futureTasks[i].id == response.id) {
+                        vue.$set(vue.futureTasks, i, response);
+                        break;
+                    }
+                }
+                for (let i in vue.inProgressTasks) {
+                    if (vue.inProgressTasks[i].id == response.id) {
+                        vue.$set(vue.inProgressTasks, i, response);
+                        break;
+                    }
+                }
+                for (let i in vue.overdueTasks) {
+                    if (vue.overdueTasks[i].id == response.id) {
+                        vue.$set(vue.overdueTasks, i, response);
                         break;
                     }
                 }
@@ -106,10 +126,31 @@ export default{
             var res = Task.completeTask(taskID);
             var vue = this;
 			res.then(function(completedDate){
-				for (var i in vue.allTasks) {
+				for (let i in vue.allTasks) {
                     if (vue.allTasks[i].id == taskID) {
                         vue.$set(vue.allTasks[i], 'completedDate', completedDate);
                         vue.$set(vue.allTasks[i], 'percentComplete', 100);
+                        break;
+                    }
+                }
+                for (let i in vue.futureTasks) {
+                    if (vue.futureTasks[i].id == taskID) {
+                        vue.$set(vue.futureTasks[i], 'completedDate', completedDate);
+                        vue.$set(vue.futureTasks[i], 'percentComplete', 100);
+                        break;
+                    }
+                }
+                for (let i in vue.inProgressTasks) {
+                    if (vue.inProgressTasks[i].id == taskID) {
+                        vue.$set(vue.inProgressTasks[i], 'completedDate', completedDate);
+                        vue.$set(vue.inProgressTasks[i], 'percentComplete', 100);
+                        break;
+                    }
+                }
+                for (let i in vue.overdueTasks) {
+                    if (vue.overdueTasks[i].id == taskID) {
+                        vue.$set(vue.overdueTasks[i], 'completedDate', completedDate);
+                        vue.$set(vue.overdueTasks[i], 'percentComplete', 100);
                         break;
                     }
                 }
