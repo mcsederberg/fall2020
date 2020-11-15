@@ -77,12 +77,7 @@ export default {
 		percentageChanged: function() {
 			let valueToSet = this.percentComplete;
 			if (valueToSet != this.percentBefore) {
-				// if (valueToSet == 100) {
-				// 	this.$emit('completeTask', this.task.id);
-				// }
-				// else {
-					this.$emit("savePercent", valueToSet); //popuptask id
-				// }
+				this.$emit("savePercent", valueToSet); //popuptask id
 			}
         },
 		completeTask: function() {

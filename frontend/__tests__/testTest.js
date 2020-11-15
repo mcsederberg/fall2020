@@ -18,12 +18,12 @@ afterEach(() => {
 // 	expect(taskMixin.methods.sum(1,2)).toBe(3);
 // })
 
-test('adds2', () => {
+test('emit event', () => {
 	popupWrapper.vm.closed();
 	expect(popupWrapper.emitted().closed).toEqual([[]]) //test emitted closed with parameters []
 })
 
 
-test('is a Vue instance22', () => {
+test('is a Vue instance', () => {
 	expect(popupWrapper.isVueInstance).toBeTruthy();
 });

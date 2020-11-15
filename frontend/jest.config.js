@@ -5,7 +5,7 @@ const jestConfig = {
 	'transform': {
 	  '^.+\\.jsx?$': 'babel-jest',
 	},
-	testMatch: ['**/__tests__/*.js?(x)'],
+	testMatch: ['**/__tests__/*.js?(x)', '**/__tests__/components/*.js?(x)'],
 	// collectCoverage: true, //hmmmmm vv
     // collectCoverageFrom: [
     //     "Test/*.{js,vue}",
