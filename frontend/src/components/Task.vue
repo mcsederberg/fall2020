@@ -60,8 +60,8 @@ export default {
 		deleted: function() {
 			this.$emit("deleted")
 		},
-		editTask: function(task) {
-			this.$emit("editTask", task);
+		editTask: function() {
+			this.$emit("editTask", this.task);
 		},
 		prettyDate: function(dateString){
 			var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];

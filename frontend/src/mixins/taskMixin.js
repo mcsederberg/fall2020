@@ -58,10 +58,10 @@ export default{
         },
         editActivityPopup: function(taskInput){
             this.popupType = this.ACTIVITY_EDIT;
-            var task = taskInput.duplicate();
-            task.completedDate = this.popupDate(task.completedDate);
-            task.dueDate = this.popupDate(task.dueDate);
-            task.startDate = this.popupDate(task.startDate);
+            var task = {...taskInput};
+            task.completedDate = this.popupDate(taskInput.completedDate);
+            task.dueDate = this.popupDate(taskInput.dueDate);
+            task.startDate = this.popupDate(taskInput.startDate);
             task.user = this.projectUsers.find(us => {
                 return us.id == task.userID
             })
@@ -208,7 +208,7 @@ export default{
             });
         },
         popupDate: function(dateString){
-            return new Date(dateString).toString("MMM dd yyyy");
+            return new Date(dateString).toString("yyyy-MM-dd");
         },
 	}
 }
