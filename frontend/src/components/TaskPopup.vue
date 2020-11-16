@@ -5,16 +5,16 @@
                 <div class="flex flex-row">
                     <div class="py-2">
                         <label for="newStartDate">Start Date: </label>
-                        <input id="newStartDate" type="date" v-model="task.startDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/>
+                        <input id="newStartDate" type="date" v-model="task.startDate" class="ml-2 px-1 float-right bg-darkBlue border" style="width: 11rem"/>
                     </div>
                     <div class="py-2 ml-2">
                         <label for="newDueDate">Due Date: </label>
-                        <input id="newDueDate" type="date" v-model="task.dueDate" class="ml-2 px-1 float-right bg-darkBlue border w-32"/>
+                        <input id="newDueDate" type="date" v-model="task.dueDate" class="ml-2 px-1 float-right bg-darkBlue border" style="width: 11rem"/>
                     </div>
                 </div>
                 <div class="py-2">
                     <label for="newCompletedDate">Completed Date (If already complete): </label>
-                    <input id="newCompletedDate" type="date" v-model="task.completedDate" class="ml-2 px-1 bg-darkBlue border w-32"/>
+                    <input id="newCompletedDate" type="date" v-model="task.completedDate" class="ml-2 px-1 bg-darkBlue border" style="width: 11rem"/>
                 </div>
                 <div class="py-2">
                     <label for="newTitle">Title: </label>

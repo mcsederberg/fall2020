@@ -8,6 +8,7 @@
         <div v-if="tasksOpen">
             <Task v-for="task in taskList" :key="task.id" class=" self-center w-full"
                 :task="task"
+                :percent="task.percentComplete"
                 @deleted="deleted(task.id)"
                 @completeTask="completeTask(task.id)"
                 @editTask="editActivityPopup(task)">  
@@ -46,8 +47,8 @@ export default {
         completeTask: function(taskID) {
             this.$emit('completeTask', taskID);
         },
-        editTask: function(task) {
-            this.$emit('editActivityPopup', task);
+        editActivityPopup: function(task) {
+            this.$emit('editTask', task);
         }
     }
 }

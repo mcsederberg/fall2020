@@ -15,9 +15,9 @@
 			{{task.summary}}
 		</div>
 		<div class="flex flex-col lg:flex-row justify-between mt-2">
-			<span v-if="editPercent" @mouseover="hover = true" @mouseleave="hover = false" >
+			<span v-if="editPercent && (percentComplete < 100)" @mouseover="hover = true" @mouseleave="hover = false" >
 				Percent Complete: 
-				<input type="range" min="0" max="100" v-model="percentComplete" class="slider bg-white" id="myRange" @mousedown="willChange" @mouseup="doneChanging">
+				<input type="range" min="0" max="100" v-model="percentComplete" class="slider bg-white" id="myRange" @mousedown="percentBefore = percentComplete;" @mouseup="percentageChanged">
 				<span v-if="hover">{{percentComplete}}%</span>
 			</span>
 			<div v-else>
@@ -47,12 +47,15 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		percent: {
+			type: [Number, String],
+			required:true
+		}
 	},
 	data: function() {
 		return {
-			percentComplete: this.task.percentComplete,
+			percentComplete: this.percent,
 			hover:false,
-			changing: false,
 			percentBefore: null
 		}
 	},
@@ -60,8 +63,8 @@ export default {
 		deleted: function() {
 			this.$emit("deleted")
 		},
-		editTask: function(task) {
-			this.$emit("editTask", task);
+		editTask: function() {
+			this.$emit("editTask", this.task);
 		},
 		prettyDate: function(dateString){
 			var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -71,19 +74,24 @@ export default {
 			var year = date.getFullYear();
 			return months[monthIndex] + " " + day + ", " + year;
 		},
-		willChange: function() {
-			this.percentBefore = this.percentComplete;
-			this.changing = true;
-		},
-		doneChanging: function() {
-			this.changing = false;
+		percentageChanged: function() {
 			let valueToSet = this.percentComplete;
 			if (valueToSet != this.percentBefore) {
-				this.$emit("savePercent", valueToSet);
+				this.$emit("savePercent", valueToSet); //popuptask id
 			}
         },
 		completeTask: function() {
 			this.$emit('completeTask', this.task.id);
+		}
+	},
+	watch:{
+		percent: function() {
+			this.percentComplete = this.percent
+		}, 
+		percentComplete: function(newV) {
+			if (newV == 100 && !this.task.completedDate) {
+				this.$emit('completeTask', this.task.id);
+			}
 		}
 	}
 }

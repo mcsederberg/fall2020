@@ -29,6 +29,7 @@
                 <div class="ml-2 mt-3 border p-2 cursor-pointer" @click="deletePopupOpen = false;">No</div>
             </div>
         </Popup>
+		<Popup v-if="noUsersPopup" title="There are no users with that username" @closed="noUsersPopup = false"/>
     </div>
 </template>
 
@@ -51,7 +52,8 @@ export default {
 			users: [],
 			newUsername: "",
 			isOwner: false,
-			deletePopupOpen: false
+			deletePopupOpen: false,
+			noUsersPopup: false,
 		}
 	},
 	mounted: function(){
@@ -91,9 +93,8 @@ export default {
 			var res = Project.addUser(this.newUsername, this.project.id);
 			res.then(function(response){
 				vue.users.append(response);
-            }).catch(function(e){
-				var code = e.error;
-				console.log(code);
+            }).catch(function(){
+				vue.noUsersPopup = true;
             });
 		},
 		removeUser: function(){
