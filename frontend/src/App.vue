@@ -11,8 +11,8 @@
                 </template>
                 <div @mouseover="openProfileDropdown = true" @mouseleave="openProfileDropdown = false" class="sidebarOption ml-auto">
                     <div class="">My Profile</div>
-                    <div v-if="openProfileDropdown" class="mt-3 border-b border-l border-r border-orange bg-header absolute">
-                        <div @click="logout" class="m-2">Logout</div>
+                    <div v-if="openProfileDropdown" class="flex mt-3 border-b border-l border-r border-orange bg-header absolute w-24 center">
+                        <div @click="logout" class="m-2 center mx-auto">Logout</div>
                     </div> 
                 </div>
             </div>

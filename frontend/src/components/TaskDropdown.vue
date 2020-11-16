@@ -40,6 +40,11 @@ export default {
             tasksOpen: false
         }
     },
+    mounted: function(){
+        if (this.taskGroup === "In Progress"){
+            this.tasksOpen = true;
+        }
+    },
     methods: {
         deleted: function(taskID) {
             this.$emit('deleted', taskID);

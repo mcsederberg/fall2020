@@ -1,6 +1,6 @@
 
 <template>
-	<div class="w-full h-full flex bg-darkBlue">
+	<div class="w-full h-full flex bg-darkBlue" style="min-height:100%;">
 		<div class="absolute">
 			<div id="decoration" class="top relative border-orange transform origin-center h-16 -rotate-45"></div>
 		</div>

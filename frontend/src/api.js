@@ -499,9 +499,13 @@ export default {
 						// model.clockedOut = new Date().toISOString();
 					}
 					if (!hoursPerUser[model.userID]){
-						hoursPerUser[model.userID] = 0;
+						hoursPerUser[model.userID] = {hours:0,minutes:0};
 					}
-					hoursPerUser[model.userID] += (new Date(Number(model.clockedOut)) - new Date(Number(model.clockedIn)));
+					var time = (new Date(Number(model.clockedOut)) - new Date(Number(model.clockedIn)));
+					var hhmm = new Date(time).toISOString().substr(11,5);
+					var array = hhmm.split(":");
+					hoursPerUser[model.userID].hours += Number(array[0]);
+					hoursPerUser[model.userID].minutes += Number(array[1]);
 				}
 				resolve({
 					status: "OK",

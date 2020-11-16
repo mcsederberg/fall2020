@@ -1,14 +1,14 @@
 {{ src/components/Gantt.vue }}
 <template>
 	<div class="about w-full h-full bg-lightBlue">
-		<div class="w-2/3 mx-auto bg-darkBlue" style="min-height: 100%">
+		<div class="w-2/3 mx-auto bg-darkBlue  border-orange border-l-8 border-r-8" style="min-height: 100%">
 			<div class="flex w-1/2 mx-auto pt-4">
 				<div class="text-xxxlg font-sans">Team Progress</div>
 			</div>
 			<div class="flex w-1/2 mx-auto pl-4 pt-4">
 				<div class="text-xxlg">Gantt Chart</div><span @click="chartIsBig=!chartIsBig" class="ml-2 self-center text-2xs text-gray cursor-pointer">(Click to enlarge)</span>
 			</div>
-			<div @click="chartIsBig=!chartIsBig">
+			<div>
 				<div :class="chartClasses" ref="gantt" :style="aboutStyle"></div>
 			</div>
 			<div class="flex w-1/2 mx-auto pl-4 pt-4">
@@ -18,8 +18,8 @@
 				<div  @click="collapsedHours=!collapsedHours" class="cursor-pointer text-xxlg">Individual Hours <i :class="['fa', {'fa-caret-down':collapsedHours, 'fa-caret-up':!collapsedHours}]"/></div>
 			</div>
 			<div class="flex flex-col w-1/2 mx-auto pl-4 pb-10">
-				<div v-show="!collapsedHours" v-for="(hour, userID) in individualHours" :key="userID" class="flex flex-col">  
-					{{getUsername(userID)}}: {{HMS(hour)}}
+				<div v-show="!collapsedHours" v-for="user in projectUsers" :key="user.id" class="flex ">  
+					{{getUsername(user.id)}}:  <span class="ml-3" v-if="hasTime(user.id)">{{pad(individualHours[user.id].hours)}}:{{pad(individualHours[user.id].minutes)}}</span><span class="ml-3" v-else>00:00</span>
 				</div>
 			</div>
 		</div>
@@ -72,7 +72,7 @@ export default {
 			if (this.chartIsBig){
 				return "w-full mx-auto";
 			}
-			return "w-3/4 mx-auto pointer-events-none";
+			return "w-3/4 mx-auto";
 		}
 	},
 	methods: {
@@ -109,10 +109,17 @@ export default {
 			res.then(function(response){
 				vue.individualHours = response;
 				var hours = 0;
+				var minutes = 0;
 				for (const personID in response){
-					hours += response[personID];
+					hours += Number(response[personID].hours);
+					minutes += Number(response[personID].minutes);
 				}
-				vue.teamHours = vue.HMS(hours); 
+
+				hours += Math.floor(minutes/60);
+				hours =  (hours + "").padStart(2,"0");
+				minutes = (minutes%60 + "").padStart(2,"0");
+				vue.teamHours = hours+":"+minutes;
+				// vue.teamHours = vue.HMS(hours); 
 			}).catch(function(e){
 				var code = e.error;
 				switch (code){
@@ -120,6 +127,15 @@ export default {
 				}
 			});
 		},
+		hasTime: function(userID){
+			if (this.individualHours[userID]){
+				return true;
+			}
+			return false;
+		},	
+		pad: function(time){
+			return (time+"").padStart(2,"0")
+		},	
 		HMS: function(d){
 			d = Number(d);
 			var h = Math.floor(d / 3600);
