@@ -422,7 +422,8 @@ export default {
 				for (var i = 0; i < models.length; i++){
 					var model = models[i];
 					if (model.clockedOut == undefined) {
-						model.clockedOut = new Date();
+						model.clockedOut = Date.now();
+						// model.clockedOut = new Date().toISOString();
 					}
 					hours.push(new Hour(model.id, model.userID, model.parentID, model.parentType, model.clockedIn, model.clockedOut));
 				}
@@ -460,9 +461,10 @@ export default {
 				for (var i = 0; i < models.length; i++){
 					var model = models[i];
 					if (model.clockedOut == undefined) {
-						model.clockedOut = new Date().toISOString();
+						model.clockedOut = Date.now();
+						// model.clockedOut = new Date().toISOString();
 					}
-					totalTime += (new Date(model.clockedOut) - new Date(model.clockedIn));
+					totalTime += (new Date(Number(model.clockedOut)) - new Date(Number(model.clockedIn)));
 				}
 				//totalTime is in seconds, convert to hours
 				var hours = new Date(totalTime).toISOString().substr(11,5)
@@ -493,12 +495,13 @@ export default {
 				for (var i = 0; i < models.length; i++){
 					var model = models[i];
 					if (model.clockedOut == undefined) {
-						model.clockedOut = new Date().toISOString();
+						model.clockedOut = Date.now();
+						// model.clockedOut = new Date().toISOString();
 					}
 					if (!hoursPerUser[model.userID]){
 						hoursPerUser[model.userID] = 0;
 					}
-					hoursPerUser[model.userID] += (new Date(model.clockedOut) - new Date(model.clockedIn));
+					hoursPerUser[model.userID] += (new Date(Number(model.clockedOut)) - new Date(Number(model.clockedIn)));
 				}
 				resolve({
 					status: "OK",
