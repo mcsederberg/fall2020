@@ -17,7 +17,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="flex mx-auto mt-5 w-3/4 justify-end">
+				<div class="flex mx-auto my-5 w-3/4 justify-end">
 					<button v-if="isOwner" class="rounded-lg ml-3 bg-lightBlue px-3 text-darkBlue text-lg ml-auto" @click="deletePopupOpen = true">Delete Project</button>
 					<button class="rounded-lg ml-3 bg-green px-3 text-lg text-darkBlue" @click="saveProject">Save</button>
 				</div>
