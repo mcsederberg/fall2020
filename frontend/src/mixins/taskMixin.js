@@ -76,7 +76,7 @@ export default{
                 alert("You must fill in all of the fields");
                 return;
             }
-            let userID = this.popupTask.id ? this.popupTask.id : this.user.id; //they can edit the user, but if you are only updating percentage, need a default
+            let userID = this.popupTask.user.id ? this.popupTask.user.id : this.user.id; //they can edit the user, but if you are only updating percentage, need a default
             let percent;
             if (this.popupTask.completedDate) { //they just marked it as complete
                 percent = 100;
@@ -100,27 +100,35 @@ export default{
             );
             var vue = this;
             res.then(function(response){
+                let user = vue.projectUsers.find(us => {
+                    return us.id == response.userID
+                })
+                let userFirstName = user.firstName;
                 for (var i in vue.allTasks) {
                     if (vue.allTasks[i].id == response.id) {
                         vue.$set(vue.allTasks, i, response);
+                        vue.$set(vue.allTasks[i], 'userFirstName', userFirstName)
                         break;
                     }
                 }
                 for (let i in vue.futureTasks) {
                     if (vue.futureTasks[i].id == response.id) {
                         vue.$set(vue.futureTasks, i, response);
+                        vue.$set(vue.futureTasks[i], 'userFirstName', userFirstName)
                         break;
                     }
                 }
                 for (let i in vue.inProgressTasks) {
                     if (vue.inProgressTasks[i].id == response.id) {
                         vue.$set(vue.inProgressTasks, i, response);
+                        vue.$set(vue.inProgressTasks[i], 'userFirstName', userFirstName)
                         break;
                     }
                 }
                 for (let i in vue.overdueTasks) {
                     if (vue.overdueTasks[i].id == response.id) {
                         vue.$set(vue.overdueTasks, i, response);
+                        vue.$set(vue.overdueTasks[i], 'userFirstName', userFirstName)
                         break;
                     }
                 }
