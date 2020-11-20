@@ -76,7 +76,17 @@ export default{
                 alert("You must fill in all of the fields");
                 return;
             }
-            let userID = this.popupTask.id ? this.popupTask.id : this.user.id; //they can edit the user, but if you are only updating percentage, need a default
+            let userID = this.popupTask.user.id ? this.popupTask.user.id : this.user.id; //they can edit the user, but if you are only updating percentage, need a default
+            let percent;
+            if (this.popupTask.completedDate) { //they just marked it as complete
+                percent = 100;
+            }
+            else if (this.popupTask.percentComplete == 100) { //they just un-marked it as complete
+                percent = 99;
+            }
+            else {
+                percent = this.popupTask.percentComplete;
+            }
             var res = Task.updateTask(
                 this.popupTask.id, 
                 this.project.id,
@@ -85,32 +95,40 @@ export default{
                 this.popupTask.summary,
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
-                this.popupTask.completeDate ? this.SQLDateTime(this.popupTask.completedDate) : null,
-                this.popupTask.percentComplete
+                this.popupTask.completedDate ? this.SQLDateTime(this.popupTask.completedDate) : null,
+                percent
             );
             var vue = this;
             res.then(function(response){
+                let user = vue.projectUsers.find(us => {
+                    return us.id == response.userID
+                })
+                let userFirstName = user.firstName;
                 for (var i in vue.allTasks) {
                     if (vue.allTasks[i].id == response.id) {
                         vue.$set(vue.allTasks, i, response);
+                        vue.$set(vue.allTasks[i], 'userFirstName', userFirstName)
                         break;
                     }
                 }
                 for (let i in vue.futureTasks) {
                     if (vue.futureTasks[i].id == response.id) {
                         vue.$set(vue.futureTasks, i, response);
+                        vue.$set(vue.futureTasks[i], 'userFirstName', userFirstName)
                         break;
                     }
                 }
                 for (let i in vue.inProgressTasks) {
                     if (vue.inProgressTasks[i].id == response.id) {
                         vue.$set(vue.inProgressTasks, i, response);
+                        vue.$set(vue.inProgressTasks[i], 'userFirstName', userFirstName)
                         break;
                     }
                 }
                 for (let i in vue.overdueTasks) {
                     if (vue.overdueTasks[i].id == response.id) {
                         vue.$set(vue.overdueTasks, i, response);
+                        vue.$set(vue.overdueTasks[i], 'userFirstName', userFirstName)
                         break;
                     }
                 }
@@ -179,10 +197,10 @@ export default{
             if (this.popupTask.title == "" 
             || this.popupTask.dueDate == "" 
             || this.popupTask.startDate == ""){
-                alert("You must fill in all of the fields");
+                alert("You must fill Title, Start Date, and Due Date");
                 return;
             }
-            if (this.popupTask.completedDate != "") {
+            if (this.popupTask.completedDate) {
                 this.popupTask.percentComplete = 100;
             }
             var res = Task.createTask(
