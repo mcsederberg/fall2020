@@ -77,6 +77,16 @@ export default{
                 return;
             }
             let userID = this.popupTask.id ? this.popupTask.id : this.user.id; //they can edit the user, but if you are only updating percentage, need a default
+            let percent;
+            if (this.popupTask.completedDate) { //they just marked it as complete
+                percent = 100;
+            }
+            else if (this.popupTask.percentComplete == 100) { //they just un-marked it as complete
+                percent = 99;
+            }
+            else {
+                percent = this.popupTask.percentComplete;
+            }
             var res = Task.updateTask(
                 this.popupTask.id, 
                 this.project.id,
@@ -85,8 +95,8 @@ export default{
                 this.popupTask.summary,
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
-                this.popupTask.completeDate ? this.SQLDateTime(this.popupTask.completedDate) : null,
-                this.popupTask.percentComplete
+                this.popupTask.completedDate ? this.SQLDateTime(this.popupTask.completedDate) : null,
+                percent
             );
             var vue = this;
             res.then(function(response){
@@ -179,10 +189,10 @@ export default{
             if (this.popupTask.title == "" 
             || this.popupTask.dueDate == "" 
             || this.popupTask.startDate == ""){
-                alert("You must fill in all of the fields");
+                alert("You must fill Title, Start Date, and Due Date");
                 return;
             }
-            if (this.popupTask.completedDate != "") {
+            if (this.popupTask.completedDate) {
                 this.popupTask.percentComplete = 100;
             }
             var res = Task.createTask(
