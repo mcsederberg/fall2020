@@ -160,6 +160,24 @@ router.put("/addUser/username/:username/projectID/:projectID", async(req,res)=> 
 	}
 })
 
+router.put("/removeUser/userID/:userID/projectID/:projectID", async(req,res)=> {
+	var userID = req.params.userID;
+	var projectID = req.params.projectID;
+	try{
+		var queryString = `DELETE FROM table_name WHERE projectID = '${projectID}' AND userID = '${userID}';`;
+		server.data.query(queryString, function(result){
+			res.send({
+				code: "OK",
+				user: result
+			});
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
+})
+
 module.exports = {
 	routes: router,
 }

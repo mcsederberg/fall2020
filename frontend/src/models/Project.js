@@ -51,6 +51,20 @@ export default class Project {
             });
         });
     }
+    static async removeUser(userID, projectID){
+        return new Promise(function(resolve, reject){
+            var res = api.removeUser(userID, projectID);
+            res.then(function(response){
+                if (response.status !== "OK"){
+                    reject();
+                    return;
+                }
+                resolve(response.user);
+            }).catch(function(e){
+                reject(e);
+            });
+        });
+    }
     async update(){
         var obj = this;
         return new Promise(function(resolve, reject){

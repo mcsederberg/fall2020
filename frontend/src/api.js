@@ -645,5 +645,28 @@ export default {
 				return e;
 			});
 		});
+	},
+	async removeUser(userID, projectID){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/project/removeUser/userID/"+userID+"/projectID/"+projectID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					user: new User(model.id, model.username, model.password, model.firstName, model.lastName)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
 	}
 }
