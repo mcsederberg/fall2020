@@ -76,16 +76,16 @@ export default {
     },
     computed: {
         sortedOverdueTasks: function() {
-            return this.overdueTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+            return this.overdueTasks.slice().sort((a,b) => new Date(b.startDate) - new Date(a.startDate));
         },
         sortedInProgressTasks: function() {
-            return this.inProgressTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+            return this.inProgressTasks.slice().sort((a,b) => new Date(b.startDate) - new Date(a.startDate));
         },
         sortedCompletedTasks: function() {
-            return this.completedTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+            return this.completedTasks.slice().sort((a,b) => new Date(b.startDate) - new Date(a.startDate));
         },
         sortedFutureTasks: function() {
-            return this.futureTasks.slice().sort((a,b) => new Date(b.start_date) - new Date(a.start_date));
+            return this.futureTasks.slice().sort((a,b) => new Date(b.startDate) - new Date(a.startDate));
         }
     },
     methods: {
