@@ -143,7 +143,7 @@ export default {
 			});
 		});
 	},
-	async updateTask(taskID, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete){
+	async updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/task/update", {
 				taskID: taskID,

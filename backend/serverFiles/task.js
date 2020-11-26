@@ -47,10 +47,10 @@ router.put("/update", async(req, res) => {
 	try{
 		var queryString;
 		if (!model.completedDate) {
-			queryString = `UPDATE task SET title ='${model.title}',	summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = NULL, percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
+			queryString = `UPDATE task SET title ='${model.title}',	userID='${model.userID}', summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = NULL, percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
 		}
 		else {
-			queryString = `UPDATE task SET title ='${model.title}',	summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
+			queryString = `UPDATE task SET title ='${model.title}',	userID='${model.userID}', summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
 		}
 		sql.query(queryString, function(result){
 			res.send({
