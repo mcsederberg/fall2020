@@ -3,7 +3,9 @@ const { query } = require("express");
 const express = require("express")
 const passwordHash = require('password-hash');
 const router = express.Router();
-const server = require("../server.js");
+//const server = require("../server.js");
+const sql = require("../sql");
+const helper = require("../helper");
 
 router.post('/login', async (req, res) => {
 	var username = req.body.username;
@@ -44,7 +46,7 @@ router.post('/login', async (req, res) => {
 		var errorCallback = function(error){
 			res.send(error);
 		}
-		var response = await server.data.query(queryString, successCallback, errorCallback);
+		var response = await sql.query(queryString, successCallback, errorCallback);
 	} catch (error){
 		res.send(error);
 	}
@@ -57,8 +59,11 @@ router.post('/register', async (req, res) => {
 	var username = req.body.username;
 	var password = req.body.password;
 	var hashedPassword = passwordHash.generate(password);
-	var id = server.data.generateUID();
+	var id = helper.generateUID();
 	try{
+		db.collection('inserts').insertOne({a:1}).then(function(r) {
+			console.log(r);
+		});
 		var queryString = `INSERT INTO user (id, username, password, firstname, lastname) VALUES ('${id}', '${username}', '${hashedPassword}', '${first}', '${last}')`;
 		var successCallback = function(result){
 			res.send({
@@ -75,7 +80,7 @@ router.post('/register', async (req, res) => {
 		var errorCallback = function(error){
 			res.send(error);
 		}
-		server.data.query(queryString, successCallback, errorCallback);
+		sql.query(queryString, successCallback, errorCallback);
 	} catch (error){
 		console.log("Error in register" + error);
 		res.send(error);
@@ -95,7 +100,7 @@ router.get("/getUsersForProject/:projectID", async(req, res)=>{
 		var errorCallback = function(error){
 			res.send(error);
 		}
-		server.data.query(queryString, successCallback, errorCallback);
+		sql.query(queryString, successCallback, errorCallback);
 	} catch (error){
 		console.log("Error in register" + error);
 		res.send(error);

@@ -8,7 +8,10 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 app.use(express.static('public'));
-const mysql = require('mysql');
+//const mongo = require('./mongo');
+const sql = require('./sql');
+
+//const mysql = require('mysql');
 const { time } = require('console');
 
 const user = require("./serverFiles/user.js");
@@ -27,62 +30,9 @@ const project = require("./serverFiles/project.js");
 app.use('/api/project', project.routes);
 
 
+sql.initializeDatabase().then(function() {
+	app.listen(3000, () => console.log('Server listening on port 3000!!'));
+}).catch(function() {
+	console.log("NOT");
+})
 
-
-
-
-var connection;
-
-function handleDisconnect() {
-	connection = mysql.createConnection({
-		host: '34.71.2.189',
-		user: 'forklift',
-		password: 'tomato',
-		database: 'forklift'
-	});
-
-	connection.connect(function(err){
-		if (err){
-			console.log("Couldn't connect: " + err);
-			throw err;
-		} 
-		console.log("connected to database");
-		app.listen(3000, () => console.log('Server listening on port 3000!!'));
-	});
-	connection.on('error', function(err) {
-		console.log('db error', err);
-		if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
-			handleDisconnect();   
-		} else {                                      
-			throw err;                                 
-		}
-	});
-}
-
-handleDisconnect();
-var methods = {
-	async query(sql, successCallback, errorCallback){ //TODO move these to a shared location
-		connection.query(sql, function (err, result) {
-			if (err){ 
-				errorCallback(err);
-			} else {
-				successCallback(result);
-			}
-		});
-	},
-	generateUID: function() {
-		return 'xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-			return v.toString(16);
-		});
-	},
-	SQLDateTime: function(date){
-		if (date == ""){
-			return "";
-		}
-		return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
-	}
-};
-
-
-exports.data = methods;

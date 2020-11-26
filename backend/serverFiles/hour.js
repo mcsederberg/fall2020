@@ -2,14 +2,16 @@ const { query } = require("express");
 const express = require("express")
 
 const router = express.Router();
-const server = require("../server.js");
+//const server = require("../server.js");
+const sql = require("../sql");
+const helper = require("../helper");
 
 
 router.post('/clockIn', async(req, res)=> {
 	//Make sure we're not already clocked in
 	try {
 		let queryString = `SELECT * FROM hour WHERE userID ='${req.body.userID}' AND parentID ='${req.body.parentID}' AND clockedOut IS NULL`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length != 0){
 				res.send({
 					code: "ALREADY_CLOCKED_IN"
@@ -20,7 +22,7 @@ router.post('/clockIn', async(req, res)=> {
 			var id = server.data.generateUID();
 			try {
 				let queryString = `INSERT INTO hour (hourID, userID, parentID, parentType, clockedIn, clockedOut) VALUES ('${id}', '${req.body.userID}', '${req.body.parentID}', '${req.body.parentType}', '${req.body.clockedIn}', NULL)`
-				server.data.query(queryString, 
+				sql.query(queryString, 
 					function(result){
 						res.send({
 							code: "OK",
@@ -51,7 +53,7 @@ router.put('/clockOut', async(req, res)=> {
 	//Make sure we're not already clocked in
 	try {
 		let queryString = `SELECT * FROM hour WHERE userID ='${req.body.userID}' AND parentID ='${req.body.parentID}' AND clockedOut IS NULL`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "ALREADY_CLOCKED_OUT"
@@ -60,7 +62,7 @@ router.put('/clockOut', async(req, res)=> {
 			}
 			try {
 				let queryString = `UPDATE hour SET clockedOut ='${req.body.clockedOut}' WHERE parentID = '${req.body.parentID}' AND userID = '${req.body.userID}' AND clockedOut IS NULL`;
-				server.data.query(queryString, 
+				sql.query(queryString, 
 					function(result){
 						res.send({
 							code: "OK",
@@ -87,7 +89,7 @@ router.get('/getHours/userID/:userID/parentID/:parentID', async(req, res)=> {
 	var userID = req.params.userID;
 	try{
 		var queryString = `SELECT * FROM hour WHERE parentID = '${parentID}' AND userID = '${userID}'`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "NO_HOURS"
@@ -109,7 +111,7 @@ router.get('/getHours/userID/:userID/parentID/:parentID', async(req, res)=> {
 router.get('/getClockedIn/parentID/:parentID/userID/:userID', async(req, res)=> {
 	try{
 		var queryString = `SELECT * FROM hour WHERE parentID = '${req.params.parentID}' AND userID = '${req.params.userID}' AND clockedOut IS NULL`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "OK",
@@ -132,7 +134,7 @@ router.get('/getClockedIn/parentID/:parentID/userID/:userID', async(req, res)=> 
 router.put('/updateTime', async(req, res) => {
 	try {
 		let queryString = `UPDATE hour SET time = '${req.body.time}' WHERE hourID = '${req.body.id}'`
-		server.data.query(queryString, 
+		sql.query(queryString, 
 			function(result){
 				res.send({
 					code: "OK",
@@ -152,7 +154,7 @@ router.put('/updateTime', async(req, res) => {
 router.get('/getTime/userID/:userID/parentID/:parentID', async(req, res) => {
 	try {
 		let queryString = `SELECT * FROM hour WHERE userID = '${req.params.userID}' AND parentID = '${req.params.parentID}'`
-		server.data.query(queryString, 
+		sql.query(queryString, 
 			function(result){
 				console.log("Hours:");
 				console.log(result);
@@ -175,7 +177,7 @@ router.get('/getTime/projectTask/:id', async(req, res) => {
 	var id = req.params.id;
 	try {
 		let queryString = `SELECT * FROM hour WHERE parentID = '${id}'`
-		server.data.query(queryString, 
+		sql.query(queryString, 
 			function(result){
 				if (result.length == 0) {
 					res.send({
@@ -199,7 +201,7 @@ router.get('/getHoursForProject/projectID/:projectID', async(req, res) =>{
 	var projectID = req.params.projectID
 	try {
 		let queryString = `SELECT * FROM hour WHERE parentID = '${projectID}'`
-		server.data.query(queryString, 
+		sql.query(queryString, 
 			function(result){
 				if (result.length == 0) {
 					res.send({

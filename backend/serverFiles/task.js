@@ -1,7 +1,9 @@
 const express = require("express")
 
 const router = express.Router();
-const server = require("../server.js");
+//const server = require("../server.js");
+const sql = require("../sql");
+const helper = require("../helper");
 
 //Create task
 router.post("/create", async(req, res) => {
@@ -15,7 +17,7 @@ router.post("/create", async(req, res) => {
 		else {
 			queryString = `INSERT INTO task (id, userID, projectID, title, summary, dueDate, completedDate, percentComplete, startDate, deleted) VALUES ('${id}', '${model.userID}','${model.projectID}','${model.title}','${model.summary}','${model.dueDate}','${model.completedDate}','${model.percentComplete}','${model.startDate}','0')`;
 		}
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			res.send({
 				code: "OK",
 				model: {
@@ -50,7 +52,7 @@ router.put("/update", async(req, res) => {
 		else {
 			queryString = `UPDATE task SET title ='${model.title}',	summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
 		}
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			res.send({
 				code: "OK",
 				model: {
@@ -79,7 +81,7 @@ router.put("/complete", async(req, res) => {
 	var completedDate = req.body.completedDate;
 	try{
 		var queryString = `UPDATE task SET completedDate ='${completedDate}', percentComplete=100 WHERE id = '${id}'`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			res.send({
 				code: "OK",
 				completedDate: completedDate
@@ -98,7 +100,7 @@ router.get("/projectID/:projectID", async(req,res)=>{
 	var id = req.params.projectID;
 	try{
 		var queryString = `SELECT task.*, firstName FROM task JOIN user ON task.userID=user.id WHERE projectID = '${id}' AND deleted = 0`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "NO_TASKS"
@@ -125,7 +127,7 @@ router.get("/projectID/:projectID/userID/:userID", async(req,res)=>{
 
 	try{
 		var queryString = `SELECT * FROM task WHERE projectID = '${projectID}' AND userID = '${userID}' AND deleted = 0`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "NO_TASKS"
@@ -149,7 +151,7 @@ router.get("/taskID/:taskID", async(req,res)=>{
 	var id = req.params.taskID;
 	try{
 		var queryString = `SELECT * FROM  task WHERE id = '${id}' AND deleted = 0`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "NO_TASK"
@@ -174,7 +176,7 @@ router.put("/delete/task/:taskID", async(req,res) =>{
 	var id = req.params.taskID;
 	try{
 		var queryString = `UPDATE task SET deleted = 1 WHERE id = '${id}'`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			res.send({
 				code: "OK"
 			});
