@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router();
-const server = require("../server.js");
+//const server = require("../server.js");
+const sql = require("../sql");
+const helper = require("../helper");
 
 //MESSAGE
 router.post('/api/message/create', async (req, res) => {
@@ -11,7 +13,7 @@ router.post('/api/message/create', async (req, res) => {
 	var id = server.data.generateUID();
 	try{
 		var queryString = `INSERT INTO message (id, projectID, userID, content, timePublished, editDate, priority, deleted) VALUES ('${id}', '${model.projectID}', '${model.userID}', '${model.content}', '${timePublished}', '${editDate}', '${model.priority}', '${deleted}')`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			res.send({
 				code: "OK",
 				model:{
@@ -37,7 +39,7 @@ router.post('/api/message/create', async (req, res) => {
 router.get('/api/message/:id', async (req, res) => {
 	try{
 		var queryString = `SELECT * FROM message WHERE id = '${req.params.id}' AND deleted = 0`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "INVALID_ID"
@@ -72,7 +74,7 @@ router.get("/api/message/projectID/:projectID", async(req,res)=>{
 	var id = req.params.projectID;
 	try{
 		var queryString = `SELECT * FROM message WHERE projectID = '${id}' AND deleted = 0`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "NO_MESSAGES"
@@ -97,7 +99,7 @@ router.put('/api/message/update/:id', async (req, res) => {
 	try{
 		var queryString = `UPDATE message SET (content, editDate, priority, deleted) VALUES (${model.content}', '${editDate}', '${model.priority}', '${deleted}')
 							WHERE id = '${req.params.id}'`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "INVALID_ID"
@@ -131,7 +133,7 @@ router.put("/api/message/delete/:id", async(req,res) =>{
 	var id = req.params.messageID;
 	try{
 		var queryString = `UPDATE message SET deleted = 1 WHERE id = ${id}`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			res.send({
 				code: "OK"
 			});

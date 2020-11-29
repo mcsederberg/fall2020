@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router();
-const server = require("../server.js");
+//const server = require("../server.js");
+const sql = require("../sql");
+const helper = require("../helper");
 
 //PROJECT
 router.post('/create', async (req, res) => {
@@ -9,10 +11,10 @@ router.post('/create', async (req, res) => {
 	var id = server.data.generateUID();
 	try{
 		var queryString = `INSERT INTO project (projectID, title, summary, ownerID, deleted) VALUES ('${id}', '${model.title}', '${model.summary}', '${model.ownerID}', '${deleted}')`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			try{
 				var mapperQueryString = `INSERT INTO projectUsers (projectID, userID) VALUES ('${id}', '${model.ownerID}')`;
-				server.data.query(mapperQueryString, function(result){
+				sql.query(mapperQueryString, function(result){
 					res.send({
 						code: "OK",
 						model:{
@@ -42,7 +44,7 @@ router.post('/create', async (req, res) => {
 router.get('/:id', async (req, res) => {
 	try{
 		var queryString = `SELECT * FROM project WHERE projectID = '${req.params.id}' AND deleted = 0`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "INVALID_ID"
@@ -74,7 +76,7 @@ router.put('/update/:id', async (req, res) => {
 	//probably need to make a check to see if it is already deleted.
 	try{
 		var queryString = `UPDATE project SET ownerID = '${model.ownerID}', title = '${model.title}', summary = '${model.summary}', deleted = '${model.deleted}' WHERE projectID = '${model.id}'`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
 					code: "INVALID_ID"
@@ -104,7 +106,7 @@ router.put("/delete/:id", async(req,res) =>{
 	var id = req.params.id;
 	try{
 		var queryString = `UPDATE project SET deleted = 1 WHERE projectID = '${id}'`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			res.send({
 				code: "OK"
 			});
@@ -120,7 +122,7 @@ router.get('/getProjects/userID/:userID', async(req, res)=> {
 	var userID = req.params.userID;
 	try{
 		var queryString = `select project.* from project where project.projectID in (  select projectUsers.projectID from projectUsers where projectUsers.userID = "${userID}") AND project.deleted = '0'`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			res.send({
 				code: "OK",
 				projects: result
@@ -138,10 +140,10 @@ router.put("/addUser/username/:username/projectID/:projectID", async(req,res)=> 
 	var projectID = req.params.projectID;
 	try{
 		var queryString = `INSERT INTO projectUsers (projectID, userID) VALUES ('${projectID}', (select user.id from user where user.username = '${username}'))`;
-		server.data.query(queryString, function(result){
+		sql.query(queryString, function(result){
 			try{
 				var queryString = `SELECT * from user where user.username = '${username}'`;
-				server.data.query(queryString, function(result){
+				sql.query(queryString, function(result){
 					res.send({
 						code: "OK",
 						user: result
