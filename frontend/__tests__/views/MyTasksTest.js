@@ -18,8 +18,8 @@ test('calls getMyTasks', () => {
 	expect(myTasks.methods.getMyTasks.mock.calls.length).toEqual(1);
 })
 
-// test('calls getMyTasks', () => {
-// 	expect(myTasks.methods.getMyTasks.mock.calls.length).toEqual(1);
-// })
 
+// test('savePercent', () => {
+// 	myTasks.vm.savePercent	
+// })
 
