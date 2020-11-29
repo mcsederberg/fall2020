@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static('public'));
 const mongoose = require('mongoose');
-const mysql = require('mysql');
+const sql = require('./sql');
 
 // connect to the database
 mongoose.connect('mongodb://localhost:27017/forkliftDev', {
