@@ -96,7 +96,8 @@ export default{
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
                 this.popupTask.completedDate ? this.SQLDateTime(this.popupTask.completedDate) : null,
-                percent
+                percent,
+                this.popupTask.parentID
             );
             var vue = this;
             res.then(function(response){
@@ -211,7 +212,8 @@ export default{
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
                 this.SQLDateTime(this.popupTask.completedDate), 
-                this.popupTask.percentComplete
+                this.popupTask.percentComplete,
+                this.popupTask.parentID
             );
             var vue = this;
             res.then(function(response){
