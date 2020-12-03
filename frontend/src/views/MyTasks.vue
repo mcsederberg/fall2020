@@ -21,6 +21,7 @@
         <TaskPopup v-if="showPopup" 
             :popupType="popupType"
             :popupTask="popupTask"
+            :tasks="sortedTasks"
             @taskPopupFunction="taskPopupFunction"
             @closePopup="showPopup=false"/>
         <Popup v-if="deletePopupOpen" title="Are you sure you want to delete this task?" @closed="deletePopupOpen = false; toDeleteID = null">

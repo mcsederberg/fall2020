@@ -81,6 +81,8 @@ export default {
 			var res = Task.getTasksForProjectID(this.project.id);
 			res.then(function(response){
 				var displayTasks = [];
+				var links = [];
+				var id = 0;
 				for (var i in response) {
 					var task = response[i];
 					displayTasks.push({
@@ -88,13 +90,22 @@ export default {
 						text: task.title,
 						start_date: vue.ganttDate(task.startDate),
 						duration: vue.dayDiff(new Date(task.startDate), new Date(task.dueDate)),
-						progress: task.percentComplete/100,
+						progress: task.percentComplete/100
 					});
+					if (task.parentID && task.parentID != "undefined"){
+						links.push({
+							id: id++,
+							source: task.id,
+							target: task.parentID ,
+							type:0
+						});
+					}
                 }
 
 				vue.allTasks = response;
 				vue.displayTasks.data = displayTasks.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
 				vue.showPopup = false;
+				vue.displayTasks.links = links;
 				gantt.parse(vue.displayTasks);
 			}).catch(function(e){
 				var code = e.error;

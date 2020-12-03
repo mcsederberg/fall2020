@@ -111,7 +111,7 @@ export default {
 		TASKS
 	*/
 
-	async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete){
+	async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, parentID){
 		return new Promise(function(resolve, reject){
 			var res = client.post("/api/task/create", {
 				userID: userID,
@@ -121,7 +121,8 @@ export default {
 				dueDate: dueDate,
 				startDate: startDate,
 				completedDate: completedDate,
-				percentComplete: percentComplete
+				percentComplete: percentComplete,
+				parentID: parentID
 			});
 			res.then(function(response){
 				var code = response.data.code;
@@ -135,7 +136,7 @@ export default {
 				var model = response.data.model;
 				resolve({
 					status: "OK",
-					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted, model.userFirstName)
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.parentID, model.deleted, model.userFirstName)
 				})
 				return;
 			}).catch(function(e){
@@ -143,7 +144,7 @@ export default {
 			});
 		});
 	},
-	async updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete){
+	async updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete, parentID){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/task/update", {
 				taskID: taskID,
@@ -154,7 +155,8 @@ export default {
 				dueDate: dueDate,
 				startDate: startDate,
 				completedDate: completedDate,
-				percentComplete: percentComplete
+				percentComplete: percentComplete,
+				parentID: parentID
 			});
 			res.then(function(response){
 				var code = response.data.code;
@@ -168,7 +170,7 @@ export default {
 				var model = response.data.model;
 				resolve({
 					status: "OK",
-					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted)
+					task: new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.parentID, model.deleted)
 				})
 				return;
 			}).catch(function(e){
@@ -239,7 +241,7 @@ export default {
 				var errors = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					var task = new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted, model.firstName);
+					var task = new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.parentID, model.deleted, model.firstName);
 					var today = new Date();
 					if (new Date(task.dueDate) < today && !task.completedDate) {
 						overdueTasks.push(task);
@@ -311,7 +313,7 @@ export default {
 				var tasks = [];
 				for (var i = 0; i < tasksData.length; i++){
 					var model = tasksData[i];
-					tasks.push(new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.deleted))
+					tasks.push(new Task(model.id, model.userID, model.projectID, model.title, model.summary, model.dueDate, model.startDate, model.completedDate, model.percentComplete, model.parentID, model.deleted))
 				}
 				resolve({
 					status: "OK",
@@ -626,6 +628,29 @@ export default {
 	async addUser(username, projectID){
 		return new Promise(function(resolve, reject){
 			var res = client.put("/api/project/addUser/username/"+username+"/projectID/"+projectID);
+			res.then(function(response){
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				resolve({
+					status: "OK",
+					user: new User(model.id, model.username, model.password, model.firstName, model.lastName)
+				})
+				return;
+			}).catch(function(e){
+				return e;
+			});
+		});
+	},
+	async removeUser(userID, projectID){
+		return new Promise(function(resolve, reject){
+			var res = client.put("/api/project/removeUser/userID/"+userID+"/projectID/"+projectID);
 			res.then(function(response){
 				var code = response.data.code;
 				if (code !== "OK"){

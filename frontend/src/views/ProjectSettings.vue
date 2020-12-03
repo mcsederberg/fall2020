@@ -17,7 +17,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="flex mx-auto mt-5 w-3/4 justify-end">
+				<div class="flex mx-auto my-5 w-3/4 justify-end">
 					<button v-if="isOwner" class="rounded-lg ml-3 bg-lightBlue px-3 text-darkBlue text-lg ml-auto" @click="deletePopupOpen = true">Delete Project</button>
 					<button class="rounded-lg ml-3 bg-green px-3 text-lg text-darkBlue" @click="saveProject">Save</button>
 				</div>
@@ -34,9 +34,8 @@
 </template>
 
 <script>
-import  Cookies from '../mixins/Cookies'
-import Popup from '../components/Popup'
-// import User from '../models/User';
+import  Cookies from '../mixins/Cookies';
+import Popup from '../components/Popup';
 import Project from '../models/Project';
 export default {
 	name: 'ProjectSettings',
@@ -97,8 +96,14 @@ export default {
 				vue.noUsersPopup = true;
             });
 		},
-		removeUser: function(){
-
+		removeUser: function(id){
+			let vue = this;
+			var res = Project.removeUser(id, this.project.id);
+			res.then(function(response){
+				vue.users.append(response);
+            }).catch(function(){
+				vue.noUsersPopup = true;
+            });
 		},
 		deleteProject: function(){
 			let vue = this;

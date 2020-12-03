@@ -5,6 +5,7 @@ import TeamTasks from '../views/TeamTasks.vue'
 import Chart from '../views/Chart.vue'
 import Login from '../views/Login.vue'
 import Projects from '../views/Projects.vue'
+import Ideas from '../views/Ideas.vue'
 import ProjectSettings from '../views/ProjectSettings.vue'
 
 Vue.use(VueRouter)
@@ -37,6 +38,11 @@ const routes = [
 		path: '/teamtasks',
 		name: 'TeamTasks',
 		component: TeamTasks
+	},
+	{
+		path: '/ideas',
+		name: 'IdeaBoard',
+		component: Ideas
 	},
 	{
 		path: '/chart',

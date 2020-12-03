@@ -1,7 +1,7 @@
 import api from '../api'
 
 export default class Task {
-    constructor(id, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, deleted, userFirstName) {
+    constructor(id, userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, parentID, deleted, userFirstName) {
         this.id = id;
         this.userID = userID;
         this.projectID = projectID;
@@ -13,6 +13,7 @@ export default class Task {
         this.percentComplete = percentComplete;
         this.deleted = deleted;
         this.userFirstName = userFirstName;
+        this.parentID = parentID;
     }
     static getTask(id){
         return api.getTask(id);
@@ -51,9 +52,9 @@ export default class Task {
             });
         });
     }
-    static async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete){
+    static async createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, parentID){
         return new Promise(function(resolve, reject){
-            var res = api.createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete);
+            var res = api.createTask(userID, projectID, title, summary, dueDate, startDate, completedDate, percentComplete, parentID);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
@@ -65,9 +66,9 @@ export default class Task {
             });
         });
     }
-    static async updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete){
+    static async updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete, parentID){
         return new Promise(function(resolve, reject){
-            var res = api.updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete);
+            var res = api.updateTask(taskID, projectID, userID, title, summary, dueDate, startDate, completedDate, percentComplete, parentID);
             res.then(function(response){
                 if (response.status !== "OK"){
                     reject();
@@ -112,7 +113,7 @@ export default class Task {
         });
     }
     duplicate(){
-        return new Task("", this.userID, this.userFirstName, this.projectID, this.title, this.summary, this.dueDate, this.startDate, this.completedDate, this.status, this.percentComplete, this.deleted);
+        return new Task("", this.userID, this.userFirstName, this.projectID, this.title, this.summary, this.dueDate, this.startDate, this.completedDate, this.status, this.percentComplete, this.parentID, this.deleted);
     }
     toJSON(){
         return {
@@ -125,6 +126,7 @@ export default class Task {
             startDate: this.startDate,
             completedDate: this.completedDate,
             percentComplete: this.percentComplete,
+            parentID: this.parentID,
             deleted: this.deleted
         }
     }
