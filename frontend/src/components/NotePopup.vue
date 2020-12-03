@@ -56,7 +56,12 @@ export default {
     },
     methods: {
         notePopupFunction: function() {
-            this.$emit('notePopupFunction', this.note);
+            if (!this.note.text) {
+                alert("Note must include text");
+            }
+            else {
+                this.$emit('notePopupFunction', this.note);
+            }
         },
         closePopup: function() {
             this.$emit('closePopup');
@@ -65,7 +70,7 @@ export default {
 			this.deleting = true;
 		},
 		deleteNote: function() {
-			this.$emit('deleteNote');
+			this.$emit('deleteNote', this.note.id);
 		}
     },
     // created: function() {
