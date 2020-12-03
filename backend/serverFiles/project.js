@@ -8,7 +8,7 @@ const helper = require("../helper");
 router.post('/create', async (req, res) => {
 	var model = req.body;
 	var deleted = 0;
-	var id = server.data.generateUID();
+	var id = helper.generateUID();
 	try{
 		var queryString = `INSERT INTO project (projectID, title, summary, ownerID, deleted) VALUES ('${id}', '${model.title}', '${model.summary}', '${model.ownerID}', '${deleted}')`;
 		sql.query(queryString, function(result){

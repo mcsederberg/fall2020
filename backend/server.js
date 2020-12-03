@@ -8,13 +8,13 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 app.use(express.static('public'));
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 const sql = require('./sql');
 
 // connect to the database
-mongoose.connect('mongodb://localhost:27017/forkliftDev', {
-	useNewUrlParser: true
-  });
+// mongoose.connect('mongodb://localhost:27017/forkliftDev', {
+// 	useNewUrlParser: true
+//   });
 
 
 // // Create a scheme for products in the museum: a title and a path to an image.

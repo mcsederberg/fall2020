@@ -10,7 +10,7 @@ router.post('/api/message/create', async (req, res) => {
 	var timePublished = Date.now; //not sure this will work
 	var editDate = Date.now;
 	var deleted = 0; 
-	var id = server.data.generateUID();
+	var id = helper.generateUID();
 	try{
 		var queryString = `INSERT INTO message (id, projectID, userID, content, timePublished, editDate, priority, deleted) VALUES ('${id}', '${model.projectID}', '${model.userID}', '${model.content}', '${timePublished}', '${editDate}', '${model.priority}', '${deleted}')`;
 		sql.query(queryString, function(result){

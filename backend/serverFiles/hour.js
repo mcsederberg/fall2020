@@ -19,7 +19,7 @@ router.post('/clockIn', async(req, res)=> {
 				return;
 			}
 			//Now clock in logic
-			var id = server.data.generateUID();
+			var id = helper.generateUID();
 			try {
 				let queryString = `INSERT INTO hour (hourID, userID, parentID, parentType, clockedIn, clockedOut) VALUES ('${id}', '${req.body.userID}', '${req.body.parentID}', '${req.body.parentType}', '${req.body.clockedIn}', NULL)`
 				sql.query(queryString, 

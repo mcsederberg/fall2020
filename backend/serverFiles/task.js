@@ -7,7 +7,7 @@ const helper = require("../helper");
 
 //Create task
 router.post("/create", async(req, res) => {
-	var id = server.data.generateUID();
+	var id = helper.generateUID();
 	var model = req.body;
 	try{
 		var queryString;
