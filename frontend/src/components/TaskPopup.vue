@@ -31,6 +31,12 @@
                         <option v-for="user in users" :key="user.id" :value="user">{{user.firstName}} {{user.lastName}}</option>
                     </select>
                 </div>
+                <div class="pb-4">
+                    <label for="assignee">Parent task (Optional): </label>
+                    <select name="parentTask" id="parentTask" class="bg-darkBlue border w-48" v-model="task.parentID">
+                        <option v-for="task in tasks" :key="task.id" :value="task.id">{{task.title}}</option>
+                    </select>
+                </div>
             </div>
             <div class="ml-auto mt-3 border bg-green text-darkBlue p-2 cursor-pointer" @click="taskPopupFunction">{{popupType == ACTIVITY_CREATE? 'Create' : 'Update'}}</div>
         </div>
@@ -52,6 +58,9 @@ export default {
         },
         popupTask: {
             type: Object,
+        },
+        tasks: {
+            type: Array,
         }
     },
     data: function() {

@@ -76,7 +76,7 @@ export default{
                 alert("You must fill in all of the fields");
                 return;
             }
-            let userID = this.popupTask.user.id ? this.popupTask.user.id : this.user.id; //they can edit the user, but if you are only updating percentage, need a default
+            let userID = this.popupTask.user && this.popupTask.user.id ? this.popupTask.user.id : this.user.id; //they can edit the user, but if you are only updating percentage, need a default
             let percent;
             if (this.popupTask.completedDate) { //they just marked it as complete
                 percent = 100;
@@ -96,7 +96,8 @@ export default{
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
                 this.popupTask.completedDate ? this.SQLDateTime(this.popupTask.completedDate) : null,
-                percent
+                percent,
+                this.popupTask.parentID
             );
             var vue = this;
             res.then(function(response){
@@ -211,7 +212,8 @@ export default{
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
                 this.SQLDateTime(this.popupTask.completedDate), 
-                this.popupTask.percentComplete
+                this.popupTask.percentComplete,
+                this.popupTask.parentID
             );
             var vue = this;
             res.then(function(response){

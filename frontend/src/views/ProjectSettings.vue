@@ -34,9 +34,8 @@
 </template>
 
 <script>
-import  Cookies from '../mixins/Cookies'
-import Popup from '../components/Popup'
-// import User from '../models/User';
+import  Cookies from '../mixins/Cookies';
+import Popup from '../components/Popup';
 import Project from '../models/Project';
 export default {
 	name: 'ProjectSettings',
@@ -97,8 +96,14 @@ export default {
 				vue.noUsersPopup = true;
             });
 		},
-		removeUser: function(){
-
+		removeUser: function(id){
+			let vue = this;
+			var res = Project.removeUser(id, this.project.id);
+			res.then(function(response){
+				vue.users.append(response);
+            }).catch(function(){
+				vue.noUsersPopup = true;
+            });
 		},
 		deleteProject: function(){
 			let vue = this;

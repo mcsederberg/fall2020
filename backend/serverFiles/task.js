@@ -10,11 +10,13 @@ router.post("/create", async(req, res) => {
 	try{
 		var queryString;
 		if (!model.completedDate) {
-			queryString = `INSERT INTO task (id, userID, projectID, title, summary, dueDate, completedDate, percentComplete, startDate, deleted) VALUES ('${id}', '${model.userID}','${model.projectID}','${model.title}','${model.summary}','${model.dueDate}',NULL,'${model.percentComplete}','${model.startDate}','0')`;
+			queryString = `INSERT INTO task (id, userID, projectID, title, summary, dueDate, completedDate, percentComplete, startDate, parentID, deleted) VALUES ('${id}', '${model.userID}','${model.projectID}','${model.title}','${model.summary}','${model.dueDate}',NULL,'${model.percentComplete}','${model.startDate}', '${model.parentID}','0')`;
 		}
 		else {
-			queryString = `INSERT INTO task (id, userID, projectID, title, summary, dueDate, completedDate, percentComplete, startDate, deleted) VALUES ('${id}', '${model.userID}','${model.projectID}','${model.title}','${model.summary}','${model.dueDate}','${model.completedDate}','${model.percentComplete}','${model.startDate}','0')`;
+			queryString = `INSERT INTO task (id, userID, projectID, title, summary, dueDate, completedDate, percentComplete, startDate, parentID, deleted) VALUES ('${id}', '${model.userID}','${model.projectID}','${model.title}','${model.summary}','${model.dueDate}','${model.completedDate}','${model.percentComplete}','${model.startDate}', '${model.parentID}','0')`;
 		}
+		console.log("Query String:");
+		console.log(queryString);
 		server.data.query(queryString, function(result){
 			res.send({
 				code: "OK",
@@ -28,6 +30,7 @@ router.post("/create", async(req, res) => {
 					completedDate: model.completedDate,
 					percentComplete: model.percentComplete,
 					startDate: model.startDate,
+					parentID: model.parentID,
 					deleted: model.deleted
 				}
 			})
@@ -45,10 +48,10 @@ router.put("/update", async(req, res) => {
 	try{
 		var queryString;
 		if (!model.completedDate) {
-			queryString = `UPDATE task SET title ='${model.title}',	userID='${model.userID}', summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = NULL, percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
+			queryString = `UPDATE task SET title ='${model.title}',	userID='${model.userID}', summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = NULL, percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', parentID = '${model.parentID}', deleted = '0' where id = '${model.taskID}'`;
 		}
 		else {
-			queryString = `UPDATE task SET title ='${model.title}',	userID='${model.userID}', summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', deleted = '0' where id = '${model.taskID}'`;
+			queryString = `UPDATE task SET title ='${model.title}',	userID='${model.userID}', summary = '${model.summary}', dueDate = '${model.dueDate}', completedDate = '${model.completedDate}', percentComplete = '${model.percentComplete}', startDate = '${model.startDate}', parentID = '${model.parentID}', deleted = '0' where id = '${model.taskID}'`;
 		}
 		server.data.query(queryString, function(result){
 			res.send({
@@ -63,6 +66,7 @@ router.put("/update", async(req, res) => {
 					completedDate: model.completedDate,
 					percentComplete: model.percentComplete,
 					startDate: model.startDate,
+					parentID: model.parentID,
 					deleted: model.deleted
 				}
 			})
