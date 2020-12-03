@@ -39,7 +39,7 @@ export default {
 			project: {},
 			projectUsers: [],
 			//temp message, just for testing
-			message: {content: "Here is the content to be shared", userID: "Michael", timePublished: "2020-12-07T07:00:00.000Z", editDate: "2020-12-07T07:00:00.000Z", priority: true}
+			message: {content: "Here is the content to be shared", userID: "Michael", timePublished: "2020-12-07T07:00:00.000Z", editDate: "2020-12-07T07:00:00.000Z", priority: true},
 			showPopup: false,
 			NOTE_CREATE: 0,
 			NOTE_EDIT: 1,
