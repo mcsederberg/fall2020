@@ -9,7 +9,7 @@
         </div>
         <div class="m-2 text-lg">{{message.content}}</div>
         <div class="flex justify-between">
-            <em>-{{message.userID}}</em>
+            <em>-{{message.userFirstName}}</em>
             <div>{{prettyDate(message.editDate)}}</div><!--edit date or published date?-->
         </div>
     </div>

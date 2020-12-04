@@ -10,7 +10,7 @@
 				<div class="py-2">
                     <label for="text">Text: </label>
                     <br>
-                    <textarea id="text" v-model="note.text" style="min-width:350px" class="h-32 px-1 bg-darkBlue border"/>
+                    <textarea id="text" v-model="note.content" style="min-width:350px" class="h-32 px-1 bg-darkBlue border"/>
                 </div>
             </div>
 			<div class="flex justify-end"> <!-- WHY WONT THIS GO OVER TO THE RIGHT-->
@@ -56,7 +56,7 @@ export default {
     },
     methods: {
         notePopupFunction: function() {
-            if (!this.note.text) {
+            if (!this.note.content) {
                 alert("Note must include text");
             }
             else {
