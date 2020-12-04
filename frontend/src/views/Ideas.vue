@@ -35,12 +35,14 @@
 import Cookies from '../mixins/Cookies'
 import M from '../components/Message';
 import NotePopup from '../components/NotePopup'
-import Message from '..models/Message'
+import Message from '../models/Message'
+import Popup from '../components/Popup';
 export default {
 	name: 'IdeaBoard',
 	components: {
 		NotePopup: NotePopup,
 		Message: M,
+		Popup: Popup
 	},
 	data: function(){
 		return{
@@ -71,7 +73,7 @@ export default {
 	methods: {
 		getMessages: function() {
 			var vue = this;
-            var res = Task.getMessages(this.project.id);
+            var res = Message.getMessages(this.project.id);
             res.then(function(response){
                 vue.messages = response;
             }).catch(function(e){
@@ -129,13 +131,13 @@ export default {
             });
 		},
 		createNewNote: function(note) { 
-			var res = Task.createMessage(
+			var res = Message.createMessage(
 				this.project.id, 
 				this.user.id,
 				note.content, 
 				Date.now(),
 				Date.now(),
-				note.priority
+				note.important
             );
             var vue = this;
             res.then(function(response){

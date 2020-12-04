@@ -10,6 +10,39 @@ export default class Message {
         this.priority = priority;
         this.deleted = deleted;
     }
+
+    static async getMessages(projectID){
+        return new Promise(function(resolve, reject){
+			var res = api.getMessagesForProject(projectID);
+			res.then(function(response) {
+				if (response.status !== "OK"){
+					console.error("Something terrible has happened");
+					reject();
+					return;
+				}
+				resolve(response.messages);
+				return;
+			}).catch(function(e) {
+				reject(e);
+			});
+		});
+    }
+    static async createMessage(projectID, userID, content, timePublished, editDate, priority){
+        return new Promise(function(resolve, reject){
+			var res = api.createMessage(projectID, userID, content, timePublished, editDate, priority);
+			res.then(function(response) {
+				if (response.status !== "OK"){
+					console.error("Something terrible has happened");
+					reject();
+					return;
+				}
+				resolve(response.messages);
+				return;
+			}).catch(function(e) {
+				reject(e);
+			});
+		});
+    }
     toJSON(){
         return {
             projectID: this.projectID,
