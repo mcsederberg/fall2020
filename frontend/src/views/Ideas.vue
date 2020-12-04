@@ -6,7 +6,10 @@
 		<div class="flex w-1/2 mx-auto">
 			<div class="text-xxxlg font-sans">Idea Board</div>
 		</div>
-		<Message :message="message"/>
+		<Message :message="message"
+			@deleted="toDeleteID = message.id; deletePopupOpen = true;"
+			@editMessage="editNote"
+			@prioritizeMessage="prioritizeMessage"/>
 	</div>
 	<NotePopup v-if="showPopup" 
             :popupType="popupType"
@@ -63,9 +66,9 @@ export default {
 			this.popupNote = {}; //ok??
 			this.showPopup = true;
 		},
-		editNote: function(id) {
+		editNote: function(note) {
 			this.popupType = this.NOTE_EDIT;
-			console.log(id) // this.popupNote = //TODO
+			this.popupNote = note;
 			this.showPopup = true;
 		},
 		updateNote: function(note) { //TODO
@@ -73,6 +76,9 @@ export default {
 		},
 		createNewNote: function(note) { //TODO
 			console.log(note)
+		},
+		prioritizeMessage: function() { //TODO
+
 		},
 		/**
 		 * You already have asked are you sure you want to delete, now call the ajax to delete the note
