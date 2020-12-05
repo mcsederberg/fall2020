@@ -10,11 +10,13 @@
 			@deleted="toDeleteID = message.id; deletePopupOpen = true;"
 			@editMessage="editNote"
 			@prioritizeMessage="prioritizeMessage"/> -->
-		<Message v-for="message in messages" :key="message.id"
-			:message="message"
-			@deleted="toDeleteID = message.id; deletePopupOpen = true;"
-			@editMessage="editNote"
-			@prioritizeMessage="prioritizeMessage"/>
+		<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-4">
+			<Message v-for="message in messages" :key="message.id"
+				:message="message"
+				@deleted="toDeleteID = message.id; deletePopupOpen = true;"
+				@editMessage="editNote"
+				@prioritizeMessage="prioritizeMessage"/>
+		</div>
 	</div>
 	<NotePopup v-if="showPopup" 
             :popupType="popupType"
@@ -50,7 +52,7 @@ export default {
 			project: {},
 			projectUsers: [],
 			//temp message, just for testing
-			message: {content: "Here is the content to be shared", userFirstName: "Michael", timePublished: "2020-12-07T07:00:00.000Z", editDate: "2020-12-07T07:00:00.000Z", priority: true},
+			// message: {content: "Here is the content to be shared", userFirstName: "Michael", timePublished: "2020-12-07T07:00:00.000Z", editDate: "2020-12-07T07:00:00.000Z", priority: true},
 			showPopup: false,
 			NOTE_CREATE: 0,
 			NOTE_EDIT: 1,
@@ -68,7 +70,7 @@ export default {
 		this.getMessages();
 	},
 	computed: {
-
+		//TODO sort the notes
 	},
 	methods: {
 		getMessages: function() {

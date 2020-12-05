@@ -1,9 +1,9 @@
 <template>
-    <div :class="[{'border-orange border-4' : message.priority}, 'w-1/3 bg-header p-2']">
+    <div :class="[{'border-orange border-4' : message.priority}, 'bg-header p-2']">
         <div class="flex justify-between cursor-pointer text-md">
             <div class="flex">
                 <i class="far fa-edit text-teal mr-2" @click="editMessage()"/>
-                <i class="fas fa-exclamation-circle" @click="prioritizeMessage()"/>
+                <i class="fas fa-exclamation-circle" @click="prioritizeMessage()" :title="message.priority ? 'Unmark' : 'Mark as important'"/>
             </div>
             <i class="fa fa-times cursor-pointer ml-auto" @click="deleted()"/>
         </div>
