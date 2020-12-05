@@ -2,12 +2,13 @@ import api from '../api'
 
 export default class Message {
     constructor(projectID, content, userID, timePublished, editDate, priority, deleted) {
-        this.projectID = projectID;
+		let importance = priority == 'true' || priority == true ? true : false;
+		this.projectID = projectID;
         this.content = content;
         this.userID = userID;
         this.timePublished = timePublished;
         this.editDate = editDate;
-        this.priority = priority;
+        this.priority = importance;
         this.deleted = deleted;
     }
 
@@ -36,7 +37,7 @@ export default class Message {
 					reject();
 					return;
 				}
-				resolve(response.messages);
+				resolve(response.message);
 				return;
 			}).catch(function(e) {
 				reject(e);

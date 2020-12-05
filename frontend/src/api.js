@@ -722,7 +722,7 @@ export default {
 					});
 					return;
 				}
-				var model = response.data.message;
+				var model = response.data.model;
 				var message = new Message(model.id, model.content, model.userID, model.timePublished, model.editDate, model.priority, model.deleted);
 				resolve({
 					status: "OK",

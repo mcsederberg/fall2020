@@ -10,7 +10,7 @@
         <div class="m-2 text-lg">{{message.content}}</div>
         <div class="flex justify-between">
             <em>-{{message.userFirstName}}</em>
-            <div>{{prettyDate(message.editDate)}}</div><!--edit date or published date?-->
+            <div>Last edited: {{prettyDate(message.editDate)}}</div><!--edit date or published date?-->
         </div>
     </div>
 </template>

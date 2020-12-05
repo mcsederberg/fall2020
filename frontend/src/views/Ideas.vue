@@ -75,7 +75,15 @@ export default {
 			var vue = this;
             var res = Message.getMessages(this.project.id);
             res.then(function(response){
-                vue.messages = response;
+				vue.messages = response;
+				
+				for (var i in vue.messages) {
+					let user = vue.projectUsers.find(us => {
+						return us.id == vue.messages[i].userID
+					})
+					let userFirstName = user && user.firstName ? user.firstName : "unknown";
+					vue.$set(vue.messages[i], 'userFirstName', userFirstName)
+				}
             }).catch(function(e){
                 var code = e.error;
                 switch (code){
@@ -85,7 +93,7 @@ export default {
 		},
 		createNote: function() {
 			this.popupType = this.NOTE_CREATE;
-			this.popupNote = {}; //ok??
+			this.popupNote = {content: "", priority: false};
 			this.showPopup = true;
 		},
 		editNote: function(note) {
@@ -96,10 +104,10 @@ export default {
 		updateNote: function(note, deleted = false) {
 			let noteID = note.id;
 			var res = Message.updateMessage(
-                this.note.id, 
-				this.note.content,
+                note.id, 
+				note.content,
 				Date.now(),
-				this.note.priority,
+				note.priority,
 				deleted
             );
             var vue = this;
