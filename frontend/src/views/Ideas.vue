@@ -11,7 +11,7 @@
 			@editMessage="editNote"
 			@prioritizeMessage="prioritizeMessage"/> -->
 		<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-4">
-			<Message v-for="message in messages" :key="message.id"
+			<Message v-for="message in sortedMessages" :key="message.id"
 				:message="message"
 				@deleted="toDeleteID = message.id; deletePopupOpen = true;"
 				@editMessage="editNote"
@@ -70,7 +70,22 @@ export default {
 		this.getMessages();
 	},
 	computed: {
-		//TODO sort the notes
+		priorityMessages: function () {
+			return this.messages.filter(message => {
+				return message.priority;
+			})
+		},
+		nonPriorityMessages: function () {
+			return this.messages.filter(message => {
+				return message.priority == false;
+			})
+		},
+		sortedMessages: function() {
+			let allMs = [];
+			allMs = allMs.concat(this.priorityMessages.slice().sort((a,b) => new Date(b.editDate) - new Date(a.editDate)))
+			allMs = allMs.concat(this.nonPriorityMessages.slice().sort((a,b) => new Date(b.editDate) - new Date(a.editDate)))
+			return allMs;
+		}
 	},
 	methods: {
 		getMessages: function() {
@@ -156,7 +171,7 @@ export default {
 					})
 				let userFirstName = user && user.firstName ? user.firstName : "error";
 				response.userFirstName = userFirstName;
-                vue.messages.unshift(response); //todo probably create computed property to sort by date
+                vue.messages.unshift(response); 
                 vue.showPopup = false;
             }).catch(function(e){
                 var code = e.error;	
