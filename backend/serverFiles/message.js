@@ -96,8 +96,7 @@ router.get("/getMessagesForProject/:projectID", async(req,res)=>{
 router.put('/update/:id', async (req, res) => {
 	var model = req.body;
 	try{
-		var queryString = `UPDATE message SET (content, editDate, priority, deleted) VALUES (${model.content}', '${model.date}', '${model.priority}', '${model.deleted}')
-							WHERE id = '${req.params.id}'`;
+		var queryString = `UPDATE message SET content = '${model.content}', editDate = '${model.editDate}', priority = '${model.priority}', deleted = ${model.deleted} WHERE messageID = '${req.params.id}'`;
 		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
@@ -107,17 +106,7 @@ router.put('/update/:id', async (req, res) => {
 			}
 			var model = result[0];
 			res.send({ //also not sure if we need to send the model back here...
-				code: "OK",
-				model:{
-					id: model.id,
-					projectID: model.projectID,
-					userID: model.userID,
-					content: model.content,
-					timePublished: model.timePublished,
-					editDate: model.editDate,
-					priority: model.priority,
-					deleted: model.deleted
-				}
+				code: "OK"
 			});
 		},
 		function(error){

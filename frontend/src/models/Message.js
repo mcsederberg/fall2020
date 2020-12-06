@@ -1,8 +1,9 @@
 import api from '../api'
 
 export default class Message {
-    constructor(projectID, content, userID, timePublished, editDate, priority, deleted) {
-		let importance = priority == 'true' || priority == true ? true : false;
+    constructor(messageID, projectID, content, userID, timePublished, editDate, priority, deleted) {
+        let importance = priority == 'true' || priority == true ? true : false;
+        this.messageID = messageID;
 		this.projectID = projectID;
         this.content = content;
         this.userID = userID;
@@ -43,6 +44,26 @@ export default class Message {
 				reject(e);
 			});
 		});
+    }
+    async updateMessage(){
+        var model = this;
+        return new Promise(function(resolve, reject){
+			var res = api.updateMessage(model.messageID, model.projectID, model.userID, model.content, model.timePublished, model.editDate, model.priority, model.deleted);
+			res.then(function(response) {
+				if (response.status !== "OK"){
+					console.error("Something terrible has happened");
+					reject();
+					return;
+				}
+				resolve(response.message);
+				return;
+			}).catch(function(e) {
+				reject(e);
+			});
+		});
+    }
+    setDeleted(deleted){
+        this.deleted = deleted;
     }
     toJSON(){
         return {

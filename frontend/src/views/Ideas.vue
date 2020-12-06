@@ -120,13 +120,8 @@ export default {
 		},
 		updateNote: function(note, deleted = false) {
 			let noteID = note.id;
-			var res = Message.updateMessage(
-                note.id, 
-				note.content,
-				Date.now(),
-				note.priority,
-				deleted
-            );
+			note.setDeleted(deleted);
+			var res = note.updateMessage();
             var vue = this;
             res.then(function(response){
 				if (!deleted) {
@@ -135,7 +130,7 @@ export default {
 					})
 					let userFirstName = user.firstName;
 					for (var i in vue.messages) {
-						if (vue.messages[i].id == response.id) {
+						if (vue.messages[i].messageID == response.messageID) {
 							vue.$set(vue.messages, i, response);
 							vue.$set(vue.messages[i], 'userFirstName', userFirstName)
 							break;
@@ -144,7 +139,7 @@ export default {
 				}
 				else {
 					vue.messages = vue.messages.filter(function(message){
-						return message.id !== noteID;
+						return message.messageID !== noteID;
 					});
 				}
                 vue.showPopup = false;
