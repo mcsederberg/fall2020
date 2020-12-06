@@ -3,42 +3,44 @@ const router = express.Router();
 //const server = require("../server.js");
 const sql = require("../sql");
 const helper = require("../helper");
+const mongo = require("../mongo");
 
 //PROJECT
 router.post('/create', async (req, res) => {
 	var model = req.body;
 	var deleted = 0;
 	var id = helper.generateUID();
-	try{
-		var queryString = `INSERT INTO project (projectID, title, summary, ownerID, deleted) VALUES ('${id}', '${model.title}', '${model.summary}', '${model.ownerID}', '${deleted}')`;
-		sql.query(queryString, function(result){
-			try{
-				var mapperQueryString = `INSERT INTO projectUsers (projectID, userID) VALUES ('${id}', '${model.ownerID}')`;
-				sql.query(mapperQueryString, function(result){
-					res.send({
-						code: "OK",
-						model:{
-							id: id,
-							title: model.title,
-							summary: model.summary,
-							ownerID: model.ownerID,
-							deleted: deleted
-						}
-					});
-				},
-				function(error){
-					res.send(error);
-				})
-			} catch (error){
-				res.send(error);
-			}
-		},
-		function(error){
-			res.send(error);
-		})
-	} catch (error){
-		res.send(error);
-	}
+	mongo.getDB().collection("project").insertOne({projectID: id, ownerID: model.ownerID, title: model.title, summary: model.summary, deleted: deleted});
+	// try{
+	// 	//var queryString = `INSERT INTO project (projectID, title, summary, ownerID, deleted) VALUES ('${id}', '${model.title}', '${model.summary}', '${model.ownerID}', '${deleted}')`;
+	// 	sql.query(queryString, function(result){
+	// 		try{
+	// 			var mapperQueryString = `INSERT INTO projectUsers (projectID, userID) VALUES ('${id}', '${model.ownerID}')`;
+	// 			sql.query(mapperQueryString, function(result){
+	// 				res.send({
+	// 					code: "OK",
+	// 					model:{
+	// 						id: id,
+	// 						title: model.title,
+	// 						summary: model.summary,
+	// 						ownerID: model.ownerID,
+	// 						deleted: deleted
+	// 					}
+	// 				});
+	// 			},
+	// 			function(error){
+	// 				res.send(error);
+	// 			})
+	// 		} catch (error){
+	// 			res.send(error);
+	// 		}
+	// 	},
+	// 	function(error){
+	// 		res.send(error);
+	// 	})
+	// } catch (error){
+	// 	res.send(error);
+	// }
 })
 
 router.get('/:id', async (req, res) => {

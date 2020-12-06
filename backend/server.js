@@ -8,8 +8,9 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 app.use(express.static('public'));
+const mongo = require('./mongo');
 //const mongoose = require('mongoose');
-const sql = require('./sql');
+//const sql = require('./sql');
 
 // connect to the database
 // mongoose.connect('mongodb://localhost:27017/forkliftDev', {
@@ -75,7 +76,7 @@ const project = require("./serverFiles/project.js");
 app.use('/api/project', project.routes);
 
 
-sql.initializeDatabase().then(function() {
+mongo.initializeDatabase().then(function() {
 	app.listen(3000, () => console.log('Server listening on port 3000!!'));
 }).catch(function() {
 	console.log("NOT");

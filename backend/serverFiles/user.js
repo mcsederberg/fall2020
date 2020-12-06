@@ -3,9 +3,8 @@ const { query } = require("express");
 const express = require("express")
 const passwordHash = require('password-hash');
 const router = express.Router();
-//const server = require("../server.js");
-const sql = require("../sql");
 const helper = require("../helper");
+const mongo = require("../mongo");
 
 router.post('/login', async (req, res) => {
 	var username = req.body.username;
@@ -60,31 +59,43 @@ router.post('/register', async (req, res) => {
 	var password = req.body.password;
 	var hashedPassword = passwordHash.generate(password);
 	var id = helper.generateUID();
-	try{
-		db.collection('inserts').insertOne({a:1}).then(function(r) {
-			console.log(r);
-		});
-		var queryString = `INSERT INTO user (id, username, password, firstname, lastname) VALUES ('${id}', '${username}', '${hashedPassword}', '${first}', '${last}')`;
-		var successCallback = function(result){
-			res.send({
-				code: "OK",
-				model:{
-					id: id,
-					username: username,
-					password: password,
-					first: first,
-					last: last
-				}
-			});
-		}
-		var errorCallback = function(error){
-			res.send(error);
-		}
-		sql.query(queryString, successCallback, errorCallback);
-	} catch (error){
-		console.log("Error in register" + error);
-		res.send(error);
-	}
+	mongo.getDB().collection("user").insertOne({id: id, username: username, password: hashedPassword, firstname: first, lastname: last})
+		.then(result => res.send({
+			code: "OK",
+			model: {
+				id: id,
+				username: username,
+				password: password,
+				first: first,
+				last: last
+			}
+		}))
+		.catch(err => res.send(err));
+	// try{
+	// 	db.collection('inserts').insertOne({a:1}).then(function(r) {
+	// 		console.log(r);
+	// 	});
+	// 	var queryString = `INSERT INTO user (id, username, password, firstname, lastname) VALUES ('${id}', '${username}', '${hashedPassword}', '${first}', '${last}')`;
+	// 	var successCallback = function(result){
+	// 		res.send({
+	// 			code: "OK",
+	// 			model:{
+	// 				id: id,
+	// 				username: username,
+	// 				password: password,
+	// 				first: first,
+	// 				last: last
+	// 			}
+	// 		});
+	// 	}
+	// 	var errorCallback = function(error){
+	// 		res.send(error);
+	// 	}
+	// 	sql.query(queryString, successCallback, errorCallback);
+	// } catch (error){
+	// 	console.log("Error in register" + error);
+	// 	res.send(error);
+	// }
 });
 
 router.get("/getUsersForProject/:projectID", async(req, res)=>{

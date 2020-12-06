@@ -16,10 +16,12 @@ function getDB() {
     return db;
 }
 
-client.connect().then(function(mongoConnection) {
-  db = mongoConnection.db(dbName);
-}).catch(function(err){
-	console.log(err);
-});
+function initializeDatabase() {
+  return client.connect().then(function(mongoConnection) {
+    db = mongoConnection.db(dbName);
+  }).catch(function(err){
+    console.log(err);
+  });
+}
 
-module.exports = getDB;
+module.exports = {getDB, initializeDatabase};
