@@ -5,51 +5,36 @@ const mongo = require("../mongo");
 const helper = require("../helper");
 
 //MESSAGE
-router.post('/api/message/create', async (req, res) => {
+router.post('/createMessage', async (req, res) => {
 	var model = req.body;
 	var deleted = 0; 
 	var id = helper.generateUID();
-	mongo.getDB().collection("message").insertOne({id: id, projectID: model.projectID, userID: model.userID, content: model.content, timePublished: model.timePublished, editDate: model.editDate, priority: model.priority, deleted: deleted})
-		.then(result => res.send({
-			code: "OK",
-			model: {
-				id: id,
-				projectID: model.projectID,
-				userID: model.userID,
-				content: model.content,
-				timePublished: model.timePublished,
-				editDate: model.editDate,
-				priority: model.priority,
-				deleted: deleted
-			}
-		}))
-		.catch(err => res.send(err));
-	// try{
-	// 	var queryString = `INSERT INTO message (id, projectID, userID, content, timePublished, editDate, priority, deleted) VALUES ('${id}', '${model.projectID}', '${model.userID}', '${model.content}', '${timePublished}', '${editDate}', '${model.priority}', '${deleted}')`;
-	// 	sql.query(queryString, function(result){
-	// 		res.send({
-	// 			code: "OK",
-	// 			model:{
-	// 				id: id,
-	// 				projectID: projectID,
-	// 				userID: userID,
-	// 				content: content,
-	// 				timePublished: timePublished,
-	// 				editDate: editDate,
-	// 				priority: priority,
-	// 				deleted: deleted //should this be returned in the object?
-	// 			}
-	// 		})
-	// 	}, function(error){
-	// 		res.send(error);
-	// 	})
-	// } catch (error){
-	// 	res.send(error);
-	// }
+	try{
+		var queryString = `INSERT INTO message (messageID, projectID, userID, content, timePublished, editDate, priority, deleted) VALUES ('${id}', '${model.projectID}', '${model.userID}', '${model.content}', '${model.timePublished}', '${model.editDate}', '${model.priority}', '${deleted}')`;
+		sql.query(queryString, function(result){
+			res.send({
+				code: "OK",
+				model:{
+					id: id,
+					projectID: model.projectID,
+					userID: model.userID,
+					content: model.content,
+					timePublished: model.timePublished,
+					editDate: model.editDate,
+					priority: model.priority,
+					deleted: deleted
+				}
+			})
+		}, function(error){
+			res.send(error);
+		})
+	} catch (error){
+		res.send(error);
+	}
 })
 
 //message by id
-router.get('/api/message/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
 	try{
 		var queryString = `SELECT * FROM message WHERE id = '${req.params.id}' AND deleted = 0`;
 		sql.query(queryString, function(result){
@@ -83,7 +68,7 @@ router.get('/api/message/:id', async (req, res) => {
 })
 
 //message by project
-router.get("/api/message/projectID/:projectID", async(req,res)=>{
+router.get("/getMessagesForProject/:projectID", async(req,res)=>{
 	var id = req.params.projectID;
 	try{
 		var queryString = `SELECT * FROM message WHERE projectID = '${id}' AND deleted = 0`;
@@ -106,12 +91,12 @@ router.get("/api/message/projectID/:projectID", async(req,res)=>{
 	}
 });
 
-router.put('/api/message/update/:id', async (req, res) => {
-	var editDate = Date.now;
+//id, text, date, priority, and deleted
+
+router.put('/update/:id', async (req, res) => {
 	var model = req.body;
 	try{
-		var queryString = `UPDATE message SET (content, editDate, priority, deleted) VALUES (${model.content}', '${editDate}', '${model.priority}', '${deleted}')
-							WHERE id = '${req.params.id}'`;
+		var queryString = `UPDATE message SET content = '${model.content}', editDate = '${model.editDate}', priority = '${model.priority}', deleted = ${model.deleted} WHERE messageID = '${req.params.id}'`;
 		sql.query(queryString, function(result){
 			if (result.length == 0){
 				res.send({
@@ -121,17 +106,7 @@ router.put('/api/message/update/:id', async (req, res) => {
 			}
 			var model = result[0];
 			res.send({ //also not sure if we need to send the model back here...
-				code: "OK",
-				model:{
-					id: model.id,
-					projectID: model.projectID,
-					userID: model.userID,
-					content: model.content,
-					timePublished: model.timePublished,
-					editDate: model.editDate,
-					priority: model.priority,
-					deleted: model.deleted
-				}
+				code: "OK"
 			});
 		},
 		function(error){
@@ -142,7 +117,7 @@ router.put('/api/message/update/:id', async (req, res) => {
 	}
 })
 
-router.put("/api/message/delete/:id", async(req,res) =>{
+router.put("/delete/:id", async(req,res) =>{
 	var id = req.params.messageID;
 	try{
 		var queryString = `UPDATE message SET deleted = 1 WHERE id = ${id}`;

@@ -4,13 +4,13 @@
         <div class="flex flex-col text-lg">
             <div class="border px-3 pt-3">
                 <div class="pb-4">
-                    <input name="important" id="important" type="checkbox" class="bg-darkBlue border mr-6 " v-model="note.important"/>
+                    <input name="important" id="important" type="checkbox" class="bg-darkBlue border mr-6 " v-model="note.priority"/>
                     <label for="important">Mark as important</label>
                 </div>
 				<div class="py-2">
                     <label for="text">Text: </label>
                     <br>
-                    <textarea id="text" v-model="note.text" style="min-width:350px" class="h-32 px-1 bg-darkBlue border"/>
+                    <textarea id="text" v-model="note.content" style="min-width:350px" class="h-32 px-1 bg-darkBlue border"/>
                 </div>
             </div>
 			<div class="flex justify-end"> <!-- WHY WONT THIS GO OVER TO THE RIGHT-->
@@ -56,7 +56,7 @@ export default {
     },
     methods: {
         notePopupFunction: function() {
-            if (!this.note.text) {
+            if (!this.note.content) {
                 alert("Note must include text");
             }
             else {

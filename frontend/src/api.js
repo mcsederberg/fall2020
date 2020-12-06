@@ -4,6 +4,7 @@ import Task from './models/Task';
 import User from './models/User';
 import Hour from './models/Hour';
 import Project from './models/Project';
+import Message from './models/Message';
 //import task from '../../backend/serverFiles/task';
 
 const client = axios.create({
@@ -670,5 +671,95 @@ export default {
 				return e;
 			});
 		});
-	}
+	},
+	/**
+	 * Messages
+	 */
+	async getMessagesForProject(projectID){
+		return new Promise(function(resolve, reject){
+			var res =  client.get("/api/message/getMessagesForProject/"+projectID);	
+			res.then(function(response) {
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var messagesData = response.data.messages;
+				var messages = [];
+				for (var i = 0; i < messagesData.length; i++){
+					var model = messagesData[i];
+					messages.push(new Message(model.messageID, model.projectID, model.content, model.userID, Number(model.timePublished), Number(model.editDate), model.priority, model.deleted));
+				}
+				resolve({
+					status: "OK",
+					messages: messages
+				})
+			}).catch(function(e) {
+				console.log("error", e);
+				return e;
+			})
+		});
+	},
+	async createMessage(projectID, userID, content, timePublished, editDate, priority){
+		return new Promise(function(resolve, reject){
+			var res =  client.post("/api/message/createMessage/", {
+				projectID: projectID,
+				userID: userID,
+				content: content,
+				timePublished: timePublished,
+				editDate: editDate,
+				priority: priority
+			});	
+			res.then(function(response) {
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var model = response.data.model;
+				var message = new Message(model.id, model.projectID, model.content, model.userID, Number(model.timePublished), Number(model.editDate), model.priority, model.deleted);
+				resolve({
+					status: "OK",
+					message: message
+				})
+			}).catch(function(e) {
+				console.log("error", e);
+				return e;
+			})
+		});
+	},
+	async updateMessage(messageID, projectID, userID, content, timePublished, editDate, priority, deleted){
+		return new Promise(function(resolve, reject){
+			var res =  client.put("/api/message/update/" + messageID, {
+				content: content,
+				editDate: editDate,
+				priority: priority,
+				deleted: deleted
+			});	
+			res.then(function(response) {
+				var code = response.data.code;
+				if (code !== "OK"){
+					reject({
+						status: "BAD",
+						error: code
+					});
+					return;
+				}
+				var message = new Message(messageID, projectID, content, userID, timePublished, editDate, priority, deleted);
+				resolve({
+					status: "OK",
+					message: message
+				})
+			}).catch(function(e) {
+				console.log("error", e);
+				return e;
+			})
+		});
+	},
 }
