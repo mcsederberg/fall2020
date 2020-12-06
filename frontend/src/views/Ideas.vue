@@ -1,9 +1,9 @@
 {{ src/components/Gantt.vue }}
 <template>
 <div class="about w-full h-full bg-lightBlue">
-	<div class="w-2/3 mx-auto bg-darkBlue  border-orange border-l-8 border-r-8" style="min-height: 100%">
+	<div class="w-2/3 mx-auto bg-darkBlue pb-6 border-orange border-l-8 border-r-8" style="min-height: 100%">
 		<i @click="createNote()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
-		<div class="flex w-1/2 mx-auto">
+		<div class="flex w-1/2 ml-4 pt-2">
 			<div class="text-xxxlg font-sans">Idea Board</div>
 		</div>
 		<!-- <Message :message="message"
@@ -118,9 +118,8 @@ export default {
 			this.popupNote = note;
 			this.showPopup = true;
 		},
-		updateNote: function(note, deleted = false) {
+		updateNote: function(note) {
 			let noteID = note.id;
-			note.setDeleted(deleted);
 			var res = note.updateMessage();
             var vue = this;
             res.then(function(response){
@@ -176,7 +175,7 @@ export default {
             });
 		},
 		prioritizeMessage: function(note) { 
-			note.priority = !note.priority;
+			note.togglePriority();
 			this.updateNote(note);
 		},
 		/**
@@ -186,13 +185,16 @@ export default {
 			let messageToDelete = this.messages.find(message => {
 				return message.id = id;
 			})
-			this.updateNote(messageToDelete, true);
+			messageToDelete.setDeleted(true);
+			messageToDelete.setEditDate();
+			this.updateNote(messageToDelete);
 		},
 		notePopupFunction: function(note) {
 			if (this.popupType == this.NOTE_CREATE) {
 				this.createNewNote(note);
 			}
 			else {
+				note.setEditDate();
 				this.updateNote(note);
 			}
 			this.showPopup = false;

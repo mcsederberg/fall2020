@@ -1,7 +1,7 @@
 {{ src/components/Gantt.vue }}
 <template>
 	<div class="about w-full h-full bg-lightBlue">
-		<div class="w-2/3 mx-auto bg-darkBlue  border-orange border-l-8 border-r-8" style="min-height: 100%">
+		<div class="w-2/3 pt-8 mx-auto bg-darkBlue  border-orange border-l-8 border-r-8" style="min-height: 100%">
 			<div class="flex w-1/2 mx-auto pt-4">
 				<div class="text-xxxlg font-sans">Team Progress</div>
 			</div>
@@ -64,9 +64,12 @@ export default {
 	},
 	computed: {
 		aboutStyle: function(){
-			var rows = this.displayTasks.data.length + 1;
-			var height = rows * 35;
-			return "min-height: " + height + "px;";
+			if (this.chartIsBig){
+				var rows = this.displayTasks.data.length + 1;
+				var height = rows * 35;
+				return "min-height: " + height + "px;";
+			}
+			return "min-height: 250px;";
 		},
 		chartClasses: function() {
 			if (this.chartIsBig){

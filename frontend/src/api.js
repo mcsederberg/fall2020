@@ -691,7 +691,7 @@ export default {
 				var messages = [];
 				for (var i = 0; i < messagesData.length; i++){
 					var model = messagesData[i];
-					messages.push(new Message(model.messageID, model.projectID, model.content, model.userID, model.timePublished, model.editDate, model.priority, model.deleted));
+					messages.push(new Message(model.messageID, model.projectID, model.content, model.userID, Number(model.timePublished), Number(model.editDate), model.priority, model.deleted));
 				}
 				resolve({
 					status: "OK",
@@ -723,7 +723,7 @@ export default {
 					return;
 				}
 				var model = response.data.model;
-				var message = new Message(model.id, model.projectID, model.content, model.userID, model.timePublished, model.editDate, model.priority, model.deleted);
+				var message = new Message(model.id, model.projectID, model.content, model.userID, Number(model.timePublished), Number(model.editDate), model.priority, model.deleted);
 				resolve({
 					status: "OK",
 					message: message
