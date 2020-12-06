@@ -11,9 +11,9 @@
 			@editMessage="editNote"
 			@prioritizeMessage="prioritizeMessage"/> -->
 		<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-4">
-			<Message v-for="message in sortedMessages" :key="message.id"
+			<Message v-for="message in sortedMessages" :key="message.messageID"
 				:message="message"
-				@deleted="toDeleteID = message.id; deletePopupOpen = true;"
+				@deleted="toDeleteID = message.messageID; deletePopupOpen = true;"
 				@editMessage="editNote"
 				@prioritizeMessage="prioritizeMessage"/>
 		</div>
@@ -119,7 +119,7 @@ export default {
 			this.showPopup = true;
 		},
 		updateNote: function(note) {
-			let noteID = note.id;
+			let noteID = note.messageID;
 			var res = note.updateMessage();
             var vue = this;
             res.then(function(response){
@@ -156,7 +156,7 @@ export default {
 				note.content, 
 				Date.now(),
 				Date.now(),
-				note.important
+				note.priority
             );
             var vue = this;
             res.then(function(response){
@@ -183,7 +183,7 @@ export default {
 		 */
 		deleteNote: function(id) { 
 			let messageToDelete = this.messages.find(message => {
-				return message.id = id;
+				return message.messageID == id;
 			})
 			messageToDelete.setDeleted(true);
 			messageToDelete.setEditDate();
