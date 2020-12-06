@@ -10,9 +10,9 @@ const mongo = require("../mongo");
 
 router.post('/clockIn', async(req, res)=> {
 	//Make sure we're not already clocked in
-	mongo.getDB().collection("hour").findOne({ userID: req.body.userID, parentID: req.body.parentID, clockedOut: NULL})
+	mongo.getDB().collection("hour").findOne({ userID: req.body.userID, parentID: req.body.parentID, clockedOut: null})
 	.then(result => {
-		if (!result){
+		if (result){
 			res.send({
 				code: "ALREADY_CLOCKED_IN"
 			});
@@ -20,7 +20,7 @@ router.post('/clockIn', async(req, res)=> {
 		}
 		//Now clock in logic
 		var id = helper.generateUID();
-		mongo.getDB().collection("hour").insertOne({hourID: id, userID: req.body.userID, parentID: req.body.parentID, parentType: req.body.parentType, clockedIn: req.body.clockedIn, clockedOut: NULL})
+		mongo.getDB().collection("hour").insertOne({hourID: id, userID: req.body.userID, parentID: req.body.parentID, parentType: req.body.parentType, clockedIn: req.body.clockedIn, clockedOut: null})
 		.then(result => res.send({
 			code: "OK",
 			model: {
@@ -36,7 +36,7 @@ router.post('/clockIn', async(req, res)=> {
 	})
 	.catch(err => res.send(err));
 	// try {
-	// 	let queryString = `SELECT * FROM hour WHERE userID ='${req.body.userID}' AND parentID ='${req.body.parentID}' AND clockedOut IS NULL`;
+	// 	let queryString = `SELECT * FROM hour WHERE userID ='${req.body.userID}' AND parentID ='${req.body.parentID}' AND clockedOut IS null`;
 	// 	sql.query(queryString, function(result){
 	// 		if (result.length != 0){
 	// 			res.send({
@@ -47,7 +47,7 @@ router.post('/clockIn', async(req, res)=> {
 	// 		//Now clock in logic
 	// 		var id = helper.generateUID();
 	// 		try {
-	// 			let queryString = `INSERT INTO hour (hourID, userID, parentID, parentType, clockedIn, clockedOut) VALUES ('${id}', '${req.body.userID}', '${req.body.parentID}', '${req.body.parentType}', '${req.body.clockedIn}', NULL)`
+	// 			let queryString = `INSERT INTO hour (hourID, userID, parentID, parentType, clockedIn, clockedOut) VALUES ('${id}', '${req.body.userID}', '${req.body.parentID}', '${req.body.parentType}', '${req.body.clockedIn}', null)`
 	// 			sql.query(queryString, 
 	// 				function(result){
 	// 					res.send({
@@ -77,7 +77,7 @@ router.post('/clockIn', async(req, res)=> {
 })
 router.put('/clockOut', async(req, res)=> {
 	//Make sure we're not already clocked in
-	mongo.getDB().collection("hour").findOne({ userID: req.body.userID, parentID: req.body.parentID, clockedOut: NULL})
+	mongo.getDB().collection("hour").findOne({ userID: req.body.userID, parentID: req.body.parentID, clockedOut: null})
 	.then(result => {
 		if (!result){
 			res.send({
@@ -85,29 +85,32 @@ router.put('/clockOut', async(req, res)=> {
 			});
 			return;
 		}
+		console.log("Result:");
+		console.log(result);
 		//Now clock in logic
-		var id = helper.generateUID();
 		mongo.getDB().collection("hour").updateOne(
 			{
-				parentID: req.body.parentID,
-				userID: req.body.userID,
-				clockedOut: NULL
+				_id: result._id
 			},
 			{
-				clockedOut: req.body.clockedOut
+				$set: {
+					clockedOut: req.body.clockedOut
+				}
 			}
 		)
-		.then(result => res.send({
-			code: "OK"
-		}))
-		.catch(err => res.send(err));
+		.then(anotherResult => {
+				res.send({
+				code: "OK"
+			})
+		})
+		.catch(err => {console.log(err);res.send(err)});
 	})
-	.catch(err => res.send(err));
+	.catch(err => {console.log(err);res.send(err)});
 
 
 
 	// try {
-	// 	let queryString = `SELECT * FROM hour WHERE userID ='${req.body.userID}' AND parentID ='${req.body.parentID}' AND clockedOut IS NULL`;
+	// 	let queryString = `SELECT * FROM hour WHERE userID ='${req.body.userID}' AND parentID ='${req.body.parentID}' AND clockedOut IS null`;
 	// 	sql.query(queryString, function(result){
 	// 		if (result.length == 0){
 	// 			res.send({
@@ -116,7 +119,7 @@ router.put('/clockOut', async(req, res)=> {
 	// 			return;
 	// 		}
 	// 		try {
-	// 			let queryString = `UPDATE hour SET clockedOut ='${req.body.clockedOut}' WHERE parentID = '${req.body.parentID}' AND userID = '${req.body.userID}' AND clockedOut IS NULL`;
+	// 			let queryString = `UPDATE hour SET clockedOut ='${req.body.clockedOut}' WHERE parentID = '${req.body.parentID}' AND userID = '${req.body.userID}' AND clockedOut IS null`;
 	// 			sql.query(queryString, 
 	// 				function(result){
 	// 					res.send({
@@ -218,7 +221,7 @@ router.get('/getClockedIn/parentID/:parentID/userID/:userID', async(req, res)=> 
 	// })
 	// .catch(err => res.send(err));
 	// try{
-	// 	var queryString = `SELECT * FROM hour WHERE parentID = '${req.params.parentID}' AND userID = '${req.params.userID}' AND clockedOut IS NULL`;
+	// 	var queryString = `SELECT * FROM hour WHERE parentID = '${req.params.parentID}' AND userID = '${req.params.userID}' AND clockedOut IS null`;
 	// 	sql.query(queryString, function(result){
 	// 		if (result.length == 0){
 	// 			res.send({
@@ -277,20 +280,31 @@ router.get('/getTime/userID/:userID/parentID/:parentID', async(req, res) => {
 
 router.get('/getHoursForProject/projectID/:projectID', async(req, res) =>{
 	var projectID = req.params.projectID
-	mongo.getDB().collection("hour").find({parentID: projectID})
-	.then(result => {
-		if (result.length == 0) {
+	mongo.getDB().collection("hour").find({parentID: projectID}).toArray(function(e, result){
+		if (result.length == 0){
 			res.send({
 				code: "NO_TIME"
-			})
+			});
 			return;
 		}
 		res.send({
 			code: "OK",
 			hours: result
-		})
+		});
 	})
-	.catch(err => res.send(err));
+	// .then(result => {
+	// 	if (result.length == 0) {
+	// 		res.send({
+	// 			code: "NO_TIME"
+	// 		})
+	// 		return;
+	// 	}
+	// 	res.send({
+	// 		code: "OK",
+	// 		hours: result
+	// 	})
+	// })
+	// .catch(err => res.send(err));
 	// try {
 	// 	let queryString = `SELECT * FROM hour WHERE parentID = '${projectID}'`
 	// 	sql.query(queryString, 

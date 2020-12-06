@@ -4,6 +4,7 @@ const router = express.Router();
 // const sql = require("../sql");
 const helper = require("../helper");
 const mongo = require("../mongo");
+const ObjectID = require("mongodb").ObjectID;
 
 // mongo.getDB().collection("user").findOne({ username: username})
 // 		.then(result => {
@@ -266,18 +267,27 @@ router.put("/addUser/username/:username/projectID/:projectID", async(req,res)=> 
 			});
 			return;
 		}
+		var projectUsers = result.projectUsers;
 		mongo.getDB().collection("user").findOne({ username: username})
 		.then(user => {
 			var userID = user.id
-			result.projectUsers.push(userID);
-			mongo.getDB().collection("project").insertOne(result)
+			projectUsers.push(userID);
+			mongo.getDB().collection("project").updateOne(
+				{projectID: projectID}, 
+				{
+					$set: {
+						projectUsers: projectUsers
+					}
+				}
+			)
 			.then(result => {
 				res.send({
 					code: "OK"
 				});
-			}).catch(err=>res.send(err));
-		}).catch(err => res.send(err));
-	}).catch(err => res.send(err));
+			}).catch(err => {console.log(err);res.send(err)});
+		}).catch(err => {console.log(err);res.send(err)});
+	}).catch(err => {console.log(err);res.send(err)});
+
 	// try{
 	// 	var queryString = `INSERT INTO projectUsers (projectID, userID) VALUES ('${projectID}', (select user.id from user where user.username = '${username}'))`;
 	// 	sql.query(queryString, function(result){

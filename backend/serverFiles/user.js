@@ -31,8 +31,7 @@ router.post('/login', async (req, res) => {
 					lastName: model.lastName
 				}
 			});
-		})
-		.catch(err => res.send(err));
+		}).catch(err => res.send(err));
 	// try{
 	// 	var queryString = `SELECT * FROM user WHERE username = '${username}'`;
 	// 	var successCallback = function(result){
