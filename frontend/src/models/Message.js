@@ -65,9 +65,9 @@ export default class Message {
     setDeleted(deleted){
         this.deleted = deleted;
     }
-    setEditDate(editDate){
-        this.editDate = editDate;
-    }
+    // setEditDate(editDate){
+    //     this.editDate = editDate;
+    // }
     togglePriority(){
         this.priority = !this.priority;
     }
