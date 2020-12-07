@@ -2,10 +2,10 @@
     <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
         <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8" style="min-height: 100%;">
             <i @click="createTaskPopup()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
+            <div class="flex w-1/2 mx-auto mt-4">
+                <div class="text-xxxlg font-sans">My Tasks</div>
+            </div>
             <div class="w-full flex flex-col">
-                <div class="flex w-1/2 mx-auto mt-4">
-                    <div class="text-xxxlg font-sans">My Tasks</div>
-                </div>
                 <Task v-for="task in sortedTasks" :key="task.id" class=" self-center w-1/2"
                  :task="task"
                  :percent="task.percentComplete"

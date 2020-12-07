@@ -1,8 +1,8 @@
 <template>
    <div class="w-full h-full bg-lightBlue" style="background-attachment: fixed;">
-        <div class="w-2/3 mx-auto bg-darkBlue border-orange border-l-8 border-r-8" style="min-height: 100%">
+        <div class="w-2/3 mx-auto pt-8 bg-darkBlue border-orange border-l-8 border-r-8" style="min-height: 100%">
             <div class="w-full flex flex-col">
-				<div class="flex w-2/3 mx-auto mt-6">
+				<div class="flex w-3/4 mx-auto mt-4">
                     <div class="text-xxxlg font-sans">Settings</div>
                 </div>
 				<div class="flex w-3/4 bg-header self-center mt-6 p-6 text-xlg">Title <input v-model="project.title" class="px-2 ml-2 text-dark w-full bg-lightBlue"/></div>

@@ -3,14 +3,10 @@
 <div class="about w-full h-full bg-lightBlue">
 	<div class="w-2/3 mx-auto bg-darkBlue pb-6 border-orange border-l-8 border-r-8" style="min-height: 100%">
 		<i @click="createNote()" style="right: 15px; top: 15px; font-size: 35px;" class="float-right fa fa-plus relative text-primary-alt cursor-pointer text-teal"/>
-		<div class="flex w-1/2 ml-4 pt-2">
+		<div class="flex w-1/2 ml-4 pt-16 mb-6 ml-16">
 			<div class="text-xxxlg font-sans">Idea Board</div>
 		</div>
-		<!-- <Message :message="message"
-			@deleted="toDeleteID = message.id; deletePopupOpen = true;"
-			@editMessage="editNote"
-			@prioritizeMessage="prioritizeMessage"/> -->
-		<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-4">
+		<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ml-16 mr-16">
 			<Message v-for="message in sortedMessages" :key="message.messageID"
 				:message="message"
 				@deleted="toDeleteID = message.messageID; deletePopupOpen = true;"
@@ -51,8 +47,6 @@ export default {
 			user: {},
 			project: {},
 			projectUsers: [],
-			//temp message, just for testing
-			// message: {content: "Here is the content to be shared", userFirstName: "Michael", timePublished: "2020-12-07T07:00:00.000Z", editDate: "2020-12-07T07:00:00.000Z", priority: true},
 			showPopup: false,
 			NOTE_CREATE: 0,
 			NOTE_EDIT: 1,
@@ -123,7 +117,7 @@ export default {
 			var res = note.updateMessage();
             var vue = this;
             res.then(function(response){
-				if (!deleted) {
+				if (response.deleted != '1') {
 					let user = vue.projectUsers.find(us => {
 						return us.id == response.userID
 					})
