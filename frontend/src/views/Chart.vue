@@ -18,7 +18,7 @@
 				<div  @click="collapsedHours=!collapsedHours" class="cursor-pointer text-xxlg">Individual Hours <i :class="['fa', {'fa-caret-down':collapsedHours, 'fa-caret-up':!collapsedHours}]"/></div>
 			</div>
 			<div class="flex flex-col w-1/2 mx-auto pl-4 pb-10">
-				<div v-show="!collapsedHours" v-for="user in projectUsers" :key="user.id" class="flex ">  
+				<div v-show="!collapsedHours" v-for="user in users" :key="user.id" class="flex ">  
 					{{getUsername(user.id)}}:  <span class="ml-3" v-if="hasTime(user.id)">{{pad(individualHours[user.id].hours)}}:{{pad(individualHours[user.id].minutes)}}</span><span class="ml-3" v-else>00:00</span>
 				</div>
 			</div>
@@ -43,8 +43,8 @@ export default {
 			collapsedHours: true,
 			teamHours: 0,
 			individualHours: [],
-			projectUsers: [],
-			projectUsersByID: {}
+			users: [],
+			usersByID: {}
 		}
 	},
 	mounted: function(){
@@ -57,8 +57,8 @@ export default {
         gantt.init(this.$refs.gantt);
 		this.user = Cookies.getUser();
 		this.project = Cookies.getProject();
-		this.projectUsers = Cookies.getUsers();
-		this.projectUsersByID = _.indexBy(this.projectUsers, "id")
+		this.users = Cookies.getUsers();
+		this.usersByID = _.indexBy(this.users, "id")
 		this.getAllTasks();
 		this.getTeamHours();
 	},
@@ -171,7 +171,7 @@ export default {
 			return Difference_In_Time / (1000 * 3600 * 24); 
 		},
 		getUsername: function(id){
-			var user = this.projectUsersByID[id];
+			var user = this.usersByID[id];
 			return user.getFullName();
 		}
 	}

@@ -35,7 +35,7 @@ router.post('/create', async (req, res) => {
 	var model = req.body;
 	var deleted = 0;
 	var id = helper.generateUID();
-	mongo.getDB().collection("project").insertOne({projectID: id, ownerID: model.ownerID, title: model.title, summary: model.summary, deleted: deleted, projectUsers: [model.ownerID]})
+	mongo.getDB().collection("project").insertOne({projectID: id, ownerID: model.ownerID, title: model.title, summary: model.summary, deleted: deleted, users: [model.ownerID]})
 	.then(result => {
 		res.send({
 			code: "OK",
@@ -232,7 +232,7 @@ router.get('/getProjects/userID/:userID', async(req, res)=> {
 	const cursor = mongo.getDB().collection("project").find({deleted: 0});
 	var projects = [];
 	await cursor.forEach(project =>{
-		if (project.projectUsers && project.projectUsers.includes(userID)){
+		if (project.users && project.users.includes(userID)){
 			projects.push(project);
 		}
 	});
@@ -267,16 +267,16 @@ router.put("/addUser/username/:username/projectID/:projectID", async(req,res)=> 
 			});
 			return;
 		}
-		var projectUsers = result.projectUsers;
+		var users = result.users;
 		mongo.getDB().collection("user").findOne({ username: username})
 		.then(user => {
 			var userID = user.id
-			projectUsers.push(userID);
+			users.push(userID);
 			mongo.getDB().collection("project").updateOne(
 				{projectID: projectID}, 
 				{
 					$set: {
-						projectUsers: projectUsers
+						users: users
 					}
 				}
 			)
