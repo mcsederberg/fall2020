@@ -32,46 +32,6 @@ router.post('/login', async (req, res) => {
 				}
 			});
 		}).catch(err => res.send(err));
-	// try{
-	// 	var queryString = `SELECT * FROM user WHERE username = '${username}'`;
-	// 	var successCallback = function(result){
-	// 		// console.log("Success:");
-	// 		// console.log(result);
-	// 		if (result.length == 0){
-	// 			res.send({
-	// 				code: "INVALID_USERNAME"
-	// 			});
-	// 			return;
-	// 		}
-	// 		var hashedPassword = result[0].password;
-	// 		var isPassword = passwordHash.verify(password, hashedPassword); //todo send incorrect password message
-	// 		if (!isPassword){
-	// 			res.send({
-	// 				code: "INCORRECT_PASSWORD"
-	// 			});
-	// 			return;
-	// 		}
-	// 		// console.log("Result:");
-	// 		// console.log(result);
-	// 		var model = result[0];
-	// 		res.send({
-	// 			code: "OK",
-	// 			model:{
-	// 				id: model.id,
-	// 				username: model.username,
-	// 				password: model.password,
-	// 				firstName: model.firstName,
-	// 				lastName: model.lastName
-	// 			}
-	// 		});
-	// 	}
-	// 	var errorCallback = function(error){
-	// 		res.send(error);
-	// 	}
-	// 	var response = await sql.query(queryString, successCallback, errorCallback);
-	// } catch (error){
-	// 	res.send(error);
-	// }
 });
 
 
@@ -82,7 +42,7 @@ router.post('/register', async (req, res) => {
 	var password = req.body.password;
 	var hashedPassword = passwordHash.generate(password);
 	var id = helper.generateUID();
-	mongo.getDB().collection("user").insertOne({id: id, username: username, password: hashedPassword, firstname: first, lastname: last})
+	mongo.getDB().collection("user").insertOne({id: id, username: username, password: hashedPassword, firstName: first, lastName: last})
 		.then(result => res.send({
 			code: "OK",
 			model: {
@@ -94,67 +54,21 @@ router.post('/register', async (req, res) => {
 			}
 		}))
 		.catch(err => res.send(err));
-	// try{
-	// 	db.collection('inserts').insertOne({a:1}).then(function(r) {
-	// 		console.log(r);
-	// 	});
-	// 	var queryString = `INSERT INTO user (id, username, password, firstname, lastname) VALUES ('${id}', '${username}', '${hashedPassword}', '${first}', '${last}')`;
-	// 	var successCallback = function(result){
-	// 		res.send({
-	// 			code: "OK",
-	// 			model:{
-	// 				id: id,
-	// 				username: username,
-	// 				password: password,
-	// 				first: first,
-	// 				last: last
-	// 			}
-	// 		});
-	// 	}
-	// 	var errorCallback = function(error){
-	// 		res.send(error);
-	// 	}
-	// 	sql.query(queryString, successCallback, errorCallback);
-	// } catch (error){
-	// 	console.log("Error in register" + error);
-	// 	res.send(error);
-	// }
 });
 
 router.get("/getUsersForProject/:projectID", async(req, res)=>{
 	var projectID = req.params.projectID;
-	
 	mongo.getDB().collection("project").findOne({ projectID: projectID})
 		.then(project => {
-			var projectUsers = project.projectUsers;
-			mongo.getDB().collection("user").find({id: {
-				$or: projectUsers
-			}}).toArray(function(e, result){
-				console.log("Result:");
-				console.log(result);
+			var users = project.users;
+			mongo.getDB().collection("user").find({id: {$in: users}}).toArray(function(e, result){
 				res.send({
 					code: "OK",
-					users: projectUsers
+					users: result
 				});
 			})
 		})
 		.catch(err => res.send(err));
-	// try{
-	// 	var queryString = `select * from user where user.id in (select projectUsers.userID from projectUsers where projectUsers.projectID = "${projectID}")`;
-	// 	var successCallback = function(result){
-	// 		res.send({
-	// 			code: "OK",
-	// 			users: result
-	// 		});
-	// 	}
-	// 	var errorCallback = function(error){
-	// 		res.send(error);
-	// 	}
-	// 	sql.query(queryString, successCallback, errorCallback);
-	// } catch (error){
-	// 	console.log("Error in register" + error);
-	// 	res.send(error);
-	// }
 });
 
 module.exports = {

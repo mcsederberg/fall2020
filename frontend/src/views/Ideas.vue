@@ -46,7 +46,7 @@ export default {
 		return{
 			user: {},
 			project: {},
-			projectUsers: [],
+			users: [],
 			showPopup: false,
 			NOTE_CREATE: 0,
 			NOTE_EDIT: 1,
@@ -60,7 +60,7 @@ export default {
 	mounted: function(){
 		this.user = Cookies.getUser();
 		this.project = Cookies.getProject();
-		this.projectUsers = Cookies.getUsers();
+		this.users = Cookies.getUsers();
 		this.getMessages();
 	},
 	computed: {
@@ -89,7 +89,7 @@ export default {
 				vue.messages = response;
 				
 				for (var i in vue.messages) {
-					let user = vue.projectUsers.find(us => {
+					let user = vue.users.find(us => {
 						return us.id == vue.messages[i].userID
 					})
 					let userFirstName = user && user.firstName ? user.firstName : "unknown";
@@ -118,7 +118,7 @@ export default {
             var vue = this;
             res.then(function(response){
 				if (response.deleted != '1') {
-					let user = vue.projectUsers.find(us => {
+					let user = vue.users.find(us => {
 						return us.id == response.userID
 					})
 					let userFirstName = user.firstName;
@@ -154,7 +154,7 @@ export default {
             );
             var vue = this;
             res.then(function(response){
-				let user = vue.projectUsers.find(us => {
+				let user = vue.users.find(us => {
 						return us.id == response.userID
 					})
 				let userFirstName = user && user.firstName ? user.firstName : "error";
