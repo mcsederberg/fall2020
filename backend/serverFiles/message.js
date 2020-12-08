@@ -17,7 +17,7 @@ router.post('/createMessage', async (req, res) => {
 		content: model.content,
 		timePublished: model.timePublished,
 		editDate: model.editDate,
-		priorty: model.priority,
+		priority: model.priority,
 		deleted: 0
 	})
 	.then(result =>res.send({
