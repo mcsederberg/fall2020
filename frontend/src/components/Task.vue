@@ -6,13 +6,13 @@
 			<i class="fa fa-times cursor-pointer ml-auto" @click="deleted()"/>
 		</div>
 		<div class="taskHeader flex flex-col lg:flex-row justify-between items-center mt-2">
-			<p class="text-center text-lg">{{task.title}}
+			<p class="text-center text-lg">{{unescape(task.title)}}
 				<i class="far fa-edit cursor-pointer text-teal" @click="editTask"/>
 			</p>
 			<p class="float-right">Due: {{prettyDate(task.dueDate)}}</p>
 		</div>
 		<div class="taskDescription ml-3 mt-3">
-			{{task.summary}}
+			{{unescape(task.summary)}}
 		</div>
 		<div class="flex flex-col lg:flex-row justify-between mt-2">
 			<span v-if="editPercent && (percentComplete < 100)" @mouseover="hover = true" @mouseleave="hover = false" >
@@ -37,6 +37,7 @@
 
 <script>
 export default {
+	/*global _*/
 	name: 'Task',
 	props: {
 		task: {
@@ -64,6 +65,9 @@ export default {
 		}
 	},
 	methods: {
+		unescape: function(input){
+			return _.unescape(input);
+		},
 		deleted: function() {
 			this.$emit("deleted")
 		},
