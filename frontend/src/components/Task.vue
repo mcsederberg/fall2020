@@ -2,7 +2,7 @@
 <div>
 	<div class="border my-3 p-4 bg-header flex flex-col">
 		<div class="flex flex-row">
-			<div v-if="task.userFirstName">Assigned to: {{task.userFirstName}}</div>
+			<div v-if="task.userFirstName && showOwner">Assigned to: {{task.userFirstName}}</div>
 			<i class="fa fa-times cursor-pointer ml-auto" @click="deleted()"/>
 		</div>
 		<div class="taskHeader flex flex-col lg:flex-row justify-between items-center mt-2">
@@ -50,6 +50,10 @@ export default {
 		percent: {
 			type: [Number, String],
 			required:true
+		},
+		showOwner: {
+			type: Boolean,
+			default: true
 		}
 	},
 	data: function() {

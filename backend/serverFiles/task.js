@@ -184,7 +184,7 @@ router.put("/complete", async(req, res) => {
 //Get all tasks
 router.get("/projectID/:projectID", async(req,res)=>{
 	var id = req.params.projectID;
-	const cursor = mongo.getDB().collection("task").find({projectID: id});
+	const cursor = mongo.getDB().collection("task").find({projectID: id, deleted:0});
 	var tasks = [];
 	await cursor.forEach(task =>{
 		tasks.push(task)
@@ -221,7 +221,7 @@ router.get("/projectID/:projectID/userID/:userID", async(req,res)=>{
 	var projectID = req.params.projectID;
 	var userID = req.params.userID;
 
-	const cursor = mongo.getDB().collection("task").find({projectID: projectID, userID: userID});
+	const cursor = mongo.getDB().collection("task").find({projectID: projectID, userID: userID, deleted:0});
 	var tasks = [];
 	await cursor.forEach(task =>{
 		tasks.push(task)

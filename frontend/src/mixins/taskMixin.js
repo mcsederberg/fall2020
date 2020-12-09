@@ -221,7 +221,7 @@ export default{
                 var today = new Date();
                 for (let i = 0; i < vue.projectUsers.length; i++) {
                     if (vue.projectUsers[i].id == response.userID) {
-                        response.userFirstName = vue.projectUsers[i].userFirstName;
+                        response.userFirstName = vue.projectUsers[i].firstName;
                         break;
                     }
                 }

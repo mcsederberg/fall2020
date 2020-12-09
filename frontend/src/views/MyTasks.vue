@@ -10,6 +10,7 @@
                  :task="task"
                  :percent="task.percentComplete"
                  :editPercent="true"
+                 :showOwner="false"
                  @deleted="deletePopupOpen = true; toDeleteID=task.id"
                  @completeTask="completeTask"
                  @editTask="editActivityPopup(task)"

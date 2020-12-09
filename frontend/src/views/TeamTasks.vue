@@ -97,6 +97,35 @@ export default {
                 vue.inProgressTasks = response.inProgressTasks;
                 vue.completedTasks = response.completedTasks;
                 vue.futureTasks = response.futureTasks;
+                for (let i in vue.overdueTasks) {
+					let user = vue.projectUsers.find(us => {
+						return us.id == vue.overdueTasks[i].userID
+					})
+					let userFirstName = user && user.firstName ? user.firstName : "unknown";
+					vue.$set(vue.overdueTasks[i], 'userFirstName', userFirstName)
+                }
+                for (let i in vue.inProgressTasks) {
+					let user = vue.projectUsers.find(us => {
+						return us.id == vue.inProgressTasks[i].userID
+					})
+					let userFirstName = user && user.firstName ? user.firstName : "unknown";
+					vue.$set(vue.inProgressTasks[i], 'userFirstName', userFirstName)
+                }
+                for (let i in vue.completedTasks) {
+					let user = vue.projectUsers.find(us => {
+						return us.id == vue.completedTasks[i].userID
+					})
+					let userFirstName = user && user.firstName ? user.firstName : "unknown";
+					vue.$set(vue.completedTasks[i], 'userFirstName', userFirstName)
+                }
+                for (let i in vue.futureTasks) {
+					let user = vue.projectUsers.find(us => {
+						return us.id == vue.futureTasks[i].userID
+					})
+					let userFirstName = user && user.firstName ? user.firstName : "unknown";
+					vue.$set(vue.futureTasks[i], 'userFirstName', userFirstName)
+				}
+
                 if (response.error.length > 0) {
                     throw "Error when sorting tasks!";
                 }
