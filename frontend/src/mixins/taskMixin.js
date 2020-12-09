@@ -1,6 +1,6 @@
 import Cookies from '../mixins/Cookies';
 import Task from '../models/Task';
-
+/*global _*/
 export default{
 	data: function() {
 		return {
@@ -91,8 +91,8 @@ export default{
                 this.popupTask.id, 
                 this.project.id,
                 userID,
-                this.popupTask.title, 
-                this.popupTask.summary,
+                _.escape(this.popupTask.title), 
+                _.escape(this.popupTask.summary),
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
                 this.popupTask.completedDate ? this.SQLDateTime(this.popupTask.completedDate) : null,
@@ -207,8 +207,8 @@ export default{
             var res = Task.createTask(
                 this.popupTask.user.id, 
                 this.project.id, 
-                this.popupTask.title, 
-                this.popupTask.summary, 
+                _.escape(this.popupTask.title),
+                _.escape(this.popupTask.summary), 
                 this.SQLDateTime(this.popupTask.dueDate), 
                 this.SQLDateTime(this.popupTask.startDate), 
                 this.SQLDateTime(this.popupTask.completedDate), 

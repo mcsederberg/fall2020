@@ -1,7 +1,7 @@
 
 import User from '../models/User';
 import Project from '../models/Project';
-
+/*global _*/
 export default class Cookies {
     static setCookie(cname, cvalue, exdays){
         var d = new Date();
@@ -16,10 +16,10 @@ export default class Cookies {
         for(var i = 0; i <ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0) == ' ') {
-            c = c.substring(1);
+                c = c.substring(1);
             }
             if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
+                return c.substring(name.length, c.length);
             }
         }
         return "";
@@ -39,7 +39,7 @@ export default class Cookies {
         return new User(user.id, user.username, user.password, user.firstName, user.lastName);
     }
     static setProject(project){
-        Cookies.setCookie("project", JSON.stringify(project), "1");
+        Cookies.setCookie("project", _.unescape(JSON.stringify(project)), "1");
     }
     static getProject(){
         var string = Cookies.getCookie("project");

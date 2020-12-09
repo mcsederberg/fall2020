@@ -4,9 +4,9 @@
 		<i @click="showPopup = true" class="fa fa-plus text-orange float-right cursor-pointer relative" style="right: 15px; top: 15px; font-size: 35px;"/>
 		<div class="w-full flex flex-col">
 			<div v-for="project in projects" :key="project.id"  @click="openProject(project.id)" class="flex flex-col self-center w-2/3 my-3 p-4 bg-header cursor-pointer border-4 border-darkBlue hover:border-gray">
-				<p class="text-center text-lg">{{project.title}}</p>
+				<p class="text-center text-lg">{{unescape(project.title)}}</p>
 				<div class="border-t my-2"/>
-				<p class="text-center">{{project.summary}}</p>
+				<p class="text-center">{{unescape(project.summary)}}</p>
 			</div>
 		</div>
 
@@ -27,6 +27,7 @@ import User from '../models/User';
 import Popup from '../components/Popup';
 import Cookies from '../mixins/Cookies'
 export default {
+	/*global _*/
 	name: 'Projects',
 	components: {
 		Popup: Popup
@@ -44,9 +45,12 @@ export default {
 		this.getAllProjects();
 	},
 	methods: {
+		unescape: function(input){
+			return _.unescape(input);
+		},
 		createProject: function() {
 			let vue = this;
-			var res = Project.createProject(this.newProject.title, this.newProject.summary, this.user.id);
+			var res = Project.createProject(_.escape(this.newProject.title), _.escape(this.newProject.summary), this.user.id);
             res.then(function(response){
 				console.log(response);
 				vue.projects.unshift(response);
