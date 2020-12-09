@@ -1,4 +1,3 @@
-
 const { query } = require("express");
 const express = require("express")
 const passwordHash = require('password-hash');
